@@ -21,8 +21,10 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -48,7 +49,7 @@ import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.SoftIcon6
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.components.ad.RequestBannerAd
-import com.bootx.app.ui.navigation.Destinations
+import com.bootx.app.util.IDownloadCallback
 import com.bootx.app.util.ShareUtils
 import com.bootx.app.util.SharedPreferencesUtils
 import com.bootx.app.viewmodel.DownloadViewModel
@@ -59,7 +60,7 @@ import kotlinx.coroutines.launch
     ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class, ExperimentalLayoutApi::class
 )
 @Composable
-fun AppDetailScreen(
+fun AppDetailScreen1(
     navController: NavHostController,
     id: String,
     downloadViewModel: DownloadViewModel = viewModel(),
@@ -68,9 +69,6 @@ fun AppDetailScreen(
     val coroutineScope = rememberCoroutineScope()
     var progress by remember {
         mutableIntStateOf(0)
-    }
-    var showDialog by remember {
-        mutableStateOf(false)
     }
     val context = LocalContext.current
 
@@ -100,9 +98,38 @@ fun AppDetailScreen(
                 }
             }
             Button(modifier = Modifier.weight(1.0f), onClick = {
-                showDialog = true
+                if (progress == 0) {
+                    coroutineScope.launch {
+                        progress = 1;
+                        downloadViewModel.download(context,
+                            softViewModel.softDetail.id,
+                            object : IDownloadCallback {
+                                override fun done() {
+                                }
+
+                                override fun downloading(data: Int) {
+                                    if (data > progress) {
+                                        progress = data
+                                    }
+                                    Log.e("downloading data", "data: ${data},${progress}")
+                                }
+
+                                override fun error(e: Throwable) {
+                                }
+
+                                override fun start() {
+                                }
+                            })
+                    }
+                }
             }) {
-                Text(text = "下载")
+                if (progress == 0) {
+                    Text(text = "下载")
+                } else {
+                    Text(text = "下载中")
+
+
+                }
             }
             TextButton(onClick = {
                 val shareAppList = ShareUtils.getShareAppList(context)
@@ -163,7 +190,7 @@ fun AppDetailScreen(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            DetailItem(
+                            DetailItem1(
                                 softViewModel.softDetail.score,
                                 "评分"
                             )
@@ -173,14 +200,14 @@ fun AppDetailScreen(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            DetailItem(softViewModel.softDetail.size, "大小")
+                            DetailItem1(softViewModel.softDetail.size, "大小")
                         }
                         Column(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            DetailItem(softViewModel.softDetail.downloads, "下载")
+                            DetailItem1(softViewModel.softDetail.downloads, "下载")
                         }
                     }
                 }
@@ -200,45 +227,11 @@ fun AppDetailScreen(
                 }
             }
         }
-
-        if (showDialog) {
-            androidx.compose.material3.AlertDialog(
-                onDismissRequest = {
-                    showDialog = false
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        navController.navigate(Destinations.LoginFrame.route)
-                    }) {
-                        Text(text = "去登录")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = {
-                        showDialog = false
-                        val token = SharedPreferencesUtils(context).get("token")
-                        if(token.isBlank()){
-                            navController.navigate(Destinations.DownloadFrame.route + "/${softViewModel.softDetail.id}")
-                        }else{
-                            navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}")
-                        }
-                    }) {
-                        Text(text = "跳转广告页面")
-                    }
-                },
-                title = {
-                    Text(text = "您还未登录")
-                },
-                text = {
-                    Text(text = "您可以选择登录后免广告下载，或者免登录观看广告后下载")
-                })
-        }
-
     }
 }
 
 @Composable
-fun DetailItem(title: String, title2: String, modifier: Modifier = Modifier) {
+fun DetailItem1(title: String, title2: String, modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier.then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,

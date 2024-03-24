@@ -1,4 +1,4 @@
-package com.bootx.yysc.repository
+package com.bootx.app.repository
 
 import android.content.Context
 import androidx.room.Database
@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.bootx.app.repository.dao.DownloadManagerDao
 import com.bootx.app.repository.dao.HistoryDao
-import com.bootx.app.repository.dao.UserDao
 import com.bootx.app.repository.entity.DownloadManagerEntity
 import com.bootx.app.repository.entity.HistoryEntity
 import com.bootx.app.repository.entity.UserEntity
@@ -24,7 +23,7 @@ abstract class DataBase : RoomDatabase() {
 
     companion object {
         private var db: DataBase? = null
-        private var name = "app"
+        private var name = "yysc"
         fun getDb(context: Context) = if (db == null) {
             Room.databaseBuilder(context, DataBase::class.java, name)
                 .enableMultiInstanceInvalidation().fallbackToDestructiveMigration().build().apply {
@@ -34,9 +33,6 @@ abstract class DataBase : RoomDatabase() {
             db
         }
     }
-
-    abstract fun getUserDao(): UserDao
-
     abstract fun getHistoryDao(): HistoryDao
 
     abstract fun getDownloadManagerDao(): DownloadManagerDao

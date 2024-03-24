@@ -10,7 +10,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.ui.screens.AppDetailScreen
+import com.bootx.app.ui.screens.DownloadScreen
+import com.bootx.app.ui.screens.LoginScreen
 import com.bootx.app.ui.screens.MainScreen
+import com.bootx.app.ui.screens.WebViewScreen
+import com.bootx.app.ui.screens.RegisterScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -20,7 +24,7 @@ fun NavHostApp() {
 
     NavHost(
         navController = navController,
-        startDestination = Destinations.MainFrame.route+"/0",
+        startDestination = Destinations.RegisterFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
@@ -54,6 +58,72 @@ fun NavHostApp() {
         ) {
             val id = it.arguments?.getString("id") ?: ""
             AppDetailScreen(navController, id)
+        }
+
+        composable(
+            Destinations.DownloadFrame.route + "/{id}",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            DownloadScreen(navController, id)
+        }
+
+        composable(
+            Destinations.WebViewFrame.route + "/{id}",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            WebViewScreen(navController, id)
+        }
+
+        composable(
+            Destinations.RegisterFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            RegisterScreen(navController)
+        }
+
+        composable(
+            Destinations.LoginFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            LoginScreen(navController)
         }
     }
 }

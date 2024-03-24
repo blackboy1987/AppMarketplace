@@ -54,7 +54,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        SSPSdk.init(this@MainActivity, "6862", true)
+        SSPSdk.init(this@MainActivity, "6862", null, true)
+        SSPSdk.setReqPermission(true)
         val connectivityManager = getSystemService(ConnectivityManager::class.java)
         val currentNetwork = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
@@ -67,6 +69,10 @@ class MainActivity : ComponentActivity() {
                 CommonUtils.toast(this@MainActivity,"虚拟网络")
             }
         }
+
+
+
+
 
 
 
@@ -83,9 +89,6 @@ class MainActivity : ComponentActivity() {
                             gson.toJson(adConfig)
                         )
                         Log.e("adConfig", "onSuccess: ${data.toString()}")
-                        SSPSdk.init(this@MainActivity, adConfig.mediaId, true)
-                        SSPSdk.init(this@MainActivity, adConfig.mediaId, null, true)
-                        SSPSdk.setReqPermission(true)
                     } catch (e: Exception) {
                         Log.e("adConfig", "onSuccess: 广告配置失败：${data}")
                     }

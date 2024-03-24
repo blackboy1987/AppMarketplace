@@ -11,7 +11,7 @@ import com.bootx.app.entity.SoftEntity
 import com.bootx.app.repository.entity.HistoryEntity
 import com.bootx.app.service.SoftService
 import com.bootx.app.util.SharedPreferencesUtils
-import com.bootx.yysc.repository.DataBase
+import com.bootx.app.repository.DataBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
