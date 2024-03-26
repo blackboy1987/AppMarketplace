@@ -158,9 +158,6 @@ fun HomeScreen(
                             )
                         }
                     }
-                    item {
-                        Text(text = "abc")
-                    }
                 }
             }
 

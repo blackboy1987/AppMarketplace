@@ -4,6 +4,7 @@ import com.bootx.app.entity.SoftDetailResponse
 import com.bootx.app.entity.SoftListResponse
 import com.bootx.app.repository.entity.DownloadEntity1Response
 import com.bootx.app.repository.entity.DownloadEntityResponse
+import com.bootx.app.repository.entity.DownloadUrlResponse
 import com.bootx.app.util.HiRetrofit
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -42,6 +43,23 @@ interface SoftService {
         @Header("token") token: String,
         @Field("id") id: String,
     ): DownloadEntity1Response
+
+    @POST("/api/soft/url")
+    @FormUrlEncoded
+    suspend fun getUrl(
+        @Header("token") token: String,
+        @Field("id") id: String,
+    ): DownloadUrlResponse
+
+    @POST("/api/soft/orderBy")
+    @FormUrlEncoded
+    suspend fun orderBy(
+        @Header("token") token: String,
+        @Field("pageNumber") pageNumber: Int,
+        @Field("pageSize") pageSize: Int,
+        @Field("orderBy") orderBy: String,
+        @Field("categoryId") categoryId: Int = 0,
+    ): SoftListResponse
 
     companion object {
         fun instance(): SoftService {

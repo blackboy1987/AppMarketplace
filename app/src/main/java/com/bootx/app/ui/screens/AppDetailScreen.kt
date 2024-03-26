@@ -49,6 +49,7 @@ import com.bootx.app.ui.components.SoftIcon6
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.components.ad.RequestBannerAd
 import com.bootx.app.ui.navigation.Destinations
+import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.ShareUtils
 import com.bootx.app.util.SharedPreferencesUtils
 import com.bootx.app.viewmodel.DownloadViewModel
@@ -56,7 +57,7 @@ import com.bootx.app.viewmodel.SoftViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class, ExperimentalLayoutApi::class
+    ExperimentalMaterial3Api::class
 )
 @Composable
 fun AppDetailScreen(
@@ -100,7 +101,14 @@ fun AppDetailScreen(
                 }
             }
             Button(modifier = Modifier.weight(1.0f), onClick = {
-                showDialog = true
+                val token = SharedPreferencesUtils(context).get("token")
+                if(token.isBlank()){
+                    showDialog = true
+                }else{
+                    navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}/0")
+                }
+
+
             }) {
                 Text(text = "下载")
             }
@@ -208,6 +216,7 @@ fun AppDetailScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = {
+                        showDialog = false
                         navController.navigate(Destinations.LoginFrame.route)
                     }) {
                         Text(text = "去登录")
@@ -216,12 +225,7 @@ fun AppDetailScreen(
                 dismissButton = {
                     TextButton(onClick = {
                         showDialog = false
-                        val token = SharedPreferencesUtils(context).get("token")
-                        if(token.isBlank()){
-                            navController.navigate(Destinations.DownloadFrame.route + "/${softViewModel.softDetail.id}")
-                        }else{
-                            navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}")
-                        }
+                        navController.navigate(Destinations.DownloadFrame.route + "/${softViewModel.softDetail.id}")
                     }) {
                         Text(text = "跳转广告页面")
                     }

@@ -14,6 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +35,7 @@ import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.CommonUtils
 import com.bootx.app.viewmodel.DownloadViewModel
 import com.bootx.app.viewmodel.SoftViewModel
+import kotlinx.coroutines.launch
 
 
 @OptIn(
@@ -43,7 +49,10 @@ fun DownloadScreen(
     softViewModel: SoftViewModel = viewModel(),
 ) {
     val context = LocalContext.current
-
+    val coroutineScope = rememberCoroutineScope()
+    var adRewardStatus by remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect(Unit) {
         downloadViewModel.download1(context,id)
@@ -78,21 +87,33 @@ fun DownloadScreen(
                     .fillMaxWidth()
                     .height(100.dp)
             ) {
-                Box(modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth()){
+                Box(modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()){
                     Column {
                         Text(modifier = Modifier.fillMaxWidth(), text = "下载识别ID：${downloadViewModel.adDetail.adId}", fontSize = 12.sp, textAlign = TextAlign.Center)
                         Text(modifier = Modifier.fillMaxWidth(), text = "应用识别ID：${downloadViewModel.adDetail.id}", fontSize = 12.sp, textAlign = TextAlign.Center)
                     }
                 }
-                Box(modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()){
+                Box(modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()){
                     Button(onClick = {
-                        requestRewardAd(context, onClose = {msg->
-                            Log.e("requestRewardAd", "DownloadScreen: $msg")
-                            if(msg=="onReward"){
-                                CommonUtils.toast(context, msg)
-                            }
-                        })
-                        navController.navigate(Destinations.WebViewFrame.route+"/1")
+                        if(adRewardStatus){
+                            navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.adDetail.id}/${downloadViewModel.adDetail.adId}")
+                        }else{
+                            requestRewardAd(context, onClose = {msg->
+                                Log.e("requestRewardAd", "DownloadScreen: $msg")
+                                if(msg=="onReward"){
+                                    // 视频观看完成
+                                    coroutineScope.launch {
+                                        downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
+                                        CommonUtils.toast(context, msg)
+                                        adRewardStatus = true
+                                    }
+                                }
+                            })
+                        }
                     }, modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 8.dp)) {

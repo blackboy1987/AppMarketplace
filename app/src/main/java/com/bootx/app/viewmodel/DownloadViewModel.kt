@@ -14,28 +14,30 @@ import com.azhon.appupdate.listener.OnDownloadListener
 import com.azhon.appupdate.manager.DownloadManager
 import com.azhon.appupdate.util.NotificationUtil
 import com.bootx.app.R
-import com.bootx.app.entity.SoftDetailEntity
 import com.bootx.app.repository.DataBase
 import com.bootx.app.repository.entity.DownloadEntity1
 import com.bootx.app.repository.entity.DownloadManagerEntity
-import com.bootx.app.repository.entity.HistoryEntity
+import com.bootx.app.repository.entity.DownloadUrl
+import com.bootx.app.service.DownloadService
 import com.bootx.app.service.SoftService
 import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.IDownloadCallback
-import com.bootx.app.util.IHttpCallback
 import com.bootx.app.util.SharedPreferencesUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.Date
 
 
 class DownloadViewModel:ViewModel() {
 
     private val softService = SoftService.instance()
 
+    private val downloadService = DownloadService.instance()
+
     var adDetail by mutableStateOf<DownloadEntity1>(DownloadEntity1(id = 0, adId = ""))
+
+    var downloadInfo by mutableStateOf<DownloadUrl>(DownloadUrl(id = 0, adId = "",url=""))
 
     suspend fun download(context: Context,id: Int,callback: IDownloadCallback) {
         // 接口请求下载地址
@@ -144,5 +146,25 @@ class DownloadViewModel:ViewModel() {
             CommonUtils.toast(context,res.msg)
         }
 
+    }
+
+
+    suspend fun getUrl(context: Context,id: String) {
+        val res = softService.getUrl(SharedPreferencesUtils(context).get("token"),id)
+        if (res.code == 0) {
+            downloadInfo = res.data
+        }else{
+            CommonUtils.toast(context,res.msg)
+        }
+
+    }
+
+    suspend fun adReward(context: Context, id: Int, adId: String) {
+        val res = downloadService.adReward(SharedPreferencesUtils(context).get("token"),id,adId)
+        if (res.code == 0) {
+            downloadInfo = res.data
+        }else{
+            CommonUtils.toast(context,res.msg)
+        }
     }
 }

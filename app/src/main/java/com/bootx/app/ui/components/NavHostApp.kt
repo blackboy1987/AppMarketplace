@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bootx.app.ui.navigation.Destinations
+import com.bootx.app.ui.screens.AboutScreen
 import com.bootx.app.ui.screens.AppDetailScreen
 import com.bootx.app.ui.screens.DownloadScreen
 import com.bootx.app.ui.screens.LoginScreen
@@ -24,7 +25,7 @@ fun NavHostApp() {
 
     NavHost(
         navController = navController,
-        startDestination = Destinations.RegisterFrame.route,
+        startDestination = Destinations.MainFrame.route+"/0",
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
@@ -78,7 +79,7 @@ fun NavHostApp() {
         }
 
         composable(
-            Destinations.WebViewFrame.route + "/{id}",
+            Destinations.WebViewFrame.route + "/{id}/{adId}",
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Right
@@ -91,7 +92,8 @@ fun NavHostApp() {
             },
         ) {
             val id = it.arguments?.getString("id") ?: ""
-            WebViewScreen(navController, id)
+            val adId = it.arguments?.getString("adId") ?: ""
+            WebViewScreen(navController, id,adId)
         }
 
         composable(
@@ -124,6 +126,22 @@ fun NavHostApp() {
             },
         ) {
             LoginScreen(navController)
+        }
+
+        composable(
+            Destinations.AboutFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            AboutScreen(navController)
         }
     }
 }

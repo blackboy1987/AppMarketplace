@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.bootx.app.ui.components.NavHostApp
-import com.bootx.app.ui.theme.AppMarketplaceTheme
+import com.bootx.myapplication.ui.theme.AppMarketplaceTheme
 
 
 class HomeActivity : ComponentActivity(){

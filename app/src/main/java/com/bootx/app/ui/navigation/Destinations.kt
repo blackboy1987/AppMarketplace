@@ -17,6 +17,8 @@ sealed class Destinations(val route: String) {
     data object WebViewFrame : Destinations("WebViewFrame")
     data object LoginFrame : Destinations("LoginFrame")
     data object RegisterFrame : Destinations("RegisterFrame")
+    data object SearchFrame : Destinations("SearchFrame")
+    data object AboutFrame : Destinations("AboutFrame")
 
 
 

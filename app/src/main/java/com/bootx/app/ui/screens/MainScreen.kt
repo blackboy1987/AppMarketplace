@@ -1,22 +1,17 @@
 package com.bootx.app.ui.screens
 
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.BottomNavigation
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import com.bootx.app.ui.navigation.Destinations
 
 data class NavigationItem(
     val title: String, //底部导航栏的标题
@@ -46,23 +40,19 @@ fun MainScreen(navController: NavHostController,type: String="0") {
     )
 
     var currentNavigationIndex by remember {
-        mutableIntStateOf(type.toInt())
+        mutableIntStateOf(0)
     }
 
     Scaffold(
         bottomBar = {
-            BottomNavigation(
-                backgroundColor = MaterialTheme.colorScheme.surface,
+            NavigationBar(
                 modifier = Modifier.navigationBarsPadding()
             ){
                 navigationItems.forEachIndexed { index, navigationItem ->
-                    BottomNavigationItem(
+                    NavigationBarItem(
                         selected = currentNavigationIndex == index,
                         onClick = {
-                            if(currentNavigationIndex!=index){
-                                currentNavigationIndex = index
-                                navController.navigate(Destinations.MainFrame.route+"/${index}")
-                            }
+                            currentNavigationIndex = index
                         },
                         icon = {
                             Icon(
@@ -73,8 +63,12 @@ fun MainScreen(navController: NavHostController,type: String="0") {
                         label = {
                             Text(text = navigationItem.title)
                         },
-                        selectedContentColor = Color(0xFF149EE7),
-                        unselectedContentColor = Color(0xFF999999)
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color(0xff149ee7),
+                            selectedTextColor = Color(0xff149ee7),
+                            unselectedIconColor = Color(0xff999999),
+                            unselectedTextColor = Color(0xff999999)
+                        )
                     )
                 }
             }

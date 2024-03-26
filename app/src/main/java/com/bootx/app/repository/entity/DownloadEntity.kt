@@ -19,5 +19,13 @@ data class DownloadEntity1(
     val adId: String,
 )
 
+@JsonClass(generateAdapter = true)
+data class DownloadUrl(
+    var id: Int,
+    val adId: String,
+    val url: String,
+)
+
 data class DownloadEntityResponse(val data: DownloadEntity) : BaseResponse()
 data class DownloadEntity1Response(val data: DownloadEntity1) : BaseResponse()
+data class DownloadUrlResponse(val data: DownloadUrl) : BaseResponse()
