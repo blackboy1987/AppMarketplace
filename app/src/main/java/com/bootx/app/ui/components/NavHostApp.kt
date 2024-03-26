@@ -16,6 +16,7 @@ import com.bootx.app.ui.screens.LoginScreen
 import com.bootx.app.ui.screens.MainScreen
 import com.bootx.app.ui.screens.WebViewScreen
 import com.bootx.app.ui.screens.RegisterScreen
+import com.bootx.app.ui.screens.SearchScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -127,7 +128,21 @@ fun NavHostApp() {
         ) {
             LoginScreen(navController)
         }
-
+        composable(
+            Destinations.SearchFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            SearchScreen(navController)
+        }
         composable(
             Destinations.AboutFrame.route,
             enterTransition = {
