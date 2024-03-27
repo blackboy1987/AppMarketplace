@@ -3,6 +3,9 @@ package com.bootx.app.ui.components
 import android.content.Context
 import android.view.Gravity
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,13 +22,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
@@ -52,6 +58,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.bootx.app.entity.SoftEntity
+import com.bootx.app.ui.navigation.Destinations
+import kotlinx.coroutines.launch
 
 @Composable
 fun RightIcon(onClick: () -> Unit) {
@@ -315,6 +324,37 @@ fun MyInput1(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             visualTransformation = visualTransformation,
+        )
+    }
+}
+
+@Composable
+fun SoftItem(item: SoftEntity,onClick: (id: Int) -> Unit){
+    AnimatedVisibility(
+        visible = true,
+        enter = scaleIn(
+            initialScale = 0.1f, // 从0.8的尺寸开始
+            animationSpec = tween(30000) // 动画持续时间300毫秒
+        )
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(text = "${item.name}")
+            },
+            supportingContent = {
+                Text(text = "${item.versionName} ${item.downloads}")
+            },
+            leadingContent = {
+                SoftIcon6_8("${item.logo}")
+            },
+            trailingContent = {
+                Button(onClick = {
+                    onClick(item.id)
+                }) {
+                    Text(text = "查看")
+                }
+            }
+
         )
     }
 }

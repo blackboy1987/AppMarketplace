@@ -1,17 +1,17 @@
 package com.bootx.app.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,7 +31,6 @@ data class NavigationItem(
     val icon: ImageVector//底部导航栏图标
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController, type: String = "0") {
     val context = LocalContext.current
@@ -41,36 +40,32 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
         NavigationItem(title = "个人中心", icon = Icons.Filled.Person),
     )
 
-    var currentNavigationIndex by remember {
+    var selectedItem  by remember {
         mutableIntStateOf(0)
     }
 
     Scaffold(
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.navigationBarsPadding()
+                containerColor = Color.Transparent,
+                contentColor = Color.Red
             ) {
-                navigationItems.forEachIndexed { index, navigationItem ->
+                navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
-                        selected = currentNavigationIndex == index,
+                        selected = (selectedItem  == index),
                         onClick = {
-                            currentNavigationIndex = index
+                            selectedItem  = index
                         },
                         icon = {
                             Icon(
-                                imageVector = navigationItem.icon,
+                                imageVector = item.icon,
                                 contentDescription = null
                             )
                         },
+                        alwaysShowLabel = false,
                         label = {
-                            Text(text = navigationItem.title)
+                            Text(text = item.title)
                         },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xff149ee7),
-                            selectedTextColor = Color(0xff149ee7),
-                            unselectedIconColor = Color(0xff999999),
-                            unselectedTextColor = Color(0xff999999)
-                        )
                     )
                 }
             }
@@ -81,7 +76,7 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                 .padding(it)
                 .fillMaxHeight(),
         ) {
-            when (currentNavigationIndex) {
+            when (selectedItem) {
                 0 -> {
                     HomeScreen(navController = navController)
                 }

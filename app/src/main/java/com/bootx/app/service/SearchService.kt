@@ -1,6 +1,7 @@
 package com.bootx.app.service
 
 import com.bootx.app.entity.BaseResponse
+import com.bootx.app.entity.SoftEntity
 import com.bootx.app.util.HiRetrofit
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -25,22 +26,4 @@ interface SearchService {
         }
     }
 }
-
-
-data class SearchData(
-    val id: Int,
-    val name: String = "",
-    val logo: String = "",
-    val title: String = "",
-    val score: String = "",
-    val size: String = "",
-    val versionName: String="",
-    val memo: String = "",
-    val updateDate: String = "",
-    val avatar: String = "",
-    val username: String = "",
-    val rankName: String = "",
-    val point: String = "",
-    var isConcern: Int = 0,
-)
-data class SearchDataListResponse(val data: List<SearchData>) : BaseResponse()
+data class SearchDataListResponse(val data: List<SoftEntity>) : BaseResponse()

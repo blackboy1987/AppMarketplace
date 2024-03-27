@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.bootx.app.service.SearchData
+import com.bootx.app.entity.SoftEntity
 import com.bootx.app.service.SearchService
 import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.SharedPreferencesUtils
@@ -23,7 +23,7 @@ class SearchViewModel:ViewModel() {
     var loading by mutableStateOf(true)
         private set
 
-    var list by mutableStateOf(listOf<SearchData>())
+    var list by mutableStateOf(listOf<SoftEntity>())
 
     var hasMore by mutableStateOf(true)
         private set
@@ -32,7 +32,7 @@ class SearchViewModel:ViewModel() {
         try {
             val res = searchService.search(SharedPreferencesUtils(context).get("token"),keywords,pageNumber,pageSize)
             if (res.code == 0) {
-                val tmpList = mutableListOf<SearchData>()
+                val tmpList = mutableListOf<SoftEntity>()
                 if (pageNumber != 1) {
                     tmpList.addAll(list)
                 }

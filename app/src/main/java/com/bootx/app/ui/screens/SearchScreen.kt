@@ -64,6 +64,7 @@ import androidx.navigation.NavController
 import com.bootx.app.extension.onBottomReached
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.SoftIcon6_8
+import com.bootx.app.ui.components.SoftItem
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.StoreManager
@@ -260,35 +261,9 @@ fun SearchScreen(
                     state = lazyListState,
                 ) {
                     itemsIndexed(searchViewModel.list) { index, item ->
-                        AnimatedVisibility(
-                            visible = true,
-                            enter = scaleIn(
-                                initialScale = 0.1f, // 从0.8的尺寸开始
-                                animationSpec = tween(30000) // 动画持续时间300毫秒
-                            )
-                        ){
-                            ListItem(
-                                headlineContent = {
-                                    Text(text = "${item.name}")
-                                },
-                                supportingContent = {
-                                    Text(text = "${item.versionName} ${item.memo}")
-                                },
-                                leadingContent = {
-                                    SoftIcon6_8("${item.logo}")
-                                },
-                                trailingContent = {
-                                    OutlinedButton(onClick = {
-                                        coroutineScope.launch {
-                                            navController.navigate(Destinations.AppDetailFrame.route+"/${item.id}")
-                                        }
-                                    }) {
-                                        Text(text = "查看")
-                                    }
-                                }
-
-                            )
-                        }
+                       SoftItem(item = item) {id->
+                           navController.navigate("${Destinations.AppDetailFrame.route}/$id")
+                       }
                     }
                 }
             }

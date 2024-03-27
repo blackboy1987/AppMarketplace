@@ -47,10 +47,10 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.bootx.app.extension.onBottomReached
 import com.bootx.app.entity.CategoryEntity
-import com.bootx.app.ui.components.Item3
+import com.bootx.app.extension.onBottomReached
 import com.bootx.app.ui.components.Loading
+import com.bootx.app.ui.components.SoftItem
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.SharedPreferencesUtils
@@ -173,7 +173,7 @@ fun AppScreen(
                         state = lazyListState,
                     ) {
                         items(vm.softList) { item ->
-                            Item3(item, onClick = { id ->
+                            SoftItem(item, onClick = { id ->
                                 navController.navigate("${Destinations.AppDetailFrame.route}/$id")
                             })
                         }

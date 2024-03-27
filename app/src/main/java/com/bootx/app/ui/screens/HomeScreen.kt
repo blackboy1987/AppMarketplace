@@ -56,6 +56,7 @@ import com.bootx.app.extension.onBottomReached
 import com.bootx.app.extension.onScroll
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.SoftIcon6_8
+import com.bootx.app.ui.components.SoftItem
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.viewmodel.SoftViewModel
 import com.bootx.yysc.ui.components.SwiperItem
@@ -101,7 +102,9 @@ fun HomeScreen(
                             shape = RoundedCornerShape(16.dp)
                         )
                     }
-                    Box(modifier = Modifier.align(Alignment.CenterStart).padding(start = 16.dp)){
+                    Box(modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 16.dp)){
                         Text(text = "搜索", fontSize = 12.sp)
                     }
                 }
@@ -188,35 +191,11 @@ fun HomeScreen(
                     }
 
                     itemsIndexed(softViewModel.softList) { index, item ->
-                        AnimatedVisibility(
-                            visible = true,
-                            enter = scaleIn(
-                                initialScale = 0.1f, // 从0.8的尺寸开始
-                                animationSpec = tween(30000) // 动画持续时间300毫秒
-                            )
-                        ) {
-                            ListItem(
-                                headlineContent = {
-                                    Text(text = "${item.name}")
-                                },
-                                supportingContent = {
-                                    Text(text = "${item.versionName} ${item.downloads}")
-                                },
-                                leadingContent = {
-                                    SoftIcon6_8("${item.logo}")
-                                },
-                                trailingContent = {
-                                    OutlinedButton(onClick = {
-                                        coroutineScope.launch {
-                                            navController.navigate(Destinations.AppDetailFrame.route + "/${item.id}")
-                                        }
-                                    }) {
-                                        Text(text = "查看")
-                                    }
-                                }
-
-                            )
-                        }
+                        SoftItem(item = item, onClick = { id->
+                            coroutineScope.launch {
+                                navController.navigate(Destinations.AppDetailFrame.route + "/${item.id}")
+                            }
+                        })
                     }
                 }
             }
