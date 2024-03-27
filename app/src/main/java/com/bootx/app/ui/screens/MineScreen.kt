@@ -104,6 +104,16 @@ fun MineScreen(
                         contentDescription = ""
                     )
                 })
+                ListItem(modifier = Modifier
+                    .clickable { }
+                    .height(40.dp), headlineContent = {
+                    Text(text = "上传应用")
+                }, trailingContent = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForwardIos,
+                        contentDescription = ""
+                    )
+                })
             }
         }
     }
