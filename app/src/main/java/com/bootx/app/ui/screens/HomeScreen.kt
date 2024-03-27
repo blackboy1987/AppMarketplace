@@ -1,6 +1,7 @@
 package com.bootx.app.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
@@ -38,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -51,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bootx.app.extension.onBottomReached
+import com.bootx.app.extension.onScroll
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.SoftIcon6_8
 import com.bootx.app.ui.navigation.Destinations
@@ -71,6 +74,9 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var categoryId by remember { mutableIntStateOf(0) }
+    var isStickyHeader by remember {
+        mutableStateOf<Boolean>(false)
+    }
     LaunchedEffect(Unit) {
         homeViewModel.category(context)
         softViewModel.list(context, 1, categoryId)
@@ -111,7 +117,7 @@ fun HomeScreen(
                 }
             })
         },
-    ) {
+    ) { it ->
         Surface(
             modifier = Modifier
                 .padding(it)
@@ -125,14 +131,19 @@ fun HomeScreen(
                     softViewModel.list(context, softViewModel.pageNumber+1, categoryId)
                 }
             }
+            lazyListState.onScroll { index->
+                isStickyHeader = index>=1
+            }
             Column {
-                SwiperItem()
                 LazyColumn(
                     state = lazyListState,
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxHeight()
                 ) {
+                    item{
+                        SwiperItem()
+                    }
                     stickyHeader {
                         SecondaryScrollableTabRow(
                             selectedTabIndex = selectedTabIndex,
@@ -167,7 +178,9 @@ fun HomeScreen(
                                         selectedTabIndex = index
                                         categoryId = item.id
                                         coroutineScope.launch {
-                                            lazyListState.animateScrollToItem(0)
+                                            if(isStickyHeader){
+                                                lazyListState.animateScrollToItem(1)
+                                            }
                                             softViewModel.list(context,1,categoryId)
                                         }
                                     },
