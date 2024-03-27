@@ -66,6 +66,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.bootx.app.entity.CategoryEntity
+import com.bootx.app.entity.CategoryTreeEntity
 import com.bootx.app.extension.onScroll
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.TopBarTitle
@@ -105,7 +106,7 @@ fun TouGaoScreen(
     val quDaoList = listOf("官方版", "国际版", "测试版本", "汉化版")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var category1 by remember {
-        mutableStateOf(listOf<CategoryEntity>())
+        mutableStateOf(listOf<CategoryTreeEntity>())
     }
 
 
@@ -239,6 +240,7 @@ fun TouGaoScreen(
                                 downloadUrl,
                                 password,
                             )
+                            navController.popBackStack()
                         }
                     }) {
                     Text(text = "投稿")

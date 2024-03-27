@@ -1,7 +1,7 @@
 package com.bootx.app.service
 
 import com.bootx.app.entity.BaseResponse
-import com.bootx.app.entity.CategoryListResponse
+import com.bootx.app.entity.CategoryTreeListResponse
 import com.bootx.app.util.HiRetrofit
 import com.squareup.moshi.JsonClass
 import retrofit2.http.Field
@@ -13,7 +13,7 @@ import retrofit2.http.POST
 interface TouGaoService {
 
     @POST("/api/member/touGao/category")
-    suspend fun category(@Header("token") token: String): CategoryListResponse
+    suspend fun category(@Header("token") token: String): CategoryTreeListResponse
 
     @POST("/api/member/touGao/save")
     @FormUrlEncoded

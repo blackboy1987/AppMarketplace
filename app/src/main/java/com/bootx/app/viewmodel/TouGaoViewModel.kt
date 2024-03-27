@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.bootx.app.entity.AppInfo
 import com.bootx.app.entity.CategoryEntity
+import com.bootx.app.entity.CategoryTreeEntity
 import com.bootx.app.entity.TouGaoEntity
 import com.bootx.app.service.TouGaoService
 import com.bootx.app.util.AppInfoUtils
@@ -21,7 +22,7 @@ class TouGaoViewModel : ViewModel() {
 
     var touGaoService = TouGaoService.instance()
 
-    var categories by mutableStateOf(listOf<CategoryEntity>())
+    var categories by mutableStateOf(listOf<CategoryTreeEntity>())
 
     var touGaoInfo by mutableStateOf(TouGaoEntity())
         private set

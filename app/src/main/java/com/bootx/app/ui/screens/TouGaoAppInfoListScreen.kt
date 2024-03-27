@@ -80,6 +80,7 @@ fun TouGaoAppInfoListScreen(
                 items(appInfoList.filter { item -> item.appName.indexOf(keywords) >= 0 }) {
                     ListItem(
                         modifier = Modifier.clickable {
+                                                      navController.navigate(Destinations.TouGaoFrame.route+"/${it.packageName}")
                         },
                         headlineContent = {
                             Text(
