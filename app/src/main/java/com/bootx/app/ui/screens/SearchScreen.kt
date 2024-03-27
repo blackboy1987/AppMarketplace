@@ -65,6 +65,7 @@ import com.bootx.app.extension.onBottomReached
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.SoftIcon6_8
 import com.bootx.app.ui.navigation.Destinations
+import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.StoreManager
 import com.bootx.app.viewmodel.SearchViewModel
 import com.google.gson.Gson
@@ -151,7 +152,12 @@ fun SearchScreen(
         topBar = {
             TopAppBar(navigationIcon = {
                 LeftIcon {
-                    navController.popBackStack()
+                    if(keywords.isEmpty()){
+                        navController.popBackStack()
+                    }else{
+                        keywords = ""
+                        searchStatus = false
+                    }
                 }
             }, title = {
                 Box(
@@ -196,7 +202,10 @@ fun SearchScreen(
                                 }
                                 Box(modifier = Modifier.align(Alignment.CenterEnd)){
                                     if (keywords.isNotEmpty()) {
-                                        IconButton(onClick = { keywords="" }) {
+                                        IconButton(onClick = {
+                                            keywords=""
+                                            searchStatus=false
+                                        }) {
                                             Icon(imageVector = Icons.Filled.Clear,
                                                 contentDescription = null, modifier = Modifier.size(28.dp))
                                         }
@@ -244,6 +253,9 @@ fun SearchScreen(
                     }
                 }
             }else{
+                if(searchViewModel.list.isEmpty()){
+                   CommonUtils.toast(context,"未找到相关应用")
+                }
                 LazyColumn(
                     state = lazyListState,
                 ) {

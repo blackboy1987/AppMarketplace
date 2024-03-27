@@ -1,17 +1,16 @@
 package com.bootx.app.ui.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.Surface
@@ -45,11 +45,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bootx.app.extension.onBottomReached
@@ -84,27 +84,25 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(title = {
-                Column(
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigate(Destinations.SearchFrame.route)
-                        }
-                        .clip(RoundedCornerShape(24.dp))
-                        .height(48.dp)
-                        .fillMaxWidth()
-                        .background(Color.Red),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(24.dp))
-                            .fillMaxWidth(0.99f)
-                            .height(40.dp)
-                            .padding(2.dp)
-                            .background(Color.Yellow)
-                    ) {
-
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(32.dp)
+                    .clickable {
+                        navController.navigate(Destinations.SearchFrame.route)
+                    }) {
+                    Box(modifier = Modifier.fillMaxSize()){
+                        OutlinedTextField(
+                            enabled = false,
+                            value = "",
+                            onValueChange = {},
+                            modifier = Modifier
+                                .height(32.dp)
+                                .padding(0.dp),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                    }
+                    Box(modifier = Modifier.align(Alignment.CenterStart).padding(start = 16.dp)){
+                        Text(text = "搜索", fontSize = 12.sp)
                     }
                 }
             }, navigationIcon = {
@@ -128,11 +126,11 @@ fun HomeScreen(
             val lazyListState = rememberLazyListState()
             lazyListState.onBottomReached(buffer = 3) {
                 coroutineScope.launch {
-                    softViewModel.list(context, softViewModel.pageNumber+1, categoryId)
+                    softViewModel.list(context, softViewModel.pageNumber + 1, categoryId)
                 }
             }
-            lazyListState.onScroll { index->
-                isStickyHeader = index>=1
+            lazyListState.onScroll { index ->
+                isStickyHeader = index >= 1
             }
             Column {
                 LazyColumn(
@@ -141,7 +139,7 @@ fun HomeScreen(
                         .padding(8.dp)
                         .fillMaxHeight()
                 ) {
-                    item{
+                    item {
                         SwiperItem()
                     }
                     stickyHeader {
@@ -178,10 +176,10 @@ fun HomeScreen(
                                         selectedTabIndex = index
                                         categoryId = item.id
                                         coroutineScope.launch {
-                                            if(isStickyHeader){
+                                            if (isStickyHeader) {
                                                 lazyListState.animateScrollToItem(1)
                                             }
-                                            softViewModel.list(context,1,categoryId)
+                                            softViewModel.list(context, 1, categoryId)
                                         }
                                     },
                                 )
@@ -196,7 +194,7 @@ fun HomeScreen(
                                 initialScale = 0.1f, // 从0.8的尺寸开始
                                 animationSpec = tween(30000) // 动画持续时间300毫秒
                             )
-                        ){
+                        ) {
                             ListItem(
                                 headlineContent = {
                                     Text(text = "${item.name}")
@@ -210,7 +208,7 @@ fun HomeScreen(
                                 trailingContent = {
                                     OutlinedButton(onClick = {
                                         coroutineScope.launch {
-                                            navController.navigate(Destinations.AppDetailFrame.route+"/${item.id}")
+                                            navController.navigate(Destinations.AppDetailFrame.route + "/${item.id}")
                                         }
                                     }) {
                                         Text(text = "查看")
