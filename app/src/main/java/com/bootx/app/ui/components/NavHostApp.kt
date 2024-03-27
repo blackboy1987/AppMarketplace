@@ -17,6 +17,8 @@ import com.bootx.app.ui.screens.MainScreen
 import com.bootx.app.ui.screens.WebViewScreen
 import com.bootx.app.ui.screens.RegisterScreen
 import com.bootx.app.ui.screens.SearchScreen
+import com.bootx.app.ui.screens.TouGaoAppInfoListScreen
+import com.bootx.app.ui.screens.TouGaoScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -157,6 +159,37 @@ fun NavHostApp() {
             },
         ) {
             AboutScreen(navController)
+        }
+        composable(
+            Destinations.TouGaoAppInfoListFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            TouGaoAppInfoListScreen(navController)
+        }
+        composable(
+            Destinations.TouGaoFrame.route + "/{packageName}",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            val packageName = it.arguments?.getString("packageName") ?: ""
+            TouGaoScreen(navController, packageName)
         }
     }
 }

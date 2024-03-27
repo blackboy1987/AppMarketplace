@@ -19,6 +19,9 @@ sealed class Destinations(val route: String) {
     data object RegisterFrame : Destinations("RegisterFrame")
     data object SearchFrame : Destinations("SearchFrame")
     data object AboutFrame : Destinations("AboutFrame")
+    data object TouGaoAppInfoListFrame : Destinations("TouGaoAppInfoListFrame")
+    //应用投稿
+    data object TouGaoFrame : Destinations("TouGaoFrame")
 
 
 

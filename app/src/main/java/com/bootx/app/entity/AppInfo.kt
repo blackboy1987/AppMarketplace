@@ -14,4 +14,5 @@ data class AppInfo(
     var memo: String="",
     var introduce: String="",
     var updatedContent: String="",
+    var app32: String="",
 )
