@@ -110,6 +110,13 @@ fun DownloadScreen(
                                         downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
                                         CommonUtils.toast(context, msg)
                                         adRewardStatus = true
+                                        navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
+                                    }
+                                }else if(msg=="loadRewardAdFail"){
+                                    // 广告加载失败
+                                    coroutineScope.launch {
+                                        downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
+                                        navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
                                     }
                                 }
                             })

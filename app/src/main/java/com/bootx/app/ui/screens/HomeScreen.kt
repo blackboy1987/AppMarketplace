@@ -1,9 +1,6 @@
 package com.bootx.app.ui.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,8 +21,7 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryScrollableTabRow
@@ -55,7 +51,6 @@ import androidx.navigation.NavHostController
 import com.bootx.app.extension.onBottomReached
 import com.bootx.app.extension.onScroll
 import com.bootx.app.ui.components.LeftIcon
-import com.bootx.app.ui.components.SoftIcon6_8
 import com.bootx.app.ui.components.SoftItem
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.viewmodel.SoftViewModel
@@ -76,7 +71,7 @@ fun HomeScreen(
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var categoryId by remember { mutableIntStateOf(0) }
     var isStickyHeader by remember {
-        mutableStateOf<Boolean>(false)
+        mutableStateOf(false)
     }
     LaunchedEffect(Unit) {
         homeViewModel.category(context)
@@ -156,9 +151,9 @@ fun HomeScreen(
                                 SecondaryIndicator(
                                     height = 2.dp,
                                     modifier = Modifier
-                                        .tabIndicatorOffset(tabPosition) // 使用tabIndicatorOffset定位指示器
+                                        .tabIndicatorOffset(tabPosition)
                                         .width(10.dp),
-                                    color = Color.Red
+                                    color = MaterialTheme.colorScheme.primary,
                                 )
                             }
                         ) {
@@ -189,7 +184,6 @@ fun HomeScreen(
                             }
                         }
                     }
-
                     itemsIndexed(softViewModel.softList) { index, item ->
                         SoftItem(item = item, onClick = { id->
                             coroutineScope.launch {

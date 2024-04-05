@@ -28,6 +28,8 @@ class RegisterViewModel : ViewModel() {
             token = "",
         )
     )
+    var emailLoading by mutableStateOf(false)
+        private set
 
 
     suspend fun register(context: Context, username: String,email: String,code: String, password: String,spreadMemberUsername: String): Boolean{
@@ -50,6 +52,22 @@ class RegisterViewModel : ViewModel() {
             Log.e("login", "login: ${e.toString()}", )
             CommonUtils.toast(context,e.toString());
             return false;
+        }
+    }
+
+    suspend fun sendCode(context: Context, email: String) {
+        try {
+            emailLoading = true
+            val res = registerService.sendCode(email)
+            if(res.code==0){
+                CommonUtils.toast(context,res.data)
+            }else{
+                CommonUtils.toast(context,res.msg)
+            }
+            emailLoading=false
+        } catch (e: Throwable) {
+            CommonUtils.toast(context,e.toString())
+            emailLoading = false
         }
     }
 }

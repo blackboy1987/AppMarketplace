@@ -290,12 +290,12 @@ fun MyInput1(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    modifier: Modifier = Modifier,
 ){
     var text by remember { mutableStateOf(value) }
     var isPlaceholderVisible by remember { mutableStateOf(true) }
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.then(modifier)
             .height(48.dp)
             .clip(RoundedCornerShape(8.dp)) // 设置圆角
             .background(Color(0xFFF0F0F0)), // 设置背景色

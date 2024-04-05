@@ -37,7 +37,7 @@ class DownloadViewModel:ViewModel() {
 
     var adDetail by mutableStateOf<DownloadEntity1>(DownloadEntity1(id = 0, adId = ""))
 
-    var downloadInfo by mutableStateOf<DownloadUrl>(DownloadUrl(id = 0, adId = "",url=""))
+    var downloadInfo by mutableStateOf<DownloadUrl>(DownloadUrl(id = 0, adId = "",url="", type = 1))
 
     suspend fun download(context: Context,id: Int,callback: IDownloadCallback) {
         // 接口请求下载地址
@@ -62,7 +62,6 @@ class DownloadViewModel:ViewModel() {
                             "点击安装${data.name}",
                             Constant.AUTHORITIES!!, apk
                         )
-                        callback.done();
                         CoroutineScope(Dispatchers.IO).launch {
                             // 写入到数据库
                             try {
@@ -92,7 +91,6 @@ class DownloadViewModel:ViewModel() {
                             "${data.name}下载中...",
                             content, if (max == -1) -1 else 100, curr
                         )
-                        callback.downloading(curr)
                     }
 
                     override fun error(e: Throwable) {

@@ -1,13 +1,18 @@
 package com.bootx.app.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +40,7 @@ import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.SharedPreferencesUtils
 import com.bootx.app.viewmodel.RegisterViewModel
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 
 
 @Composable
@@ -58,6 +65,14 @@ fun RegisterScreen(
     var spreadMemberUsername by remember {
         mutableStateOf("")
     }
+
+    fun isEmail(email: String): Boolean {
+        val str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$"
+        val p = Pattern.compile(str);
+        val m = p.matcher(email)
+        return m.matches()
+    }
+
     Surface() {
         Column(
             modifier = Modifier
@@ -74,12 +89,33 @@ fun RegisterScreen(
                 username=it
             })
             Spacer(modifier = Modifier.height(8.dp))
-            MyInput1(placeholder="请输入邮箱",value = email,onValueChange={
-                email=it
-            }, keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Done,
-            ))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                MyInput1(modifier = Modifier.weight(1f), placeholder="请输入邮箱",value = email,onValueChange={
+                    email=it
+                }, keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done,
+                ))
+                Button(enabled = !registerViewModel.emailLoading, modifier = Modifier
+                    .width(130.dp)
+                    .padding(start = 8.dp), onClick = {
+                   if(!registerViewModel.emailLoading){
+                       if(isEmail(email)){
+                           coroutineScope.launch {
+                               registerViewModel.sendCode(context,email)
+                           }
+                       }else{
+                           CommonUtils.toast(context,"error")
+                       }
+                   }
+                }) {
+                    Text(text = "获取验证码")
+                }
+            }
             Spacer(modifier = Modifier.height(8.dp))
             MyInput1(placeholder="请输入验证码",value = code,onValueChange={
                 code=it
@@ -124,7 +160,9 @@ fun RegisterScreen(
                 Text(text = "注册")
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "或者", modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(), textAlign = TextAlign.Center)
+            Text(text = "或者", modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(), textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
                 navController.navigate(Destinations.LoginFrame.route)

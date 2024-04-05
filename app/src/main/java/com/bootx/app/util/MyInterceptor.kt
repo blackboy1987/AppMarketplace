@@ -1,6 +1,7 @@
 package com.bootx.app.util
 
 import android.util.Log
+import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.ResponseBody
@@ -13,6 +14,11 @@ class MyInterceptor:Interceptor {
         val url = request.url.toString()
         val currentTimeMillis = System.currentTimeMillis()
         Log.e("MyInterceptor", "请求地址: $url")
+        try {
+            Log.e("MyInterceptor", "请求参数: ${Gson().toJson(request.body)}")
+        }catch (e: Exception){
+
+        }
         var response: Response = chain.proceed(request)
         val body = response.body
         val source = body!!.source()

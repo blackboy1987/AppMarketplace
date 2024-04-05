@@ -10,14 +10,13 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -25,10 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.bootx.app.util.SharedPreferencesUtils
 
 data class NavigationItem(
-    val title: String, //底部导航栏的标题
-    val icon: ImageVector//底部导航栏图标
+    val title: String,
+    val icon: ImageVector,
 )
 
 @Composable
@@ -41,31 +41,48 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
     )
 
     var selectedItem  by remember {
-        mutableIntStateOf(0)
+        try {
+            mutableIntStateOf(SharedPreferencesUtils(context).get("homeIndex").toInt())
+        }catch (e:Exception){
+            mutableIntStateOf(0)
+        }
     }
 
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = Color.Transparent,
-                contentColor = Color.Red
+            BottomNavigation(
+                backgroundColor = MaterialTheme.colorScheme.background,
             ) {
                 navigationItems.forEachIndexed { index, item ->
-                    NavigationBarItem(
+                    BottomNavigationItem(
                         selected = (selectedItem  == index),
                         onClick = {
                             selectedItem  = index
                         },
                         icon = {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = null
-                            )
+                            if(selectedItem==index){
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            }else{
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = null,
+                                )
+                            }
                         },
-                        alwaysShowLabel = false,
                         label = {
-                            Text(text = item.title)
+                            if(selectedItem==index){
+                                Text(text = item.title,color=MaterialTheme.colorScheme.primary)
+                            }else{
+                                Text(text = item.title)
+                            }
+
                         },
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
+                        unselectedContentColor = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -78,14 +95,17 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
         ) {
             when (selectedItem) {
                 0 -> {
+                    SharedPreferencesUtils(context).set("homeIndex","0")
                     HomeScreen(navController = navController)
                 }
 
                 1 -> {
+                    SharedPreferencesUtils(context).set("homeIndex","0")
                     AppScreen(navController = navController)
                 }
 
                 2 -> {
+                    SharedPreferencesUtils(context).set("homeIndex","0")
                     MineScreen(navController = navController)
                 }
             }

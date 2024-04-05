@@ -1,31 +1,26 @@
 package com.bootx.app.util
 
+import com.azhon.appupdate.listener.OnDownloadListener
+import java.io.File
+
 /**
  * 网络请求的接口回调
  */
-interface IDownloadCallback {
+interface IDownloadCallback: OnDownloadListener {
+    override fun cancel() {
+    }
 
-    /**
-     * 下载完成
-     */
-    fun done()
+    override fun done(apk: File) {
+    }
 
+    override fun downloading(max: Int, progress: Int) {
+    }
 
-    /**
-     *
-     */
-    fun downloading(data: Int)
+    override fun error(e: Throwable) {
+    }
 
+    override fun start() {
+    }
 
-    /**
-     *
-     */
-    fun error(e: Throwable)
-
-
-    /**
-     *
-     */
-    fun start()
 
 }

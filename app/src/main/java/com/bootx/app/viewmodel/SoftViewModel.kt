@@ -88,4 +88,9 @@ class SoftViewModel:ViewModel() {
 
         return SoftDetailEntity()
     }
+
+    suspend fun checkDownload(context: Context, id: String): Boolean {
+        val res = softService.checkDownload(SharedPreferencesUtils(context).get("token"),id)
+        return res.code == 0
+    }
 }

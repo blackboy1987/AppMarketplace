@@ -1,5 +1,7 @@
 package com.bootx.app.service
 
+import com.bootx.app.entity.BaseResponse
+import com.bootx.app.entity.CommonResponse
 import com.bootx.app.entity.LoginEntityResponse
 import com.bootx.app.util.HiRetrofit
 import retrofit2.http.Field
@@ -17,6 +19,10 @@ interface RegisterService {
         @Field("email") email: String,
         @Field("spreadMemberUsername") spreadMemberUsername: String
     ): LoginEntityResponse
+
+    @POST("/api/member/register/sendCode")
+    @FormUrlEncoded
+    suspend fun sendCode(@Field("email") email: String): CommonResponse
 
     companion object {
         fun instance(): RegisterService {

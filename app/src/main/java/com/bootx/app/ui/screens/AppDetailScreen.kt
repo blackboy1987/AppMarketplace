@@ -37,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +51,8 @@ import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.components.ad.RequestBannerAd
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.CommonUtils
+import com.bootx.app.util.DownloadUtils
+import com.bootx.app.util.IDownloadCallback
 import com.bootx.app.util.ShareUtils
 import com.bootx.app.util.SharedPreferencesUtils
 import com.bootx.app.viewmodel.DownloadViewModel
@@ -74,6 +77,9 @@ fun AppDetailScreen(
         mutableStateOf(false)
     }
     val context = LocalContext.current
+    var loading by remember {
+        mutableStateOf<Boolean>(false)
+    }
 
     LaunchedEffect(Unit) {
         softViewModel.detail(context, SharedPreferencesUtils(context).get("token"), id)
@@ -84,29 +90,33 @@ fun AppDetailScreen(
             title = { TopBarTitle(text = softViewModel.softDetail.name) },
             navigationIcon = {
                 LeftIcon {
-                    navController.popBackStack()
+                    if(!loading){
+                        loading = true
+                        navController.popBackStack()
+                    }
                 }
             },
         )
     }, bottomBar = {
-        BottomAppBar {
-            TextButton(onClick = { /*TODO*/ }) {
-                Column(modifier = Modifier.clickable {
-                    coroutineScope.launch {
-
-                    }
-                }) {
-                    Icon(imageVector = Icons.Filled.CurrencyBitcoin, contentDescription = "")
-                    Text(text = "投币")
-                }
-            }
+        BottomAppBar(
+            containerColor = Color.White,
+        ) {
             Button(modifier = Modifier.weight(1.0f), onClick = {
                 val token = SharedPreferencesUtils(context).get("token")
-                if(token.isBlank()){
-                    showDialog = true
-                }else{
-                    navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}/0")
+                // 需要检测是否有下载地址
+                coroutineScope.launch {
+                    val flag = softViewModel.checkDownload(context,id)
+                    if(flag){
+                        if(token.isBlank()){
+                            showDialog = true
+                        }else{
+                            navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}/0")
+                        }
+                    }else{
+                        CommonUtils.toast(context,"暂无下载地址")
+                    }
                 }
+
 
 
             }) {

@@ -1,5 +1,6 @@
 package com.bootx.app.service
 
+import com.bootx.app.entity.CommonResponse
 import com.bootx.app.entity.SoftDetailResponse
 import com.bootx.app.entity.SoftListResponse
 import com.bootx.app.repository.entity.DownloadEntity1Response
@@ -60,6 +61,10 @@ interface SoftService {
         @Field("orderBy") orderBy: String,
         @Field("categoryId") categoryId: Int = 0,
     ): SoftListResponse
+
+    @POST("/api/soft/checkDownload")
+    @FormUrlEncoded
+    suspend fun checkDownload(@Header("token") token: String, @Field("id") id: String): CommonResponse
 
     companion object {
         fun instance(): SoftService {
