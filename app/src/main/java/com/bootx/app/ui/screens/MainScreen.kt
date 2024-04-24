@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.SharedPreferencesUtils
 
 data class NavigationItem(
@@ -105,8 +106,15 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                 }
 
                 2 -> {
-                    SharedPreferencesUtils(context).set("homeIndex","0")
-                    MineScreen(navController = navController)
+                    // 判断是否登录
+                    val token = SharedPreferencesUtils(context).get("token")
+                    if(token.isNotBlank()){
+                        SharedPreferencesUtils(context).set("homeIndex","0")
+                        MineScreen(navController = navController)
+                    }else{
+                        navController.navigate(Destinations.LoginFrame.route)
+                    }
+
                 }
             }
         }

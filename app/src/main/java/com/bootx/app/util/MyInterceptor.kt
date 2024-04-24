@@ -12,6 +12,15 @@ class MyInterceptor:Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url.toString()
+        val headers = request.headers
+        val names = headers.names()
+        names.forEach { item ->
+            println(item)
+            println(headers[item])
+            Log.e("MyInterceptor", "请求头：${item}:${headers[item]}")
+        }
+
+
         val currentTimeMillis = System.currentTimeMillis()
         Log.e("MyInterceptor", "请求地址: $url")
         try {

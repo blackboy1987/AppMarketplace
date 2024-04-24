@@ -16,4 +16,5 @@ data class UserEntity(
     var concernCount: Int = 0,
     var fanCount: Int = 0,
     var payCount: Int = 0,
+    var rankName: String="",
 )

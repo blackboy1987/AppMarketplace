@@ -122,7 +122,7 @@ fun AppDetailScreen(
             }) {
                 Text(text = "下载")
             }
-            TextButton(onClick = {
+            TextButton(modifier = Modifier.padding(8.dp),onClick = {
                 val shareAppList = ShareUtils.getShareAppList(context)
                 Log.e("shareAppList", "AppDetailScreen: ${shareAppList.toString()}")
             }) {
