@@ -37,7 +37,7 @@ class DownloadViewModel:ViewModel() {
 
     var adDetail by mutableStateOf<DownloadEntity1>(DownloadEntity1(id = 0, adId = ""))
 
-    var downloadInfo by mutableStateOf<DownloadUrl>(DownloadUrl(id = 0, adId = "",url="", type = 1))
+    var downloadInfo by mutableStateOf<DownloadUrl>(DownloadUrl(id = 0, adId = "",url="", type = 1,name=""))
 
     suspend fun download(context: Context,id: Int,callback: IDownloadCallback) {
         // 接口请求下载地址
@@ -147,13 +147,14 @@ class DownloadViewModel:ViewModel() {
     }
 
 
-    suspend fun getUrl(context: Context,id: String) {
+    suspend fun getUrl(context: Context,id: String): DownloadUrl {
         val res = softService.getUrl(SharedPreferencesUtils(context).get("token"),id)
         if (res.code == 0) {
-            downloadInfo = res.data
+            return res.data
         }else{
             CommonUtils.toast(context,res.msg)
         }
+        return DownloadUrl(id = 0, adId = "",url="", type = 1,name="")
 
     }
 

@@ -25,6 +25,7 @@ data class DownloadUrl(
     val adId: String,
     val url: String,
     var type: Int,
+    var name: String,
 )
 
 data class DownloadEntityResponse(val data: DownloadEntity) : BaseResponse()
