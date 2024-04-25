@@ -14,9 +14,11 @@ import com.bootx.app.ui.screens.AppDetailScreen
 import com.bootx.app.ui.screens.DownloadScreen
 import com.bootx.app.ui.screens.LoginScreen
 import com.bootx.app.ui.screens.MainScreen
+import com.bootx.app.ui.screens.PageScreen
 import com.bootx.app.ui.screens.WebViewScreen
 import com.bootx.app.ui.screens.RegisterScreen
 import com.bootx.app.ui.screens.SearchScreen
+import com.bootx.app.ui.screens.SettingScreen
 import com.bootx.app.ui.screens.TouGaoAppInfoListScreen
 import com.bootx.app.ui.screens.TouGaoScreen
 
@@ -28,7 +30,8 @@ fun NavHostApp() {
 
     NavHost(
         navController = navController,
-        startDestination = Destinations.MainFrame.route+"/0",
+        // startDestination = Destinations.MainFrame.route+"/0",
+        startDestination = Destinations.AboutFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
@@ -190,6 +193,38 @@ fun NavHostApp() {
         ) {
             val packageName = it.arguments?.getString("packageName") ?: ""
             TouGaoScreen(navController, packageName)
+        }
+        composable(
+            Destinations.SettingFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            SettingScreen(navController)
+        }
+        composable(
+            Destinations.PageFrame.route+"/{type}/{title}",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            val type = it.arguments?.getString("type") ?: ""
+            val title = it.arguments?.getString("title") ?: ""
+            PageScreen(navController,type,title)
         }
     }
 }

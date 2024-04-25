@@ -22,6 +22,12 @@ sealed class Destinations(val route: String) {
     data object TouGaoAppInfoListFrame : Destinations("TouGaoAppInfoListFrame")
     //应用投稿
     data object TouGaoFrame : Destinations("TouGaoFrame")
+    //应用投稿
+
+    // 设置
+    data object SettingFrame : Destinations("SettingFrame")
+    // webview打开的页面
+    data object PageFrame : Destinations("PageFrame")
 
 
 

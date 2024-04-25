@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import com.bootx.app.config.Config
 import com.bootx.app.entity.AdConfig
+import com.bootx.app.entity.SettingEntity
 import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.HttpUtils
 import com.bootx.app.util.IHttpCallback
@@ -62,11 +63,11 @@ class MainActivity : ComponentActivity() {
         val networkCapabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
         //
         if (networkCapabilities != null) {
-            if(networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)){
+            if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)) {
                 // 不是表示网络不是虚拟专用网。
-            }else{
+            } else {
                 // 是虚拟网络
-                CommonUtils.toast(this@MainActivity,"虚拟网络")
+                CommonUtils.toast(this@MainActivity, "虚拟网络")
             }
         }
 
@@ -103,7 +104,27 @@ class MainActivity : ComponentActivity() {
             })
 
 
-
+        HttpUtils.post(
+            "{}",
+            Config.baseUrl + "/api/setting",
+            object : IHttpCallback {
+                override fun onSuccess(data: Any?) {
+                    try {
+                        val gson = Gson()
+                        val setting = gson.fromJson("${data}", SettingEntity::class.java)
+                        SharedPreferencesUtils(this@MainActivity).set(
+                            "setting",
+                            gson.toJson(setting)
+                        )
+                        Log.e("setting", "onSuccess: ${data.toString()}")
+                    } catch (e: Exception) {
+                        Log.e("setting", "onSuccess: 系统配置失败：${data}")
+                    }
+                }
+                override fun onFailed(error: Any?) {
+                    Log.e("setting", "onFailed: 系统配置失败：${error.toString()}")
+                }
+            })
         gotoMainActivity()
     }
 
