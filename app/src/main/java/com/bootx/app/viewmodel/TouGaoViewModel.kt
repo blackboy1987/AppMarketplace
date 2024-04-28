@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.bootx.app.entity.AppInfo
+import com.bootx.app.entity.BaseResponse
 import com.bootx.app.entity.CategoryEntity
 import com.bootx.app.entity.CategoryTreeEntity
 import com.bootx.app.entity.TouGaoEntity
@@ -69,8 +70,6 @@ class TouGaoViewModel : ViewModel() {
     suspend fun upload(
         context: Context,
         title: String,
-        memo: String,
-        introduce: String,
         updatedContent: String,
         adType0: Int,
         adType1: Int,
@@ -80,29 +79,12 @@ class TouGaoViewModel : ViewModel() {
         categoryId0: Int,
         categoryId1: Int,
         quDaoIndex: Int,
-        list: List<MediaResource>,
         downloadUrl: String,
         password: String,
-    ) {
-        val urls = arrayOfNulls<String>(list.size)
-        // 先上传图片
-        if(list.isNotEmpty()){
-            progress = 0
-            val rate = 100/list.size
-            // 因为只支持单个文件上传，所以。得循环上传
-            list.forEachIndexed { index, item->
-                UploadUtils.uri2File(item.uri, context)?.let {
-                    urls[index] = UploadUtils.uploadImage(SharedPreferencesUtils(context).get("token"), it)
-                    progress += rate
-                    msg = "正在上传${index+1}张图片"
-                }
-            }
-        }
-        touGaoService.create(
+    ): BaseResponse {
+        val result = touGaoService.create(
             SharedPreferencesUtils(context).get("token"),
             title,
-            memo,
-            introduce,
             updatedContent,
             adType0,
             adType1,
@@ -112,7 +94,6 @@ class TouGaoViewModel : ViewModel() {
             categoryId0,
             categoryId1,
             quDaoIndex,
-            urls.joinToString(","),
             appInfo.versionCode,
             appInfo.versionName,
             appInfo.minSdkVersion,
@@ -121,8 +102,8 @@ class TouGaoViewModel : ViewModel() {
             appInfo.packageName,
             downloadUrl,
             password,
-
         )
+        return result
 
 
     }

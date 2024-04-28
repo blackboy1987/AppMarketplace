@@ -1,7 +1,10 @@
 package com.bootx.app.ui.screens
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,13 +52,13 @@ fun WebViewScreen(
         mutableDoubleStateOf(0.0)
     }
     var downloadInfo by remember {
-        mutableStateOf(DownloadUrl(id = 0, adId = "",url="", type = 1,name=""))
+        mutableStateOf(DownloadUrl(id = 0, adId = "", url = "", type = 1, name = ""))
     }
 
     LaunchedEffect(Unit) {
         // 获取具体的下载地址
         downloadInfo = downloadViewModel.getUrl(context, id)
-        if(downloadInfo.type == 0){
+        if (downloadInfo.type == 0) {
             // 可以直接进行下载
             DownloadUtils.downloadFile(
                 context,
@@ -63,8 +66,8 @@ fun WebViewScreen(
                 "abc",
                 object : IDownloadCallback {
                     override fun downloading(max: Int, progress: Int) {
-                        Log.e("downloading", "downloading: ${max} ${progress}", )
-                        rate = progress*1.0/ max
+                        Log.e("downloading", "downloading: ${max} ${progress}")
+                        rate = progress * 1.0 / max
                     }
                 })
         }
@@ -84,21 +87,25 @@ fun WebViewScreen(
                             false
                         )
                     }
-
                 }
             },
             actions = {
                 if (downloadViewModel.downloadInfo.type == 1) {
-                    Text(text = "浏览器打开")
+                    Text(modifier = Modifier.clickable {
+                        val urlIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("${downloadInfo.url}")
+                        )
+                        context.startActivity(urlIntent)
+                    }, text = "浏览器打开")
                 }
             }
         )
     }) {
         Box(modifier = Modifier.padding(it)) {
-            if(downloadInfo.type==1){
+            if (downloadInfo.type == 1 && downloadInfo.url.isNotBlank()) {
                 MyWebView(url = "${downloadInfo.url}")
             }
-            Text(text = "${rate*100}")
         }
     }
 }

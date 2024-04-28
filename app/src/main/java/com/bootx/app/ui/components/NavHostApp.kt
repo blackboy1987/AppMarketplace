@@ -31,7 +31,7 @@ fun NavHostApp() {
     NavHost(
         navController = navController,
         startDestination = Destinations.MainFrame.route+"/0",
-        // startDestination = Destinations.AboutFrame.route,
+        // startDestination = Destinations.TouGaoAppInfoListFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",

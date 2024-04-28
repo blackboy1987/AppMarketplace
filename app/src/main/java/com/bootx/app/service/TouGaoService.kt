@@ -20,8 +20,6 @@ interface TouGaoService {
     suspend fun create(
         @Header("token") token: String,
         @Field("title") title: String,
-        @Field("memo") memo: String,
-        @Field("introduce") introduce: String,
         @Field("updatedContent") updatedContent: String,
         @Field("adType0") adType0: Int,
         @Field("adType1") adType1: Int,
@@ -31,7 +29,6 @@ interface TouGaoService {
         @Field("categoryId0") categoryId0: Int,
         @Field("categoryId1") categoryId1: Int,
         @Field("quDaoIndex") quDaoIndex: Int,
-        @Field("urls") urls: String,
         @Field("versionCode") versionCode: String,
         @Field("versionName") versionName: String,
         @Field("minSdkVersion") minSdkVersion: Int,
@@ -40,7 +37,7 @@ interface TouGaoService {
         @Field("packageName") packageName: String,
         @Field("downloadUrl") downloadUrl: String,
         @Field("password") password: String
-    )
+    ): BaseResponse
 
     @POST("/api/member/touGao/list")
     @FormUrlEncoded
