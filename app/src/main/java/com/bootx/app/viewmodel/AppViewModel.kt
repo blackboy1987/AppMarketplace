@@ -29,6 +29,8 @@ class AppViewModel:ViewModel() {
 
     var softListLoading by mutableStateOf(true)
         private set
+    var hasMore by mutableStateOf(true)
+        private set
 
 
 
@@ -39,76 +41,66 @@ class AppViewModel:ViewModel() {
 
     var softList by mutableStateOf(listOf<SoftEntity>())
 
+    private var pageSize = 20
+
+    // 分类
     suspend fun fetchList(context: Context) {
         categoryLoading = true
         val res = categoryService.list(SharedPreferencesUtils(context).get("token"))
-        val gson = Gson()
         if (res.code == 0) {
             val tmpList = mutableListOf<CategoryEntity>()
             tmpList.addAll(res.data)
-            updateCurrentIndex(SharedPreferencesUtils(context).get("token"),tmpList[0].id)
+            // 加载第一个分类的数据
+            updateCurrentIndex(SharedPreferencesUtils(context).get("token"),1,tmpList[0].id)
             categories = tmpList
             categoryLoading = false
-        } else {
-            Log.e("fetchList",gson.toJson(res))
+        }else{
+            categories = arrayListOf()
         }
+        categoryLoading = false
     }
 
-    suspend fun updateCurrentIndex(token: String,id: Int) {
-        pageNumber = 1;
+    // 切换
+    suspend fun updateCurrentIndex(token: String,pageNumber1: Int,id: Int) {
         softListLoading = true
         currentIndex = id
-        val res = softService.orderBy(token,1,20,"7",id)
+        hasMore = true
+        // 需要清除，显示loading效果
+        softList = arrayListOf()
 
+        val res = softService.orderBy(token,pageNumber1,pageSize,"7",id)
         if (res.code == 0 && res.data != null) {
             val tmpList = mutableListOf<SoftEntity>()
-            if (pageNumber != 1) {
+            if (pageNumber1 != 1) {
                 tmpList.addAll(softList)
             }
             tmpList.addAll(res.data)
             softList = tmpList
-            softListLoading = false
-            pageNumber += 1
-        }
-    }
-
-    suspend fun reload(token: String,) {
-        softListLoading = true
-        pageNumber = 1
-        val res = softService.orderBy(token,1,20,"7",currentIndex)
-        val gson = Gson()
-        if (res.code == 0 && res.data != null) {
-            val tmpList = mutableListOf<SoftEntity>()
-            tmpList.addAll(res.data)
-            softList = tmpList
-            softListLoading = false
-            pageNumber += 1
-        } else {
-            Log.e("fetchList",gson.toJson(res))
-        }
-    }
-
-    suspend fun loadMore(token: String,) {
-        softListLoading = true
-        val res = softService.orderBy(token,pageNumber,20,"7",currentIndex)
-        val gson = Gson()
-        if (res.code == 0 && res.data != null) {
-            val tmpList = mutableListOf<SoftEntity>()
-            if (pageNumber != 1) {
-                tmpList.addAll(softList)
+            hasMore = res.data.size>=pageSize
+            if(hasMore){
+                pageNumber = pageNumber1+1
             }
-            tmpList.addAll(res.data)
-            softList = tmpList
-            softListLoading = false
-            pageNumber += 1
-        } else {
-            Log.e("fetchList",gson.toJson(res))
+        }else{
+            softList = arrayListOf()
+        }
+        softListLoading = false
+        hasMore = false
+    }
+
+    // 下拉刷新
+    suspend fun reload(token: String) {
+        updateCurrentIndex(token,1,currentIndex)
+    }
+    // 加载更多
+    suspend fun loadMore(token: String) {
+        if(hasMore){
+            updateCurrentIndex(token,pageNumber,currentIndex)
         }
     }
 
     suspend fun orderBy(token: String,orderBy: String) {
         softListLoading = true
-        val res = softService.orderBy(token,pageNumber,20,orderBy,currentIndex)
+        val res = softService.orderBy(token,pageNumber,pageSize,orderBy,currentIndex)
         val gson = Gson()
         if (res.code == 0 && res.data != null) {
             val tmpList = mutableListOf<SoftEntity>()

@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.ui.screens.AboutScreen
+import com.bootx.app.ui.screens.AdScreen
+import com.bootx.app.ui.screens.AnimatedScreen
 import com.bootx.app.ui.screens.AppDetailScreen
 import com.bootx.app.ui.screens.DownloadScreen
 import com.bootx.app.ui.screens.LoginScreen
@@ -30,8 +32,8 @@ fun NavHostApp() {
 
     NavHost(
         navController = navController,
-        startDestination = Destinations.MainFrame.route+"/0",
-        // startDestination = Destinations.TouGaoAppInfoListFrame.route,
+        startDestination = Destinations.MainFrame.route+"/1",
+        //  startDestination = Destinations.AnimatedFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
@@ -225,6 +227,36 @@ fun NavHostApp() {
             val type = it.arguments?.getString("type") ?: ""
             val title = it.arguments?.getString("title") ?: ""
             PageScreen(navController,type,title)
+        }
+        composable(
+            Destinations.AdFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            AdScreen(navController)
+        }
+        composable(
+            Destinations.AnimatedFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            AnimatedScreen(navController)
         }
     }
 }

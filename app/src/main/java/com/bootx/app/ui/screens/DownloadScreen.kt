@@ -30,6 +30,8 @@ import androidx.navigation.NavHostController
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.components.ad.RequestBannerAd
+import com.bootx.app.ui.components.ad.RequestExpressAd
+import com.bootx.app.ui.components.ad.RequestExpressDrawFeedAd
 import com.bootx.app.ui.components.ad.requestRewardAd
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.CommonUtils
@@ -79,7 +81,7 @@ fun DownloadScreen(
                     .align(Alignment.TopStart)
                     .fillMaxWidth()
             ) {
-                RequestBannerAd(context = context)
+                RequestExpressAd(context)
             }
             Box(
                 modifier = Modifier

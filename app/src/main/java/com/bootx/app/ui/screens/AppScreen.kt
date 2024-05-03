@@ -3,7 +3,6 @@ package com.bootx.app.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -40,16 +39,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bootx.app.entity.CategoryEntity
 import com.bootx.app.extension.onBottomReached
-import com.bootx.app.ui.components.Loading
+import com.bootx.app.ui.components.Loading1
 import com.bootx.app.ui.components.SoftItem
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.navigation.Destinations
@@ -119,22 +120,12 @@ fun AppScreen(
         }
         Box(modifier = Modifier.padding(contentPadding)) {
             Row {
-                if (vm.categoryLoading) {
-                    Box(
-                        modifier = Modifier
-                            .width(60.dp)
-                            .fillMaxHeight()
-                            .padding(top = 16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Loading()
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .width(80.dp)
-                            .padding(top = 16.dp)
-                    ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .padding(top = 16.dp)
+                ) {
+                    if(!vm.categoryLoading){
                         vm.categories.forEachIndexed { _, category ->
                             item {
                                 CategoryItem(
@@ -142,15 +133,14 @@ fun AppScreen(
                                     category.id == vm.currentIndex
                                 ) { currentIndex ->
                                     coroutineScope.launch {
-                                        vm.updateCurrentIndex(token, currentIndex)
-                                        lazyListState.animateScrollToItem(1)
+                                        vm.updateCurrentIndex(token, 1,currentIndex)
+                                        //lazyListState.animateScrollToItem(0)
                                     }
                                 }
                             }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.width(16.dp))
                 Box(
                     modifier = Modifier
                         .weight(1F)
@@ -159,15 +149,7 @@ fun AppScreen(
                         .pullRefresh(state),
                 ) {
                     if (vm.softListLoading) {
-                        Box(
-                            modifier = Modifier
-                                .width(60.dp)
-                                .fillMaxHeight()
-                                .padding(top = 16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Loading()
-                        }
+                        Loading1()
                     }
                     LazyColumn(
                         state = lazyListState,
@@ -189,7 +171,7 @@ fun AppScreen(
 @Composable
 fun CategoryItem(category: CategoryEntity, selected: Boolean, click: (id: Int) -> Unit) {
     Button(
-        contentPadding = PaddingValues(horizontal = 4.dp),
+        contentPadding = PaddingValues(0.dp),
         modifier = Modifier.width(80.dp),
         onClick = {
             click(category.id)
@@ -201,10 +183,10 @@ fun CategoryItem(category: CategoryEntity, selected: Boolean, click: (id: Int) -
             bottomStart = 0.dp,
         ),
         colors = ButtonDefaults.textButtonColors(
-            disabledContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.primary,
             disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.primary,
+            containerColor = Color(0xfffafafa),
+            contentColor = Color(0xff000000),
         ),
         enabled = !selected,
     ) {
@@ -212,6 +194,7 @@ fun CategoryItem(category: CategoryEntity, selected: Boolean, click: (id: Int) -
             text = category.name,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
+            fontSize = 12.sp,
             overflow = TextOverflow.Ellipsis,
         )
     }

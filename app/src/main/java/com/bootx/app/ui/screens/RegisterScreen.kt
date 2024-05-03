@@ -1,18 +1,13 @@
 package com.bootx.app.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -89,38 +83,6 @@ fun RegisterScreen(
                 username=it
             })
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                MyInput1(modifier = Modifier.weight(1f), placeholder="请输入邮箱",value = email,onValueChange={
-                    email=it
-                }, keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Done,
-                ))
-                Button(enabled = !registerViewModel.emailLoading, modifier = Modifier
-                    .width(130.dp)
-                    .padding(start = 8.dp), onClick = {
-                   if(!registerViewModel.emailLoading){
-                       if(isEmail(email)){
-                           coroutineScope.launch {
-                               registerViewModel.sendCode(context,email)
-                           }
-                       }else{
-                           CommonUtils.toast(context,"error")
-                       }
-                   }
-                }) {
-                    Text(text = "获取验证码")
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            MyInput1(placeholder="请输入验证码",value = code,onValueChange={
-                code=it
-            })
-            Spacer(modifier = Modifier.height(8.dp))
             MyInput1(placeholder="请输入密码",value = password,onValueChange={
                 password=it
             }, keyboardOptions = KeyboardOptions(
@@ -138,14 +100,6 @@ fun RegisterScreen(
                      CommonUtils.toast(context,"请输入用户名")
                      return@Button
                  }
-                if(email.isBlank()){
-                    CommonUtils.toast(context,"请输入邮箱")
-                    return@Button
-                }
-                if(code.isBlank()){
-                    CommonUtils.toast(context,"请输入验证码")
-                    return@Button
-                }
                 if(password.isBlank()){
                     CommonUtils.toast(context,"请输入密码")
                     return@Button

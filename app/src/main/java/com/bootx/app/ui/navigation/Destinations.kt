@@ -28,6 +28,10 @@ sealed class Destinations(val route: String) {
     data object SettingFrame : Destinations("SettingFrame")
     // webview打开的页面
     data object PageFrame : Destinations("PageFrame")
+    // 广告
+    data object AdFrame : Destinations("AdFrame")
+    // 动画
+    data object AnimatedFrame : Destinations("AnimatedFrame")
 
 
 

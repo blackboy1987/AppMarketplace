@@ -2,7 +2,7 @@ package com.bootx.myapplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF0059C5)
+val md_theme_light_primary = Color(0xFF4455ff)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFD8E2FF)
 val md_theme_light_onPrimaryContainer = Color(0xFF001A43)

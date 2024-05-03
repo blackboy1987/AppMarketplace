@@ -60,6 +60,7 @@ import com.bootx.app.extension.onScroll
 import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.components.touGao.TouGaoModalBottomSheet
+import com.bootx.app.ui.theme.fontSize12
 import com.bootx.app.ui.theme.fontSize14
 import com.bootx.app.util.CommonUtils
 import com.bootx.app.util.SharedPreferencesUtils
@@ -474,8 +475,9 @@ fun CategoryItem(text: String, selected: Boolean, onClick: () -> Unit) {
     ) {
         Text(
             modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 2.dp),
             text = text,
+            fontSize = fontSize12
         )
     }
 }

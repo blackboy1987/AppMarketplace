@@ -79,7 +79,9 @@ fun AppMarketplaceTheme(
     val colors = if (!useDarkTheme) {
         LightColors
     } else {
-        DarkColors
+        // 关闭深色模式
+        //DarkColors
+        LightColors
     }
     MaterialTheme(
         colorScheme = colors,

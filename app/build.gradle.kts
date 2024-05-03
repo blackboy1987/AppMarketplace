@@ -57,12 +57,12 @@ android {
 
 dependencies {
 
+    implementation("androidx.compose.foundation:foundation:1.4.3")
 
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
     implementation("io.github.leavesczy:matisse:1.1.3")
-
     implementation("io.github.azhon:appupdate:4.3.2")
 
 
@@ -73,7 +73,7 @@ dependencies {
     implementation(files("./libs/ssp_sdk_v5.1.10.1212.aar"))
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.appcompat:appcompat:1.7.0-alpha03")
-    implementation("androidx.appsearch:appsearch:1.1.0-alpha03")
+    implementation("com.android.support:appcompat-v7:28.0.0")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.9.0")

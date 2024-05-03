@@ -15,10 +15,7 @@ import com.youxiao.ssp.ad.listener.RewardVideoAdAdapter
 */
 fun requestRewardAd(context: Context, onClose:(type:String)->Unit) {
     val adClient = AdClient(context as Activity)
-    val gson = Gson()
-    val get = SharedPreferencesUtils(context).get("adConfig")
-    val adConfig = gson.fromJson(get, AdConfig::class.java)
-    adClient.requestRewardAd(adConfig.rewardVideoAdId, object : RewardVideoAdAdapter() {
+    adClient.requestRewardAd("12909", object : RewardVideoAdAdapter() {
         override fun loadRewardAdSuc(sspAd: SSPAd?) {
             super.loadRewardAdSuc(sspAd)
             onClose("loadRewardAdSuc")

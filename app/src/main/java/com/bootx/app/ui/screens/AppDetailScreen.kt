@@ -1,26 +1,22 @@
 package com.bootx.app.ui.screens
 
 import android.text.Html
-import android.util.Log
 import android.widget.TextView
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CurrencyBitcoin
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,10 +45,9 @@ import com.bootx.app.ui.components.LeftIcon
 import com.bootx.app.ui.components.SoftIcon6
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.components.ad.RequestBannerAd
+import com.bootx.app.ui.components.ad.RequestExpressAd
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.util.CommonUtils
-import com.bootx.app.util.DownloadUtils
-import com.bootx.app.util.IDownloadCallback
 import com.bootx.app.util.ShareUtils
 import com.bootx.app.util.SharedPreferencesUtils
 import com.bootx.app.viewmodel.DownloadViewModel
@@ -80,7 +75,6 @@ fun AppDetailScreen(
     var loading by remember {
         mutableStateOf<Boolean>(false)
     }
-
     LaunchedEffect(Unit) {
         softViewModel.detail(context, SharedPreferencesUtils(context).get("token"), id)
     }
@@ -96,6 +90,13 @@ fun AppDetailScreen(
                     }
                 }
             },
+            actions = {
+                IconButton(modifier = Modifier.padding(8.dp),onClick = {
+                    ShareUtils.shareText(context, "abc")
+                }) {
+                    Icon(imageVector = Icons.Filled.Share, contentDescription = "")
+                }
+            }
         )
     }, bottomBar = {
         BottomAppBar(
@@ -116,22 +117,8 @@ fun AppDetailScreen(
                         CommonUtils.toast(context,"暂无下载地址")
                     }
                 }
-
-
-
             }) {
                 Text(text = "下载")
-            }
-            TextButton(modifier = Modifier.padding(8.dp),onClick = {
-                val shareAppList = ShareUtils.getShareAppList(context)
-                Log.e("shareAppList", "AppDetailScreen: ${shareAppList.toString()}")
-            }) {
-                Column(modifier = Modifier.clickable {
-                    ShareUtils.shareText(context, "abc")
-                }) {
-                    Icon(imageVector = Icons.Filled.Share, contentDescription = "")
-                    Text(text = "分享")
-                }
             }
         }
     }) {
@@ -151,14 +138,15 @@ fun AppDetailScreen(
                         Text(
                             text = softViewModel.softDetail.name,
                             maxLines = 1,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = Color(0xff111111),
+                            fontWeight = FontWeight.Bold,
                             overflow = TextOverflow.Ellipsis
                         )
                     }, supportingContent = {
                         Text(
                             text = softViewModel.softDetail.fullName ?: "",
                             maxLines = 1,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = Color(0xffaaaaaa),
                             overflow = TextOverflow.Ellipsis
                         )
                     }, leadingContent = {
@@ -166,7 +154,7 @@ fun AppDetailScreen(
                     })
                 }
                 item {
-                    RequestBannerAd(context = context)
+                    RequestExpressAd(context)
                 }
                 item {
                     Row(
@@ -259,13 +247,13 @@ fun DetailItem(title: String, title2: String, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = title, fontSize = MaterialTheme.typography.titleLarge.fontSize,
-            color = MaterialTheme.colorScheme.primary,
+            text = title, fontSize = MaterialTheme.typography.titleMedium.fontSize,
+            color = Color(0xff111111),
         )
         Text(
             text = title2,
             fontSize = MaterialTheme.typography.labelSmall.fontSize,
-            color = MaterialTheme.colorScheme.secondary
+            color = Color(0xffaaaaaa),
         )
     }
 }
