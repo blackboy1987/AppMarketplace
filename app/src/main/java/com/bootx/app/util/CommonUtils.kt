@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.widget.Toast
 import androidx.core.graphics.drawable.toBitmap
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
 import java.util.Base64
 import java.util.Date
 
@@ -70,5 +71,12 @@ object CommonUtils {
 
     fun getToken(context: Context): String{
        return SharedPreferencesUtils(context).get("token")
+    }
+
+    fun formatDate(date: Date,format: String): String{
+        val simpleDateFormat = SimpleDateFormat(format)
+        return simpleDateFormat.format(date)
+
+
     }
 }

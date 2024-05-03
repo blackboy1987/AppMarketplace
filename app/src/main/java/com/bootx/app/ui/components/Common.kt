@@ -7,6 +7,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -415,8 +416,10 @@ fun SoftItem1(item: SoftEntity, onClick: (id: Int) -> Unit) {
 
     AnimatedVisibility(
         visible = visible,
-        enter = slideInVertically(tween(500)) + fadeIn(tween(500)), // 水平方向划入 + 渐变展示
-        exit = slideOutHorizontally(tween(500)) + fadeOut(tween(500)) // 垂直方向划出 + 渐变隐藏
+        enter = scaleIn(
+            initialScale = 0.1f,
+            animationSpec = tween(10)
+        ),
     ) {
         Card(modifier = Modifier
             .clickable {

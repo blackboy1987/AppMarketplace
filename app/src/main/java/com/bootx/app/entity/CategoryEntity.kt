@@ -15,6 +15,4 @@ data class CategoryListResponse(val data: List<CategoryEntity>) : BaseResponse()
 data class CategoryTreeListResponse(val data: List<CategoryTreeEntity>) : BaseResponse()
 
 
-
-
 data class CategoryDetailResponse(val data: CategoryEntity?) : BaseResponse()

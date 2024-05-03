@@ -154,9 +154,6 @@ fun AppDetailScreen(
                     })
                 }
                 item {
-                    RequestExpressAd(context)
-                }
-                item {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -190,10 +187,13 @@ fun AppDetailScreen(
                         }
                     }
                 }
+                item {
+                    RequestExpressAd(context)
+                }
                 if (softViewModel.softDetail.memo != null && softViewModel.softDetail.memo != "") {
                     item {
                         Text(
-                            text = "更新内容",
+                            text = "应用介绍",
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )

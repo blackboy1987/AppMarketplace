@@ -32,8 +32,6 @@ class SoftViewModel:ViewModel() {
     var loading by mutableStateOf(false)
         private set
 
-    var softListMap by mutableStateOf(mapOf<Int,List<SoftEntity>>())
-
     suspend fun list(context: Context, pageNumber: Int,categoryId: Int): List<SoftEntity> {
         loading = true
         if(pageNumber==1){
@@ -41,6 +39,7 @@ class SoftViewModel:ViewModel() {
         }
         try {
             val res = softService.list(SharedPreferencesUtils(context).get("token"),categoryId,pageNumber, pageSize)
+            loading = false
             if (res.code == 0 && res.data != null) {
                 val tmpList = mutableListOf<SoftEntity>()
                 if (pageNumber != 1) {
@@ -48,7 +47,6 @@ class SoftViewModel:ViewModel() {
                 }
                 tmpList.addAll(res.data)
                 softList = tmpList
-                softListMap += categoryId to softList
                 if (res.data.size == pageSize) {
                     hasMore = true
                     this.pageNumber += 1

@@ -2,6 +2,7 @@ package com.bootx.yysc.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,20 +23,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
+import com.bootx.app.entity.HomeCarousel
 import kotlin.math.absoluteValue
-
-val items = listOf(
-    "https://imgwsdl.vivo.com.cn/appstore/topic/images/focusCollectionElementImg_836_1_20210601201449136.jpg",
-    "https://imgwsdl.vivo.com.cn/appstore/topic/images/focusCollectionElementImg_49_1_20210518215859314.jpg",
-    "https://imgwsdl.vivo.com.cn/appstore/topic/images/focusCollectionElementImg_691_1_20200907104042918.jpg",
-    "https://imgwsdl.vivo.com.cn/appstore/topic/images/focusCollectionElementImg_836_1_20210601201449136.jpg",
-    "https://imgwsdl.vivo.com.cn/appstore/topic/images/focusCollectionElementImg_49_1_20210518215859314.jpg",
-)
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SwiperItem() {
+fun SwiperItem(items: List<HomeCarousel>,onClick:(url: String)->Unit) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = {
@@ -57,6 +51,9 @@ fun SwiperItem() {
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.DarkGray)
                     .height(160.dp)
+                    .clickable {
+                        onClick("${items[page%items.size].id}")
+                    }
                     .graphicsLayer {
                         val pageOffset =
                             ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
@@ -66,7 +63,7 @@ fun SwiperItem() {
                             fraction = 1f - pageOffset.coerceIn(0f, 1f)
                         )
                     },
-                model = items[page%items.size],
+                model = items[page%items.size].image,
                 contentDescription = ""
             )
         }
