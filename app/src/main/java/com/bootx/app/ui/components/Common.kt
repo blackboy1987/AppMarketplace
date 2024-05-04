@@ -172,6 +172,7 @@ fun SoftIcon4(url: String, modifier: Modifier = Modifier) {
             .size(40.dp)
             .clip(CircleShape)
             .then(modifier),
+        contentScale = ContentScale.FillBounds,
         model = url,
         contentDescription = ""
     )
@@ -417,7 +418,7 @@ fun SoftItem1(item: SoftEntity, onClick: (id: Int) -> Unit) {
     AnimatedVisibility(
         visible = visible,
         enter = scaleIn(
-            initialScale = 0.1f,
+            initialScale = 0.5f,
             animationSpec = tween(10)
         ),
     ) {

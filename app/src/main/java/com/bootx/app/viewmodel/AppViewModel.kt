@@ -51,7 +51,7 @@ class AppViewModel:ViewModel() {
             val tmpList = mutableListOf<CategoryEntity>()
             tmpList.addAll(res.data)
             // 加载第一个分类的数据
-            updateCurrentIndex(SharedPreferencesUtils(context).get("token"),1,tmpList[0].id)
+            updateCurrentIndex(context,1,tmpList[0].id)
             categories = tmpList
             categoryLoading = false
         }else{
@@ -61,14 +61,14 @@ class AppViewModel:ViewModel() {
     }
 
     // 切换
-    suspend fun updateCurrentIndex(token: String,pageNumber1: Int,id: Int) {
+    suspend fun updateCurrentIndex(context: Context,pageNumber1: Int,id: Int) {
         softListLoading = true
         currentIndex = id
         hasMore = true
         // 需要清除，显示loading效果
         softList = arrayListOf()
 
-        val res = softService.orderBy(token,pageNumber1,pageSize,"7",id)
+        val res = softService.orderBy(SharedPreferencesUtils(context).get("token"),pageNumber1,pageSize,"7",id)
         if (res.code == 0 && res.data != null) {
             val tmpList = mutableListOf<SoftEntity>()
             if (pageNumber1 != 1) {
@@ -88,31 +88,13 @@ class AppViewModel:ViewModel() {
     }
 
     // 下拉刷新
-    suspend fun reload(token: String) {
-        updateCurrentIndex(token,1,currentIndex)
+    suspend fun reload(context: Context) {
+        updateCurrentIndex(context,1,currentIndex)
     }
     // 加载更多
-    suspend fun loadMore(token: String) {
+    suspend fun loadMore(context: Context) {
         if(hasMore){
-            updateCurrentIndex(token,pageNumber,currentIndex)
-        }
-    }
-
-    suspend fun orderBy(token: String,orderBy: String) {
-        softListLoading = true
-        val res = softService.orderBy(token,pageNumber,pageSize,orderBy,currentIndex)
-        val gson = Gson()
-        if (res.code == 0 && res.data != null) {
-            val tmpList = mutableListOf<SoftEntity>()
-            if (pageNumber != 1) {
-                tmpList.addAll(softList)
-            }
-            tmpList.addAll(res.data)
-            softList = tmpList
-            softListLoading = false
-            pageNumber += 1
-        } else {
-            Log.e("fetchList",gson.toJson(res))
+            updateCurrentIndex(context,pageNumber,currentIndex)
         }
     }
 }

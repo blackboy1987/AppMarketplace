@@ -30,11 +30,9 @@ import kotlin.math.absoluteValue
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SwiperItem(items: List<HomeCarousel>,onClick:(url: String)->Unit) {
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = {
         items.size*1000
-    },initialPage=items.size)
+    },initialPage=items.size/2)
     HorizontalPager(
         state = pagerState,
         verticalAlignment = Alignment.Top,

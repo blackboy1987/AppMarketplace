@@ -1,14 +1,20 @@
 package com.bootx.app.util
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.usage.StorageStats
 import android.app.usage.StorageStatsManager
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
+import android.telephony.TelephonyManager
+import android.util.DisplayMetrics
 import com.bootx.app.entity.AppInfo
 import com.kwai.video.player.KsMediaPlayerInitConfig
 import java.io.IOException
@@ -186,4 +192,53 @@ object AppInfoUtils {
         }
         return -1
     }
+
+
+    @SuppressLint("HardwareIds")
+    fun getDeviceInfo(activity: Activity): SystemInfo {
+        // 获取设备的操作系统版本
+        var osVersion = ""
+        try {
+            osVersion = Build.VERSION.SDK_INT.toString()
+        }catch (e: Exception){}
+
+        // 获取手机型号和制造商信息
+        var model = ""
+        try {
+            model = Build.MODEL
+        }catch (e: Exception){}
+
+        var manufacturer = ""
+        try {
+            manufacturer = Build.MANUFACTURER
+        }catch (e: Exception){}
+
+        // 获取设备的硬件信息
+        var deviceId=""
+        try {
+            deviceId = (activity.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).deviceId
+        }catch (e: Exception){}
+
+        var simSerialNumber = ""
+        try {
+            simSerialNumber = (activity.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).simSerialNumber
+        }catch (e: Exception){}
+
+        return SystemInfo(
+            os = osVersion.toString(),
+            model = model,
+            manufacturer = manufacturer,
+            deviceId = deviceId,
+            simSerialNumber = simSerialNumber,
+        )
+    }
+
+
+    data class SystemInfo(
+        val os: String,
+        val model: String,
+        val manufacturer: String,
+        val deviceId: String,
+        val simSerialNumber: String,
+    )
 }

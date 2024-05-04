@@ -6,8 +6,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.view.Window
 import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Base64
@@ -76,7 +81,25 @@ object CommonUtils {
     fun formatDate(date: Date,format: String): String{
         val simpleDateFormat = SimpleDateFormat(format)
         return simpleDateFormat.format(date)
+    }
 
+    @Composable
+    fun HideStatusBar(window: Window){
+        /*// 隐藏状态栏
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val systemUiController = rememberSystemUiController()
+        systemUiController.isStatusBarVisible = true // 隐藏状态栏
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent, // 设置状态栏透明
+            darkIcons = false // 如果状态栏背景为深色，请设置为 true
+        )*/
+    }
 
+    @Composable
+    fun ShowStatus(window: Window){
+       /* // 隐藏状态栏
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        val systemUiController = rememberSystemUiController()
+        systemUiController.isStatusBarVisible = false*/
     }
 }

@@ -23,6 +23,7 @@ class MineViewModel : ViewModel() {
             id = 0,
             username = "",
             avatar = "",
+            upload = 0,
         )
     )
 

@@ -16,7 +16,7 @@ fun requestInteractionAd(context: Context, onClose:(type:String)->Unit) {
     val adClient = AdClient(context as Activity)
     adClient.requestInteractionAd("12903", object : AdLoadAdapter() {
         override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String?) {
-            Log.e("requestInteractionAd", "onStatus: $p3", )
+            Log.e("requestInteractionAd", "onStatus: $p0,$p1,$p2,$p3", )
             super.onStatus(p0, p1, p2, p3)
             status = "onStatus"
         }

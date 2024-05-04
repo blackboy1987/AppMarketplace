@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -19,13 +21,9 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,18 +42,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bootx.app.entity.CategoryEntity
 import com.bootx.app.extension.onBottomReached
+import com.bootx.app.ui.components.Item1
 import com.bootx.app.ui.components.Loading1
-import com.bootx.app.ui.components.SoftItem
 import com.bootx.app.ui.components.TopBarTitle
 import com.bootx.app.ui.navigation.Destinations
-import com.bootx.app.util.SharedPreferencesUtils
 import com.bootx.app.viewmodel.AppViewModel
 import com.bootx.app.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
@@ -71,7 +68,6 @@ fun AppScreen(
     var showDropdownMenu by remember {
         mutableStateOf(false)
     }
-    var token = SharedPreferencesUtils(context).get("token")
     LaunchedEffect(Unit) {
         //获取分类列表
         vm.fetchList(context)
@@ -92,12 +88,6 @@ fun AppScreen(
                     }) {
                         Icon(Icons.Filled.MoreVert, contentDescription = "")
                     }
-                    OrderBy(showDropdownMenu, onClick = { orderBy ->
-                        coroutineScope.launch {
-                            vm.orderBy(token, orderBy)
-                        }
-                        showDropdownMenu = false
-                    })
                 }
             )
         }
@@ -107,7 +97,7 @@ fun AppScreen(
 
         fun refresh() = refreshScope.launch {
             refreshing = true
-            vm.reload(token)
+            vm.reload(context)
             refreshing = false
         }
 
@@ -115,7 +105,7 @@ fun AppScreen(
         val lazyListState = rememberLazyListState()
         lazyListState.onBottomReached(buffer = 3) {
             coroutineScope.launch {
-                vm.loadMore(token)
+                vm.loadMore(context)
             }
         }
         Box(modifier = Modifier.padding(contentPadding)) {
@@ -133,7 +123,7 @@ fun AppScreen(
                                     category.id == vm.currentIndex
                                 ) { currentIndex ->
                                     coroutineScope.launch {
-                                        vm.updateCurrentIndex(token, 1,currentIndex)
+                                        vm.updateCurrentIndex(context, 1,currentIndex)
                                         //lazyListState.animateScrollToItem(0)
                                     }
                                 }
@@ -146,7 +136,7 @@ fun AppScreen(
                         .weight(1F)
                         .fillMaxHeight()
                         .padding(top = 16.dp)
-                        .pullRefresh(state),
+                        .pullRefresh(state)
                 ) {
                     if (vm.softListLoading) {
                         Loading1()
@@ -155,9 +145,11 @@ fun AppScreen(
                         state = lazyListState,
                     ) {
                         items(vm.softList) { item ->
-                            SoftItem(item, onClick = { id ->
-                                navController.navigate("${Destinations.AppDetailFrame.route}/$id")
-                            })
+                           key(item.id){
+                               Item1(item, modifier = Modifier.padding(end = 8.dp), onClick = { id ->
+                                   navController.navigate("${Destinations.AppDetailFrame.route}/$id")
+                               })
+                           }
                         }
                     }
                     PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.Center))
@@ -198,70 +190,4 @@ fun CategoryItem(category: CategoryEntity, selected: Boolean, click: (id: Int) -
             overflow = TextOverflow.Ellipsis,
         )
     }
-}
-
-@Composable
-fun OrderBy(showDropdownMenu: Boolean = false, onClick: (orderBy: String) -> Unit) {
-    data class Item(
-        val key: String,
-        val title: String,
-    )
-
-    var index by remember {
-        mutableStateOf("0")
-    }
-
-    val list = listOf(
-        Item(
-            key = "1",
-            title = "默认排序"
-        ),
-        Item(
-            key = "3",
-            title = "最新发布"
-        ),
-        Item(
-            key = "4",
-            title = "最近活跃"
-        ),
-        Item(
-            key = "5",
-            title = "最多评价"
-        ),
-        Item(
-            key = "6",
-            title = "最多投币"
-        ),
-        Item(
-            key = "7",
-            title = "下载量"
-        ),
-    )
-    DropdownMenu(
-        offset = DpOffset(0.dp, (-48).dp),
-        expanded = showDropdownMenu,
-        onDismissRequest = {},
-        content = {
-            list.forEach { item ->
-                DropdownMenuItem(
-                    onClick = {
-                        onClick(item.key)
-                        index = item.key
-                    },
-                    text = {
-                        ListItem(
-                            headlineContent = {
-                                Text(text = item.title)
-                            },
-                            trailingContent = {
-                                Checkbox(checked = item.key === index, onCheckedChange = {
-                                    onClick(item.key)
-                                })
-                            }
-                        )
-                    }
-                )
-            }
-        },
-    )
 }

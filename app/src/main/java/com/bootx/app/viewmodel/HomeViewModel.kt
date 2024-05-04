@@ -1,6 +1,7 @@
 package com.bootx.app.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,11 +20,16 @@ class HomeViewModel:ViewModel() {
     var homeData by mutableStateOf<HomeEntity>(HomeEntity())
 
     suspend fun category(context:Context){
-        val res = categoryService.list(SharedPreferencesUtils(context).get("token"))
-        if (res.code == 0) {
-            categoryList = res.data
-        }else{
-            CommonUtils.toast(context,res.msg)
+        try{
+            val res = categoryService.list(SharedPreferencesUtils(context).get("token"))
+            Log.e("category", "category: ${res}", )
+            if (res.code == 0) {
+                categoryList = res.data
+            }else{
+                CommonUtils.toast(context,res.msg)
+            }
+        }catch (e: Exception){
+            Log.e("category", "category: ${e}", )
         }
     }
 

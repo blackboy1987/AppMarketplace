@@ -49,7 +49,6 @@ object HttpUtils {
             override fun onResponse(call: Call, response: Response) {
                 callback.onSuccess(response.body?.string())
             }
-
         })
     }
 

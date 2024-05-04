@@ -32,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.bootx.app.ui.components.SoftIcon4
+import com.bootx.app.ui.components.SoftIcon6
+import com.bootx.app.ui.components.SoftIcon8
 import com.bootx.app.ui.components.SoftIcon8_8
 import com.bootx.app.ui.navigation.Destinations
 import com.bootx.app.viewmodel.MineViewModel
@@ -45,7 +48,6 @@ fun MineScreen(
     LaunchedEffect(Unit) {
         mineViewModel.currentUser(context)
     }
-
     Scaffold {
         LazyColumn(
             modifier = Modifier.padding(it)
@@ -54,7 +56,7 @@ fun MineScreen(
                 ListItem(headlineContent = {
                     Text(text = "${mineViewModel.data.username}")
                 }, leadingContent = {
-                    SoftIcon8_8(url = "${mineViewModel.data.avatar}")
+                    SoftIcon4(url = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png")
                 }, trailingContent = {
                     Row(
                         Modifier
@@ -83,11 +85,11 @@ fun MineScreen(
             item {
                 Column {
                     ListItem(headlineContent = {
-                        Text(text = "基础功能", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "基础功能", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     })
                     ListItem(modifier = Modifier
                         .clickable {
-                            navController.navigate(Destinations.AboutFrame.route)
+                            //navController.navigate(Destinations.AboutFrame.route)
                         }
                         .height(40.dp), headlineContent = {
                         Text(text = "关于我们")
@@ -100,7 +102,7 @@ fun MineScreen(
                     ListItem(modifier = Modifier
                         .clickable { }
                         .height(40.dp), headlineContent = {
-                        Text(text = "设置")
+                        Text(text = "设置", fontSize = 12.sp,)
                     }, trailingContent = {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowRight,
@@ -110,25 +112,28 @@ fun MineScreen(
                     ListItem(modifier = Modifier
                         .clickable { }
                         .height(40.dp), headlineContent = {
-                        Text(text = "软件官网")
+                        Text(text = "软件官网", fontSize = 12.sp,)
                     }, trailingContent = {
                         Icon(
                             imageVector = Icons.Default.ArrowForwardIos,
                             contentDescription = ""
                         )
                     })
-                    ListItem(modifier = Modifier
-                        .clickable {
-                            navController.navigate(Destinations.TouGaoAppInfoListFrame.route)
-                        }
-                        .height(40.dp), headlineContent = {
-                        Text(text = "上传应用")
-                    }, trailingContent = {
-                        Icon(
-                            imageVector = Icons.Default.ArrowForwardIos,
-                            contentDescription = ""
-                        )
-                    })
+                    if(mineViewModel.data.upload==1){
+                        ListItem(modifier = Modifier
+                            .clickable {
+                                navController.navigate(Destinations.TouGaoAppInfoListFrame.route)
+                            }
+                            .height(40.dp), headlineContent = {
+                            Text(text = "上传应用", fontSize = 12.sp,)
+                        }, trailingContent = {
+                            Icon(
+                                imageVector = Icons.Default.ArrowForwardIos,
+                                contentDescription = ""
+                            )
+                        })
+                    }
+
                 }
             }
         }

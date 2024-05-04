@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,9 +28,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.e("SplashActivity", "MainActivity start ${Date()}")
         super.onCreate(savedInstanceState)
-
-        // 用来加载开屏广告
         setContent {
+            AppMarketplaceTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Text(text = "MainActivity")
+                }
+            }
+        }
+        // 用来加载开屏广告
+        /*setContent {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
@@ -51,11 +61,10 @@ class MainActivity : ComponentActivity() {
                             })
                     }
                     Log.e("SplashActivity", "MainActivity ad 3 ${Date()}")
-                    gotoMainActivity()
                 }
             }
-        }
-
+        }*/
+        gotoMainActivity()
     }
 
     /**

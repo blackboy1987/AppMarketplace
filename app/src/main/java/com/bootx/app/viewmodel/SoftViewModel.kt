@@ -24,19 +24,19 @@ class SoftViewModel:ViewModel() {
 
     var pageNumber by mutableIntStateOf(1)
         private set
-    var pageSize by mutableIntStateOf(20)
+    var pageSize by mutableIntStateOf(200)
         private set
 
     var softDetail by mutableStateOf<SoftDetailEntity>(SoftDetailEntity())
+        private set
+
+    var softListMap by mutableStateOf(mapOf(0 to listOf<SoftEntity>()))
 
     var loading by mutableStateOf(false)
         private set
 
-    suspend fun list(context: Context, pageNumber: Int,categoryId: Int): List<SoftEntity> {
+    suspend fun list(context: Context,categoryId: Int): List<SoftEntity> {
         loading = true
-        if(pageNumber==1){
-            softList = arrayListOf()
-        }
         try {
             val res = softService.list(SharedPreferencesUtils(context).get("token"),categoryId,pageNumber, pageSize)
             loading = false
@@ -47,6 +47,9 @@ class SoftViewModel:ViewModel() {
                 }
                 tmpList.addAll(res.data)
                 softList = tmpList
+                val tmpMap = mutableMapOf<Int,List<SoftEntity>>(-1 to listOf())
+                tmpMap[categoryId] = tmpList
+                softListMap = tmpMap
                 if (res.data.size == pageSize) {
                     hasMore = true
                     this.pageNumber += 1
@@ -101,5 +104,13 @@ class SoftViewModel:ViewModel() {
     suspend fun checkDownload(context: Context, id: String): Boolean {
         val res = softService.checkDownload(SharedPreferencesUtils(context).get("token"),id)
         return res.code == 0
+    }
+
+    /**
+     * 标签切换和滑动切换
+     */
+    suspend fun switchTab(context: Context, id: Int) {
+        pageNumber = 1
+        list(context,id)
     }
 }

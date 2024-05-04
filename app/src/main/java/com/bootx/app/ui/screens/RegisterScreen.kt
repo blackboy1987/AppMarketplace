@@ -61,15 +61,7 @@ fun RegisterScreen(
     registerViewModel: RegisterViewModel = viewModel(),
 ) {
     val context = LocalContext.current
-    // 隐藏状态栏
-    WindowCompat.setDecorFitsSystemWindows((context as Activity).window, false)
-    val systemUiController = rememberSystemUiController()
-    systemUiController.isStatusBarVisible = true // 隐藏状态栏
-    systemUiController.setSystemBarsColor(
-        color = Color.Transparent, // 设置状态栏透明
-        darkIcons = false // 如果状态栏背景为深色，请设置为 true
-    )
-
+    CommonUtils.HideStatusBar((context as Activity).window)
     @SuppressLint("DiscouragedApi", "InternalInsetResource")
     fun getStatusBarHeight(context: Context): Int {
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
