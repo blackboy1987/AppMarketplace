@@ -4,19 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
 import com.bootx.app.config.Config
-import com.bootx.app.ui.components.NavHostApp
 import com.bootx.app.util.AppInfoUtils.getDeviceInfo
 import com.bootx.app.util.HttpUtils
 import com.bootx.app.util.IHttpCallback
 import com.bootx.app.util.SharedPreferencesUtils
-import com.bootx.myapplication.ui.theme.AppMarketplaceTheme
 import com.youxiao.ssp.core.SSPSdk
 
 class SplashActivity : ComponentActivity() {
