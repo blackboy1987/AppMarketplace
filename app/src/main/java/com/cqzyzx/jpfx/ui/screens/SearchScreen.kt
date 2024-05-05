@@ -11,20 +11,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
@@ -48,17 +53,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.cqzyzx.jpfx.extension.onBottomReached
+import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.SoftItem
 import com.cqzyzx.jpfx.ui.navigation.Destinations
+import com.cqzyzx.jpfx.ui.theme.fontSize12
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.StoreManager
 import com.cqzyzx.jpfx.viewmodel.SearchViewModel
@@ -80,7 +88,7 @@ fun SearchScreen(
     val coroutineScope = rememberCoroutineScope()
     val storeManager = StoreManager(context)
     var keywords by remember {
-        mutableStateOf<String>("天涯")
+        mutableStateOf<String>("")
     }
     var showDialog by remember {
         mutableStateOf<Boolean>(false)
@@ -145,7 +153,6 @@ fun SearchScreen(
     Scaffold(
         modifier = Modifier.background(Color.White),
         containerColor = Color.White,
-        contentColor = Color.White,
         topBar = {
             TopAppBar(navigationIcon = {
                 LeftIcon {
@@ -179,21 +186,45 @@ fun SearchScreen(
                             shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, Color(0xffd5d5d5))
                         ) {
-                            BasicTextField(
-                                singleLine = true,
-                                value = keywords,
-                                onValueChange = { value -> keywords = value },
-                                modifier = Modifier
-                                    .height(40.dp)
-                                    .clip(shape = RoundedCornerShape(4.dp))
-                                    .border(1.dp, Color(0xffd5d5d5))
-                                    .background(Color.White)
-                                    .fillMaxWidth()
-                                    .padding(start = 8.dp, end = 8.dp)
-                                    .wrapContentHeight(
-                                        align = Alignment.CenterVertically,
+                            Box(modifier = Modifier
+                                .fillMaxSize()){
+                                Box(modifier = Modifier.align(Alignment.TopStart)){
+                                    BasicTextField(
+                                        singleLine = true,
+                                        value = keywords,
+                                        onValueChange = { value -> keywords = value },
+                                        modifier = Modifier
+                                            .height(40.dp)
+                                            .clip(shape = RoundedCornerShape(4.dp))
+                                            .border(1.dp, Color(0xffd5d5d5))
+                                            .background(Color.White)
+                                            .fillMaxWidth()
+                                            .padding(start = 8.dp, end = 8.dp)
+                                            .wrapContentHeight(
+                                                align = Alignment.CenterVertically,
+                                            ),
+                                        keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            imeAction = ImeAction.Search,
+                                        ), keyboardActions = KeyboardActions(
+                                            onSearch = {
+                                                search(keywords)
+                                            },
+                                        ),
                                     )
-                            )
+                                }
+                                Box(modifier = Modifier.align(Alignment.CenterEnd)){
+                                    if (keywords.isNotEmpty()) {
+                                        IconButton(onClick = {
+                                            keywords=""
+                                            searchStatus=false
+                                        }) {
+                                            Icon(imageVector = Icons.Filled.Clear,
+                                                contentDescription = null, modifier = Modifier.size(28.dp))
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -209,30 +240,53 @@ fun SearchScreen(
         Box(modifier = Modifier.padding(it)) {
             if (!searchStatus) {
                 val filters = get().filter { text -> text.isNotEmpty() }
-                FlowRow(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    filters.forEach { title ->
-                        Card(
+                Column {
+                    if(filters.isNotEmpty()){
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
-                                .padding(top = 8.dp)
-                                .combinedClickable(
-                                    onClick = {
-                                        keywords = title
-                                        search(keywords)
-                                    },
-                                    onLongClick = {
-                                        keywords = title + title + title
-                                    },
-                                ),
-                            shape = RoundedCornerShape(4.dp)
-
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
                         ) {
-                            Text(text = title, modifier = Modifier.padding(8.dp))
+                            Text(text = "搜索历史")
+                            IconButton(onClick = {
+                                clear()
+                            }) {
+                                Icon(imageVector = Icons.Default.Close, contentDescription = "", tint = Color(0xff737373))
+                            }
+
+                        }
+                    }
+                    FlowRow(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        filters.forEach { title ->
+                            Card(
+                                colors = CardDefaults.cardColors().copy(
+                                    containerColor = Color(0xfff8f8f8),
+                                ),
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .combinedClickable(
+                                        onClick = {
+                                            keywords = title
+                                            search(keywords)
+                                        },
+                                        onLongClick = {
+                                            keywords = title
+                                        },
+                                    ),
+                                shape = RoundedCornerShape(4.dp)
+
+                            ) {
+                                Text(text = title, modifier = Modifier.padding(8.dp), fontSize = fontSize12)
+                            }
                         }
                     }
                 }
+
             } else {
                 if (searchViewModel.list.isEmpty()) {
                     CommonUtils.toast(context, "未找到相关应用")
@@ -241,7 +295,7 @@ fun SearchScreen(
                     state = lazyListState,
                 ) {
                     itemsIndexed(searchViewModel.list) { index, item ->
-                        SoftItem(item = item) { id ->
+                        Item1(item = item) { id ->
                             navController.navigate("${Destinations.AppDetailFrame.route}/$id")
                         }
                     }

@@ -61,6 +61,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.ui.components.Item1
+import com.cqzyzx.jpfx.ui.components.NotificationBar
 import com.cqzyzx.jpfx.ui.components.PagerTabIndicator1
 import com.cqzyzx.jpfx.ui.components.SwiperItem
 import com.cqzyzx.jpfx.ui.components.ad.requestInteractionAd
@@ -228,13 +229,15 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxHeight(),
             color = Color.White,
-            contentColor = Color.White,
         ) {
             LazyColumn {
                 item {
                     SwiperItem(homeViewModel.homeData.carousel) { url ->
                         navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
                     }
+                }
+                item{
+                    NotificationBar("我的是通知公告")
                 }
                 stickyHeader {
                     ScrollableTabRow(

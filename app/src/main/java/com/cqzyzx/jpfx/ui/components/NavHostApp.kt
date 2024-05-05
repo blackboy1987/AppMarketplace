@@ -33,8 +33,8 @@ fun NavHostApp() {
 
     NavHost(
         navController = navController,
-        // startDestination = Destinations.MainFrame.route+"/1",
-        startDestination = Destinations.SearchFrame.route,
+        startDestination = Destinations.MainFrame.route+"/1",
+        // startDestination = Destinations.SearchFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
