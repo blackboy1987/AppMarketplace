@@ -39,7 +39,7 @@ fun ScrollableNotification(text: String, modifier: Modifier = Modifier) {
         initialValue = 0f,
         targetValue = -textWidth,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = (textWidth / 500).toInt(), easing = LinearEasing),
+            animation = tween(durationMillis = (textWidth * 100).toInt(), easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ), label = ""
     )
