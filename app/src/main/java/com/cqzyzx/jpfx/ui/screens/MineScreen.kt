@@ -119,6 +119,16 @@ fun MineScreen(
                             contentDescription = ""
                         )
                     })
+                    ListItem(modifier = Modifier
+                        .clickable { }
+                        .height(40.dp), headlineContent = {
+                        Text(text = "历史记录", fontSize = 12.sp,)
+                    }, trailingContent = {
+                        Icon(
+                            imageVector = Icons.Default.ArrowForwardIos,
+                            contentDescription = ""
+                        )
+                    })
                     if(mineViewModel.data.upload==1){
                         ListItem(modifier = Modifier
                             .clickable {
@@ -133,7 +143,6 @@ fun MineScreen(
                             )
                         })
                     }
-
                 }
             }
         }

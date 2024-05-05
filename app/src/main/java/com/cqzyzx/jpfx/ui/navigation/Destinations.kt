@@ -32,6 +32,8 @@ sealed class Destinations(val route: String) {
     data object AdFrame : Destinations("AdFrame")
     // 动画
     data object AnimatedFrame : Destinations("AnimatedFrame")
+    // 动画
+    data object HistoryFrame : Destinations("HistoryFrame")
 
 
 

@@ -14,6 +14,7 @@ import com.cqzyzx.jpfx.ui.screens.AdScreen
 import com.cqzyzx.jpfx.ui.screens.AnimatedScreen
 import com.cqzyzx.jpfx.ui.screens.AppDetailScreen
 import com.cqzyzx.jpfx.ui.screens.DownloadScreen
+import com.cqzyzx.jpfx.ui.screens.HistoryScreen
 import com.cqzyzx.jpfx.ui.screens.LoginScreen
 import com.cqzyzx.jpfx.ui.screens.MainScreen
 import com.cqzyzx.jpfx.ui.screens.PageScreen
@@ -32,8 +33,8 @@ fun NavHostApp() {
 
     NavHost(
         navController = navController,
-        startDestination = Destinations.MainFrame.route+"/1",
-        // startDestination = Destinations.RegisterFrame.route,
+        // startDestination = Destinations.MainFrame.route+"/1",
+        startDestination = Destinations.SearchFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
@@ -257,6 +258,21 @@ fun NavHostApp() {
             },
         ) {
             AnimatedScreen(navController)
+        }
+        composable(
+            Destinations.HistoryFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            HistoryScreen(navController)
         }
     }
 }

@@ -18,22 +18,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.IconButton
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -56,6 +61,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.ui.components.Item1
+import com.cqzyzx.jpfx.ui.components.PagerTabIndicator1
 import com.cqzyzx.jpfx.ui.components.SwiperItem
 import com.cqzyzx.jpfx.ui.components.ad.requestInteractionAd
 import com.cqzyzx.jpfx.ui.navigation.Destinations
@@ -89,8 +95,16 @@ fun HomeScreen(
         mutableStateOf(false)
     }
     val categoryId by remember { mutableIntStateOf(0) }
-    suspend fun loadData(){
-        if(!loading){
+    val selectedTabIndex by remember {
+        mutableIntStateOf(0)
+    }
+    val pagerState = rememberPagerState(pageCount = {
+        homeViewModel.homeData.categories.size
+    }, initialPage = 0)
+    val categories = listOf("最近更新")
+
+    suspend fun loadData() {
+        if (!loading) {
             loading = true
             softViewModel.switchTab(context, categoryId)
             loading = false
@@ -122,71 +136,91 @@ fun HomeScreen(
                 backgroundColor = Color.White,
                 elevation = 0.dp,
                 title = {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)) {
-                    Box(modifier = Modifier
-                        .fillMaxSize()) {
-                        Card(
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                    ) {
+                        Box(
                             modifier = Modifier
-                                .clickable {
-                                    navController.navigate(Destinations.SearchFrame.route)
-                                }
-                                .fillMaxSize(),
-                            colors = CardDefaults.cardColors().copy(
-                                containerColor = Color.White,
-                            ),
-                            border = BorderStroke(1.dp, Color(0xffd5d5d5))
+                                .fillMaxSize()
                         ) {
+                            Card(
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate(Destinations.SearchFrame.route)
+                                    }
+                                    .fillMaxSize(),
+                                colors = CardDefaults.cardColors().copy(
+                                    containerColor = Color.White,
+                                ),
+                                border = BorderStroke(1.dp, Color(0xffd5d5d5))
+                            ) {
 
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(start = 16.dp)
+                        ) {
+                            Text(text = "搜索", fontSize = 14.sp, color = Color(0xff737373))
+                        }
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .padding(end = 8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "",
+                                tint = Color(0xff737373)
+                            )
                         }
                     }
-                    Box(
+                }, navigationIcon = {
+                    Card(
                         modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = 16.dp)
+                            .width(40.dp)
+                            .height(40.dp),
+                        shape = CircleShape,
                     ) {
-                        Text(text = "搜索", fontSize = 14.sp, color = Color(0xff737373))
+                        if (userInfo.avatar.isNotBlank()) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(40.dp),
+                                contentScale = ContentScale.Crop,
+                                model = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png",
+                                contentDescription = ""
+                            )
+                        } else {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        navController.navigate(Destinations.LoginFrame.route)
+                                    }
+                                    .size(40.dp),
+                                contentScale = ContentScale.Crop,
+                                model = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png",
+                                contentDescription = ""
+                            )
+                        }
                     }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 8.dp)
-                    ) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "", tint = Color(0xff737373))
-                    }
-                }
-            }, navigationIcon = {
-                Card(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                    shape = CircleShape,
-                ) {
-                    if(userInfo.avatar.isNotBlank()){
-                        AsyncImage(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(40.dp),
-                            contentScale = ContentScale.Crop,
-                            model = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png",
-                            contentDescription = ""
-                        )
-                    }else{
-                        AsyncImage(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable {
-                                    navController.navigate(Destinations.LoginFrame.route)
-                                }
-                                .size(40.dp),
-                            contentScale = ContentScale.Crop,
-                            model = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png",
-                            contentDescription = ""
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate(Destinations.HistoryFrame.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.History,
+                            contentDescription = "",
+                            modifier = Modifier.size(28.dp),
+                            tint = Color(0xff737373)
                         )
                     }
-                }
-            })
+                })
         },
     ) {
         Surface(
@@ -198,14 +232,49 @@ fun HomeScreen(
         ) {
             LazyColumn {
                 item {
-                    SwiperItem(homeViewModel.homeData.carousel){url->
-                        navController.navigate(Destinations.AppDetailFrame.route+"/"+url)
+                    SwiperItem(homeViewModel.homeData.carousel) { url ->
+                        navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
+                    }
+                }
+                stickyHeader {
+                    ScrollableTabRow(
+                        selectedTabIndex = 0,
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .background(Color.White)
+                            .fillMaxWidth(),
+                        edgePadding = 0.dp,
+                        divider = {},
+                        indicator = { tabPositions ->
+
+                        },
+                    ) {
+                        categories.forEachIndexed { index, item ->
+                            Tab(
+                                text = {
+                                    if (index == selectedTabIndex) {
+                                        Text(
+                                            item,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                    } else {
+                                        Text(item)
+                                    }
+                                },
+                                selectedContentColor = Color(0xff000000),
+                                unselectedContentColor = Color(0xff9ca0ab),
+                                selected = selectedTabIndex == index,
+                                onClick = {
+
+                                },
+                            )
+                        }
                     }
                 }
                 itemsIndexed(softViewModel.softList) { index, item ->
-                    key(item.id){
-                        Item1(item){id->
-                            navController.navigate(Destinations.AppDetailFrame.route+"/$id")
+                    key(item.id) {
+                        Item1(item) { id ->
+                            navController.navigate(Destinations.AppDetailFrame.route + "/$id")
                         }
                     }
                 }
@@ -243,31 +312,48 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Card(
-                            modifier = Modifier.width(120.dp).clickable {
-                                showDialog = false
-                                SharedPreferencesUtils(context).set("homeNoticeShowDialog_"+CommonUtils.formatDate(Date(),"yyyy-MM-dd")+(homeViewModel.homeData.notice[0].id),"0")
-                            },
+                            modifier = Modifier
+                                .width(120.dp)
+                                .clickable {
+                                    showDialog = false
+                                    SharedPreferencesUtils(context).set(
+                                        "homeNoticeShowDialog_" + CommonUtils.formatDate(
+                                            Date(),
+                                            "yyyy-MM-dd"
+                                        ) + (homeViewModel.homeData.notice[0].id), "0"
+                                    )
+                                },
                             colors = CardDefaults.cardColors().copy(
                                 containerColor = Color(0xff98a4af),
                                 contentColor = Color.White,
                             ),
                             shape = RoundedCornerShape(20.dp),
                         ) {
-                            Text(text = "今天不显示", modifier = Modifier.padding(4.dp).fillMaxWidth(),
-                                fontSize= fontSize12, textAlign = TextAlign.Center)
+                            Text(
+                                text = "今天不显示", modifier = Modifier
+                                    .padding(4.dp)
+                                    .fillMaxWidth(),
+                                fontSize = fontSize12, textAlign = TextAlign.Center
+                            )
                         }
                         Card(
-                            modifier = Modifier.width(120.dp).clickable {
-                                showDialog = false
-                            },
+                            modifier = Modifier
+                                .width(120.dp)
+                                .clickable {
+                                    showDialog = false
+                                },
                             colors = CardDefaults.cardColors().copy(
                                 containerColor = selectColor,
                                 contentColor = Color.White,
                             ),
                             shape = RoundedCornerShape(20.dp),
                         ) {
-                            Text(text = "关闭", modifier = Modifier.padding(4.dp).fillMaxWidth(),
-                                fontSize= fontSize12, textAlign = TextAlign.Center)
+                            Text(
+                                text = "关闭", modifier = Modifier
+                                    .padding(4.dp)
+                                    .fillMaxWidth(),
+                                fontSize = fontSize12, textAlign = TextAlign.Center
+                            )
                             Spacer(modifier = Modifier.width(4.dp))
                         }
                     }

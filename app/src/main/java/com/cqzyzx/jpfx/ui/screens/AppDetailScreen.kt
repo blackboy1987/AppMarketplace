@@ -2,6 +2,7 @@ package com.cqzyzx.jpfx.ui.screens
 
 import android.text.Html
 import android.widget.TextView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -61,13 +63,9 @@ import kotlinx.coroutines.launch
 fun AppDetailScreen(
     navController: NavHostController,
     id: String,
-    downloadViewModel: DownloadViewModel = viewModel(),
     softViewModel: SoftViewModel = viewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var progress by remember {
-        mutableIntStateOf(0)
-    }
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -82,8 +80,13 @@ fun AppDetailScreen(
         softViewModel.detail(context, SharedPreferencesUtils(context).get("token"), id)
     }
 
-    Scaffold(topBar = {
+    Scaffold(
+        modifier = Modifier.background(Color.White),
+        containerColor = Color.White,
+        topBar = {
         TopAppBar(
+            backgroundColor = Color.White,
+            elevation = 0.dp,
             title = { TopBarTitle(text = softViewModel.softDetail.name) },
             navigationIcon = {
                 LeftIcon {
@@ -137,7 +140,11 @@ fun AppDetailScreen(
                     .padding(8.dp),
             ) {
                 item {
-                    ListItem(headlineContent = {
+                    ListItem(
+                        colors = ListItemDefaults.colors(
+                            containerColor = Color.White
+                        ),
+                        headlineContent = {
                         Text(
                             text = softViewModel.softDetail.name,
                             maxLines = 1,
@@ -186,7 +193,7 @@ fun AppDetailScreen(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            DetailItem(softViewModel.softDetail.downloads, "下载")
+                            DetailItem("${softViewModel.softDetail.reviewCount}", "阅读")
                         }
                     }
                 }
@@ -215,6 +222,7 @@ fun AppDetailScreen(
 
         if (showDialog) {
             androidx.compose.material3.AlertDialog(
+                containerColor = Color.White,
                 onDismissRequest = {
                     showDialog = false
                 },

@@ -1,10 +1,10 @@
 package com.cqzyzx.jpfx.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.scaleIn
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,31 +12,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -54,8 +50,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,7 +57,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.cqzyzx.jpfx.extension.onBottomReached
 import com.cqzyzx.jpfx.ui.components.LeftIcon
-import com.cqzyzx.jpfx.ui.components.SoftIcon6_8
 import com.cqzyzx.jpfx.ui.components.SoftItem
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.util.CommonUtils
@@ -87,7 +80,7 @@ fun SearchScreen(
     val coroutineScope = rememberCoroutineScope()
     val storeManager = StoreManager(context)
     var keywords by remember {
-        mutableStateOf<String>("")
+        mutableStateOf<String>("天涯")
     }
     var showDialog by remember {
         mutableStateOf<Boolean>(false)
@@ -133,7 +126,7 @@ fun SearchScreen(
         add(keywords)
         searchStatus = true
         coroutineScope.launch {
-            searchViewModel.search(context,keywords,1)
+            searchViewModel.search(context, keywords, 1)
         }
     }
 
@@ -150,12 +143,15 @@ fun SearchScreen(
         }
     }
     Scaffold(
+        modifier = Modifier.background(Color.White),
+        containerColor = Color.White,
+        contentColor = Color.White,
         topBar = {
             TopAppBar(navigationIcon = {
                 LeftIcon {
-                    if(keywords.isEmpty()){
+                    if (keywords.isEmpty()) {
                         navController.popBackStack()
-                    }else{
+                    } else {
                         keywords = ""
                         searchStatus = false
                     }
@@ -164,58 +160,42 @@ fun SearchScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp)
-                        .clip(RoundedCornerShape(8.dp)) // 设置圆角
-                        .background(Color(0xFFF0F0F0)), // 设置背景色
-                    contentAlignment = Alignment.CenterStart
+                        .height(40.dp)
                 ) {
-                    if (keywords.isEmpty()) {
-                        Text(
-                            text = "输入搜索关键字",
-                            color = Color.Gray,
-                            modifier = Modifier.padding(horizontal = 12.dp)
-                        )
-                    }
-                    BasicTextField(
-                        value = keywords,
-                        onValueChange = {
-                            keywords = it
-                        },
-                        singleLine = true,
-                        textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(vertical = 14.dp, horizontal = 8.dp),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Search,
-                        ), keyboardActions = KeyboardActions(
-                            onSearch = {
-                                search(keywords)
-                            },
-                        ),
-                        decorationBox = {innerTextField->
-                            Box(modifier = Modifier
-                                .fillMaxSize()){
-                                Box(modifier = Modifier.align(Alignment.TopStart)){
-                                    innerTextField()
-                                }
-                                Box(modifier = Modifier.align(Alignment.CenterEnd)){
-                                    if (keywords.isNotEmpty()) {
-                                        IconButton(onClick = {
-                                            keywords=""
-                                            searchStatus=false
-                                        }) {
-                                            Icon(imageVector = Icons.Filled.Clear,
-                                                contentDescription = null, modifier = Modifier.size(28.dp))
-                                        }
-                                    }
-                                }
-                            }
 
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate(Destinations.SearchFrame.route)
+                                }
+                                .fillMaxSize(),
+                            colors = CardDefaults.cardColors().copy(
+                                containerColor = Color.White,
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, Color(0xffd5d5d5))
+                        ) {
+                            BasicTextField(
+                                singleLine = true,
+                                value = keywords,
+                                onValueChange = { value -> keywords = value },
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .clip(shape = RoundedCornerShape(4.dp))
+                                    .border(1.dp, Color(0xffd5d5d5))
+                                    .background(Color.White)
+                                    .fillMaxWidth()
+                                    .padding(start = 8.dp, end = 8.dp)
+                                    .wrapContentHeight(
+                                        align = Alignment.CenterVertically,
+                                    )
+                            )
                         }
-                    )
+                    }
                 }
             }, actions = {
                 IconButton(onClick = {
@@ -227,7 +207,7 @@ fun SearchScreen(
         }
     ) {
         Box(modifier = Modifier.padding(it)) {
-            if(!searchStatus){
+            if (!searchStatus) {
                 val filters = get().filter { text -> text.isNotEmpty() }
                 FlowRow(
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -253,17 +233,17 @@ fun SearchScreen(
                         }
                     }
                 }
-            }else{
-                if(searchViewModel.list.isEmpty()){
-                   CommonUtils.toast(context,"未找到相关应用")
+            } else {
+                if (searchViewModel.list.isEmpty()) {
+                    CommonUtils.toast(context, "未找到相关应用")
                 }
                 LazyColumn(
                     state = lazyListState,
                 ) {
                     itemsIndexed(searchViewModel.list) { index, item ->
-                       SoftItem(item = item) {id->
-                           navController.navigate("${Destinations.AppDetailFrame.route}/$id")
-                       }
+                        SoftItem(item = item) { id ->
+                            navController.navigate("${Destinations.AppDetailFrame.route}/$id")
+                        }
                     }
                 }
             }

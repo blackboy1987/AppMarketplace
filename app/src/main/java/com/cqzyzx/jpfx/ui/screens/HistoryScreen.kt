@@ -1,57 +1,128 @@
-package com.cqzyzx.jpfx.ui.components
+package com.cqzyzx.jpfx.ui.screens
 
-import androidx.annotation.FloatRange
+import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RemoveRedEye
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TabPosition
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.cqzyzx.jpfx.entity.SoftEntity
-import kotlin.math.abs
+import com.cqzyzx.jpfx.repository.entity.HistoryEntity
+import com.cqzyzx.jpfx.ui.components.Item1
+import com.cqzyzx.jpfx.ui.components.LeftIcon
+import com.cqzyzx.jpfx.ui.components.SoftIcon4
+import com.cqzyzx.jpfx.util.CommonUtils
+import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.cqzyzx.jpfx.viewmodel.HistoryViewModel
+import kotlinx.coroutines.launch
 
+@SuppressLint("InvalidColorHexValue", "RememberReturnType")
 @Composable
-fun Item1(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) -> Unit) {
+fun HistoryScreen(
+    navController: NavHostController,
+    historyViewModel: HistoryViewModel = viewModel(),
+) {
+    val context = LocalContext.current
+    CommonUtils.ShowStatus((context as Activity).window)
+    LaunchedEffect(Unit){
+        historyViewModel.list(context)
+    }
+    val coroutineScope = rememberCoroutineScope()
+    Scaffold(
+        modifier = Modifier.background(Color.White),
+        containerColor = Color.White,
+        topBar = {
+            TopAppBar(
+                backgroundColor = Color.White,
+                elevation = 0.dp,
+                title = {
+                    Text(text = "历史记录")
+                }, navigationIcon = {
+                    LeftIcon {
+                        navController.popBackStack()
+                    }
+                }, actions = {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            historyViewModel.remove(context)
+                        }
+                    }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "",tint = Color(0xff737373))
+                    }
+                })
+        },
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxHeight(),
+            color = Color.White,
+            contentColor = Color.White,
+        ) {
+            LazyColumn {
+                item{
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                if(historyViewModel.historyList.isEmpty()){
+
+                }else{
+                    itemsIndexed(historyViewModel.historyList){ index, item ->
+                        Item11(item = item) {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@Composable
+fun Item11(item: HistoryEntity, modifier: Modifier = Modifier, onClick: (id: Int) -> Unit) {
     var isVisible by remember {
         mutableStateOf(false)
     }
@@ -116,15 +187,6 @@ fun Item1(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) ->
                         Text(text = " | ", color = Color(0xffa6a6a6), fontSize = 10.sp)
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .constrainAs(title2) {
-                            top.linkTo(title1.bottom, (-10).dp)
-                        }
-                ) {
-                    Text(text = "${item.versionName}", color = Color(0xffa6a6a6), fontSize = 10.sp)
-                }
             }
             Card(
                 modifier = Modifier.width(60.dp),
@@ -146,43 +208,4 @@ fun Item1(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) ->
             }
         }
     }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun PagerTabIndicator1(
-    tabPositions: List<TabPosition>,
-    pagerState: PagerState,
-    color: Color = MaterialTheme.colorScheme.primary,
-    @FloatRange(from = 0.0, to = 1.0) percent: Float = 0.4f,
-    height: Dp = 5.dp,
-) {
-    val currentPage by rememberUpdatedState(newValue = pagerState.currentPage)
-    val fraction by rememberUpdatedState(newValue = pagerState.currentPageOffsetFraction)
-    val currentTab = tabPositions[currentPage]
-    val previousTab = tabPositions.getOrNull(currentPage - 1)
-    val nextTab = tabPositions.getOrNull(currentPage + 1)
-    Canvas(
-        modifier = Modifier.fillMaxSize(),
-        onDraw = {
-            val indicatorWidth = currentTab.width.toPx() * percent
-            val indicatorOffset = if (fraction > 0 && nextTab != null) {
-                lerp(currentTab.left, nextTab.left, fraction).toPx()
-            } else if (fraction < 0 && previousTab != null) {
-                lerp(currentTab.left, previousTab.left, -fraction).toPx()
-            } else {
-                currentTab.left.toPx()
-            }
-            val canvasHeight = size.height
-            drawRoundRect(
-                color = color,
-                topLeft = Offset(
-                    indicatorOffset + (currentTab.width.toPx() * (1 - percent) / 2),
-                    canvasHeight - height.toPx()
-                ),
-                size = Size(indicatorWidth + indicatorWidth * abs(fraction), height.toPx()),
-                cornerRadius = CornerRadius(50f)
-            )
-        }
-    )
 }

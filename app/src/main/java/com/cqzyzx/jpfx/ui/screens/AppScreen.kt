@@ -1,5 +1,6 @@
 package com.cqzyzx.jpfx.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,9 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -27,7 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,6 +51,7 @@ import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.TopBarTitle
 import com.cqzyzx.jpfx.ui.navigation.Destinations
+import com.cqzyzx.jpfx.ui.theme.selectColor
 import com.cqzyzx.jpfx.viewmodel.AppViewModel
 import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
@@ -74,19 +74,18 @@ fun AppScreen(
     }
 
     Scaffold(
+        modifier = Modifier.background(Color.White),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
+                backgroundColor = Color(0xfffafafa),
+                elevation = 0.dp,
                 title = { TopBarTitle(text = "应用分类") },
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(Destinations.SearchFrame.route)
                     }) {
                         Icon(Icons.Filled.Search, contentDescription = "")
-                    }
-                    IconButton(onClick = {
-                        showDropdownMenu = true
-                    }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = "")
                     }
                 }
             )
@@ -96,9 +95,9 @@ fun AppScreen(
         var refreshing by remember { mutableStateOf(false) }
 
         fun refresh() = refreshScope.launch {
-            refreshing = true
+            /*refreshing = true
             vm.reload(context)
-            refreshing = false
+            refreshing = false*/
         }
 
         val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -113,6 +112,7 @@ fun AppScreen(
                 LazyColumn(
                     modifier = Modifier
                         .width(80.dp)
+                        .background(Color(0xfffafafa))
                         .padding(top = 16.dp)
                 ) {
                     if(!vm.categoryLoading){
@@ -122,9 +122,11 @@ fun AppScreen(
                                     category,
                                     category.id == vm.currentIndex
                                 ) { currentIndex ->
+                                    refreshing = true
                                     coroutineScope.launch {
                                         vm.updateCurrentIndex(context, 1,currentIndex)
                                         //lazyListState.animateScrollToItem(0)
+                                        refreshing = false
                                     }
                                 }
                             }
@@ -138,9 +140,6 @@ fun AppScreen(
                         .padding(top = 16.dp)
                         .pullRefresh(state)
                 ) {
-                    if (vm.softListLoading) {
-                        Loading1()
-                    }
                     LazyColumn(
                         state = lazyListState,
                     ) {
@@ -164,18 +163,18 @@ fun AppScreen(
 fun CategoryItem(category: CategoryEntity, selected: Boolean, click: (id: Int) -> Unit) {
     Button(
         contentPadding = PaddingValues(0.dp),
-        modifier = Modifier.width(80.dp),
+        modifier = Modifier.width(80.dp).background(Color(0xfffafafa)),
         onClick = {
             click(category.id)
         },
         shape = RoundedCornerShape(
             topStart = 0.dp,
-            topEnd = 18.dp,
-            bottomEnd = 18.dp,
+            topEnd = 8.dp,
+            bottomEnd = 8.dp,
             bottomStart = 0.dp,
         ),
         colors = ButtonDefaults.textButtonColors(
-            disabledContainerColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = selectColor,
             disabledContentColor = MaterialTheme.colorScheme.onPrimary,
             containerColor = Color(0xfffafafa),
             contentColor = Color(0xff000000),
