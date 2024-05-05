@@ -34,9 +34,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ScrollableNotification(text: String, modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
-    val textWidth = with(LocalDensity.current) {
-        text.length * 10f
-    }
+    val textWidth = text.length * 10f
     val animOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = -textWidth,
