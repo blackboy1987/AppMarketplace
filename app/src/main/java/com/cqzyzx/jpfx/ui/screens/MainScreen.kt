@@ -153,17 +153,15 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                     SharedPreferencesUtils(context).set("homeIndex", "0")
                     HomeScreen(navController = navController)
                 }
-
                 1 -> {
-                    SharedPreferencesUtils(context).set("homeIndex", "0")
+                    SharedPreferencesUtils(context).set("homeIndex", "1")
                     AppScreen(navController = navController)
                 }
-
                 2 -> {
                     // 判断是否登录
                     val token = SharedPreferencesUtils(context).get("token")
                     if (token.isNotBlank()) {
-                        SharedPreferencesUtils(context).set("homeIndex", "0")
+                        SharedPreferencesUtils(context).set("homeIndex", "2")
                         MineScreen(navController = navController)
                     } else {
                         navController.navigate(Destinations.LoginFrame.route)

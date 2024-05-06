@@ -21,6 +21,7 @@ class HomeActivity : ComponentActivity(){
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SharedPreferencesUtils(this@HomeActivity).set("homeIndex","0")
         setContent {
             AppMarketplaceTheme {
                 SharedPreferencesUtils(this@HomeActivity).set("adType6","-1")
