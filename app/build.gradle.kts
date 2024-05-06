@@ -58,6 +58,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets-ui:0.31.5-beta")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-process:2.3.1")
 
 
     implementation("androidx.compose.foundation:foundation:1.4.3")

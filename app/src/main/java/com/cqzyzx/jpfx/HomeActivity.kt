@@ -33,4 +33,18 @@ class HomeActivity : ComponentActivity(){
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        // 应用程序进入前台
+        Log.e("HomeActivity", "onResume: ", )
+        // 在此处添加您的逻辑
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // 应用程序进入后台
+        Log.e("HomeActivity", "onPause: ", )
+        // 在此处添加您的逻辑
+    }
 }
