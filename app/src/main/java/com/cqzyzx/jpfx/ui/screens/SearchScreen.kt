@@ -78,7 +78,7 @@ fun SearchScreen(
     val coroutineScope = rememberCoroutineScope()
     val storeManager = StoreManager(context)
     var keywords by remember {
-        mutableStateOf<String>("天涯")
+        mutableStateOf<String>("")
     }
     var showDialog by remember {
         mutableStateOf<Boolean>(false)
@@ -226,13 +226,40 @@ fun SearchScreen(
                                         search(keywords)
                                     },
                                     onLongClick = {
-                                        keywords = title + title + title
+                                        keywords = title
                                     },
                                 ),
                             shape = RoundedCornerShape(4.dp)
 
                         ) {
                             Text(text = title, modifier = Modifier.padding(8.dp))
+                        }
+                    }
+                }
+                Column {
+                    Text(text = "热门搜索")
+                    FlowRow(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        searchViewModel.hotSearchList.forEach { title ->
+                            Card(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .combinedClickable(
+                                        onClick = {
+                                            keywords = title
+                                            search(keywords)
+                                        },
+                                        onLongClick = {
+                                            keywords = title
+                                        },
+                                    ),
+                                shape = RoundedCornerShape(4.dp)
+
+                            ) {
+                                Text(text = title, modifier = Modifier.padding(8.dp))
+                            }
                         }
                     }
                 }
