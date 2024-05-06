@@ -39,7 +39,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -48,9 +47,7 @@ import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.fontSize12
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
-import com.cqzyzx.jpfx.viewmodel.LoginViewModel
 import com.cqzyzx.jpfx.viewmodel.RegisterViewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
@@ -156,10 +153,6 @@ fun RegisterScreen(
                             imeAction = ImeAction.Done
                         ),visualTransformation = PasswordVisualTransformation()
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        MyInput1(placeholder="填写邀请码注册可获得100积分",value = spreadMemberUsername,onValueChange={
-                            spreadMemberUsername=it
-                        })
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(enabled = !registerViewModel.loading , onClick = {
                             if(username.isBlank()){

@@ -110,10 +110,9 @@ fun Item1(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) ->
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(text = "实用工具", color = Color(0xffa6a6a6), fontSize = 10.sp)
-                        Text(text = "-", color = Color(0xffa6a6a6), fontSize = 10.sp)
-                        Text(text = "下载工具", color = Color(0xffa6a6a6), fontSize = 10.sp)
+                        Text(text = "${item.categoryName}", color = Color(0xffa6a6a6), fontSize = 10.sp)
                         Text(text = " | ", color = Color(0xffa6a6a6), fontSize = 10.sp)
+                        Text(text = "${item.updateDate}", color = Color(0xffa6a6a6), fontSize = 10.sp)
                     }
                 }
                 Box(

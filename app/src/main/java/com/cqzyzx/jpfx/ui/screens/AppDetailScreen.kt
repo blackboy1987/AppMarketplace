@@ -108,11 +108,12 @@ fun AppDetailScreen(
                 coroutineScope.launch {
                     val flag = softViewModel.checkDownload(context,id)
                     if(flag){
-                        if(token.isBlank()){
-                            showDialog = true
+                        /*if(token.isBlank()){
+                            //showDialog = true
                         }else{
-                            navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}/0")
-                        }
+                            //navController.navigate(Destinations.WebViewFrame.route + "/${softViewModel.softDetail.id}/0")
+                        }*/
+                        navController.navigate(Destinations.DownloadFrame.route + "/${softViewModel.softDetail.id}")
                     }else{
                         CommonUtils.toast(context,"暂无下载地址")
                     }
