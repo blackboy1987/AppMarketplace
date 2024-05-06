@@ -229,11 +229,17 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxHeight(),
             color = Color.White,
+            contentColor = Color.White,
         ) {
             LazyColumn {
                 item {
                     SwiperItem(homeViewModel.homeData.carousel) { url ->
-                        navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
+                        if(url.startsWith("http")){
+                            navController.navigate(Destinations.WebView2Frame.route + "/" + url)
+                        }else{
+                            navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
+                        }
+
                     }
                 }
                 item{

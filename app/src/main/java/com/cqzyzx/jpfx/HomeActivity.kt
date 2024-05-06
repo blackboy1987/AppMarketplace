@@ -21,6 +21,7 @@ class HomeActivity : ComponentActivity(){
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SharedPreferencesUtils(this@HomeActivity).set("homeIndex","0")
         setContent {
             AppMarketplaceTheme {
                 SharedPreferencesUtils(this@HomeActivity).set("adType6","-1")
@@ -31,5 +32,19 @@ class HomeActivity : ComponentActivity(){
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 应用程序进入前台
+        Log.e("HomeActivity", "onResume: ", )
+        // 在此处添加您的逻辑
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // 应用程序进入后台
+        Log.e("HomeActivity", "onPause: ", )
+        // 在此处添加您的逻辑
     }
 }

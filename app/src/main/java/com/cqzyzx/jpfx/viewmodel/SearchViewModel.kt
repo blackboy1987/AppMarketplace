@@ -24,6 +24,9 @@ class SearchViewModel:ViewModel() {
         private set
 
     var list by mutableStateOf(listOf<SoftEntity>())
+        private set
+
+    var hotSearchList by mutableStateOf(listOf<String>())
 
     var hasMore by mutableStateOf(true)
         private set
@@ -42,6 +45,19 @@ class SearchViewModel:ViewModel() {
                 if(this.hasMore){
                     this.pageNumber = pageNumber+1
                 }
+            }
+        }catch (e: Throwable){
+            CommonUtils.toast(context,"${e.message}")
+        }
+    }
+
+    suspend fun hotSearch(context: Context) {
+        try {
+            val res = searchService.hotSearch(SharedPreferencesUtils(context).get("token"))
+            if (res.code == 0) {
+                val tmpList = mutableListOf<String>()
+                tmpList.addAll(res.data)
+                hotSearchList = tmpList
             }
         }catch (e: Throwable){
             CommonUtils.toast(context,"${e.message}")

@@ -38,7 +38,7 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
         val mAdLayout = view.findViewById<FrameLayout>(R.id.ad_layout)
         val customLayout = view.findViewById<FrameLayout>(R.id.custom_layout)
         customLayout.visibility = View.INVISIBLE
-        adClient.requestBannerAd(mAdLayout, AdConfig.SPLASH_AD_ID, object : AdLoadAdapter() {
+        adClient.requestSplashAd(mAdLayout, AdConfig.SPLASH_AD_ID, object : AdLoadAdapter() {
             override fun onError(var1: Int, error: String) {
                 super.onError(var1, error)
                 Log.e("requestSplashAd", "onError: ${var1}, ${error}", )

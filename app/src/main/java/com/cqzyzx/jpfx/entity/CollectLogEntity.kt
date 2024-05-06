@@ -3,7 +3,7 @@ package com.cqzyzx.jpfx.entity
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class SoftEntity(
+data class CollectLogEntity(
     var id: Int=0,
     var name: String="",
     val size: String="",
@@ -15,7 +15,6 @@ data class SoftEntity(
     var images: String="",
     var versionName: String="",
     var downloads: String = "",
-    var categoryName: String = "",
 )
 
-data class SoftListResponse(val data: List<SoftEntity>?) : BaseResponse()
+data class CollectLogEntityListResponse(val data: List<SoftEntity>) : BaseResponse()

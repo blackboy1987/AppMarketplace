@@ -24,6 +24,7 @@ data class SoftDetailEntity(
     var packageName: String = "",
     var targetSdkVersion: String="",
     var minSdkVersion: String="",
+    var isCollect:Boolean = false,
 )
 
 data class SoftDetailResponse(val data: SoftDetailEntity) : BaseResponse()

@@ -42,6 +42,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,7 +77,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
-    ExperimentalFoundationApi::class, ExperimentalMaterialApi::class
+    ExperimentalFoundationApi::class
 )
 @Composable
 fun SearchScreen(
@@ -96,6 +97,11 @@ fun SearchScreen(
     val gson = Gson()
 
     val searchResult = storeManager.get("keywords").collectAsState(initial = "[]")
+
+    LaunchedEffect(Unit) {
+        searchViewModel.hotSearch(context)
+    }
+
 
     fun add(value: String) {
         val type = object : TypeToken<List<String>>() {}.type
@@ -240,6 +246,50 @@ fun SearchScreen(
         Box(modifier = Modifier.padding(it)) {
             if (!searchStatus) {
                 val filters = get().filter { text -> text.isNotEmpty() }
+                FlowRow(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    filters.forEach { title ->
+                        Card(
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .combinedClickable(
+                                    onClick = {
+                                        keywords = title
+                                        search(keywords)
+                                    },
+                                    onLongClick = {
+                                        keywords = title
+                                    },
+                                ),
+                            shape = RoundedCornerShape(4.dp)
+
+                        ) {
+                            Text(text = title, modifier = Modifier.padding(8.dp))
+                        }
+                    }
+                }
+                Column {
+                    Text(text = "热门搜索")
+                    FlowRow(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        searchViewModel.hotSearchList.forEach { title ->
+                            Card(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .combinedClickable(
+                                        onClick = {
+                                            keywords = title
+                                            search(keywords)
+                                        },
+                                        onLongClick = {
+                                            keywords = title
+                                        },
+                                    ),
+                                shape = RoundedCornerShape(4.dp)
                 Column {
                     if(filters.isNotEmpty()){
                         Row(
@@ -282,6 +332,9 @@ fun SearchScreen(
 
                             ) {
                                 Text(text = title, modifier = Modifier.padding(8.dp), fontSize = fontSize12)
+                            }
+                            ) {
+                                Text(text = title, modifier = Modifier.padding(8.dp))
                             }
                         }
                     }

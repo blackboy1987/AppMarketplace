@@ -1,11 +1,17 @@
 package com.cqzyzx.jpfx.ui.screens
 
+import android.content.SharedPreferences
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -15,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +29,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +49,12 @@ import com.cqzyzx.jpfx.ui.components.SoftIcon6
 import com.cqzyzx.jpfx.ui.components.SoftIcon8
 import com.cqzyzx.jpfx.ui.components.SoftIcon8_8
 import com.cqzyzx.jpfx.ui.navigation.Destinations
+import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.cqzyzx.jpfx.util.StoreManager
 import com.cqzyzx.jpfx.viewmodel.MineViewModel
+import com.google.gson.Gson
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun MineScreen(
@@ -45,10 +62,45 @@ fun MineScreen(
     mineViewModel: MineViewModel= viewModel()
 ) {
     val context = LocalContext.current
+    var coroutineScope = rememberCoroutineScope()
+    val storeManager = StoreManager(context)
     LaunchedEffect(Unit) {
         mineViewModel.currentUser(context)
     }
-    Scaffold {
+
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri->
+            uri?.let{
+                imageUri = it
+            }
+        }
+        )
+
+
+    Scaffold(
+        bottomBar = {
+            if(SharedPreferencesUtils(context).get("token").isNotEmpty()){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Button(modifier = Modifier.fillMaxWidth(),onClick = {
+                        SharedPreferencesUtils(context).remove("token")
+                        navController.navigate(Destinations.MainFrame.route+"/0")
+                    }) {
+                        Text(text = "退出")
+                    }
+                }
+            }
+        }
+    ) {
         LazyColumn(
             modifier = Modifier.padding(it)
         ) {
@@ -56,26 +108,10 @@ fun MineScreen(
                 ListItem(headlineContent = {
                     Text(text = "${mineViewModel.data.username}")
                 }, leadingContent = {
-                    SoftIcon4(url = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png")
-                }, trailingContent = {
-                    Row(
-                        Modifier
-                            .clip(
-                                RoundedCornerShape(8.dp)
-                            )
-                            .background(MaterialTheme.colorScheme.primary)
-                            .padding(8.dp)
-                            .clickable { }
-                            .width(56.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = "",
-                            tint = Color.White
-                        )
-                        Text(text = "签到", color = Color.White)
+                    Box(modifier = Modifier.clickable {
+                        galleryLauncher.launch("image/*")
+                    }){
+                        SoftIcon4(url = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png")
                     }
                 }, supportingContent = {
                     Text(text = "${mineViewModel.data.rankName}")
@@ -92,7 +128,7 @@ fun MineScreen(
                             //navController.navigate(Destinations.AboutFrame.route)
                         }
                         .height(40.dp), headlineContent = {
-                        Text(text = "关于我们")
+                        Text(text = "关于我们", fontSize = 12.sp,)
                     }, trailingContent = {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowRight,
@@ -110,22 +146,43 @@ fun MineScreen(
                         )
                     })
                     ListItem(modifier = Modifier
-                        .clickable { }
-                        .height(40.dp), headlineContent = {
-                        Text(text = "软件官网", fontSize = 12.sp,)
-                    }, trailingContent = {
-                        Icon(
-                            imageVector = Icons.Default.ArrowForwardIos,
-                            contentDescription = ""
-                        )
-                    })
-                    ListItem(modifier = Modifier
-                        .clickable { }
+                        .clickable {
+                            navController.navigate(Destinations.HistoryFrame.route)
+                        }
                         .height(40.dp), headlineContent = {
                         Text(text = "历史记录", fontSize = 12.sp,)
                     }, trailingContent = {
                         Icon(
-                            imageVector = Icons.Default.ArrowForwardIos,
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = ""
+                        )
+                    })
+                    ListItem(modifier = Modifier
+                        .clickable {
+                            navController.navigate(Destinations.CollectLogFrame.route)
+                        }
+                        .height(40.dp), headlineContent = {
+                        Text(text = "我的收藏", fontSize = 12.sp,)
+                    }, trailingContent = {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = ""
+                        )
+                    })
+                    ListItem(modifier = Modifier
+                        .clickable {
+                            // 浏览记录清理掉
+                            val gson = Gson()
+                            coroutineScope.launch {
+                                storeManager.save("keywords", gson.toJson(listOf<String>()))
+                                mineViewModel.clearCache(context)
+                            }
+                        }
+                        .height(40.dp), headlineContent = {
+                        Text(text = "清理缓存", fontSize = 12.sp,)
+                    }, trailingContent = {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
                             contentDescription = ""
                         )
                     })

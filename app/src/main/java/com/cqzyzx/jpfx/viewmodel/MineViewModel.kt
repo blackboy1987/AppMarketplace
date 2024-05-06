@@ -6,10 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.cqzyzx.jpfx.repository.DataBase
 import com.cqzyzx.jpfx.repository.entity.UserEntity
 import com.cqzyzx.jpfx.service.UserService
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MineViewModel : ViewModel() {
     private val userService = UserService.instance()
@@ -41,5 +45,18 @@ class MineViewModel : ViewModel() {
             Log.e("login", "login: ${e.toString()}", )
             CommonUtils.toast(context,e.toString());
         }
+    }
+
+    suspend fun clearCache(context: Context){
+
+        // 浏览得记录
+        val historyDao = DataBase.getDb(context)?.getHistoryDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            if (historyDao != null) {
+                historyDao.delete()
+            }
+        }
+        // 搜索记录
+
     }
 }

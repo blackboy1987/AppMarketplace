@@ -20,6 +20,11 @@ interface SearchService {
         @Field("pageSize") pageSize: Int
     ): SearchDataListResponse
 
+    @POST("/api/hotSearch")
+    suspend fun hotSearch(
+        @Header("token") token: String,
+    ): HotSearchDataListResponse
+
     companion object {
         fun instance(): SearchService {
             return HiRetrofit.create(SearchService::class.java)
@@ -27,3 +32,4 @@ interface SearchService {
     }
 }
 data class SearchDataListResponse(val data: List<SoftEntity>) : BaseResponse()
+data class HotSearchDataListResponse(val data: List<String>) : BaseResponse()
