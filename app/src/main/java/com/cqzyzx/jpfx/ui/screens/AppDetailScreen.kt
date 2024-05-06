@@ -11,24 +11,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material.TopAppBar
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,24 +45,21 @@ import androidx.navigation.NavHostController
 import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.SoftIcon6
 import com.cqzyzx.jpfx.ui.components.TopBarTitle
-import com.cqzyzx.jpfx.ui.components.ad.RequestBannerAd
 import com.cqzyzx.jpfx.ui.components.ad.RequestExpressAd
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.ShareUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
-import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
+import com.cqzyzx.jpfx.viewmodel.CollectLogViewModel
 import com.cqzyzx.jpfx.viewmodel.SoftViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(
-    ExperimentalMaterial3Api::class
-)
 @Composable
 fun AppDetailScreen(
     navController: NavHostController,
     id: String,
     softViewModel: SoftViewModel = viewModel(),
+    collectLogViewModel: CollectLogViewModel = viewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
     var showDialog by remember {
@@ -96,18 +92,16 @@ fun AppDetailScreen(
                     }
                 }
             },
-            actions = {
-                IconButton(modifier = Modifier.padding(8.dp),onClick = {
-                    ShareUtils.shareText(context, "abc")
-                }) {
-                    Icon(imageVector = Icons.Filled.Share, contentDescription = "")
-                }
-            }
         )
     }, bottomBar = {
         BottomAppBar(
             containerColor = Color.White,
         ) {
+            IconButton(modifier = Modifier.padding(8.dp),onClick = {
+                ShareUtils.shareText(context, "abc")
+            }) {
+                Icon(imageVector = Icons.Filled.Share, contentDescription = "")
+            }
             Button(modifier = Modifier.weight(1.0f), onClick = {
                 val token = SharedPreferencesUtils(context).get("token")
                 // 需要检测是否有下载地址
@@ -125,6 +119,13 @@ fun AppDetailScreen(
                 }
             }) {
                 Text(text = "下载")
+            }
+            IconButton(modifier = Modifier.padding(8.dp),onClick = {
+                coroutineScope.launch {
+                    collectLogViewModel.add(context,softViewModel.softDetail.id)
+                }
+            }) {
+                Icon(imageVector = Icons.Filled.Collections, contentDescription = "")
             }
         }
     }) {

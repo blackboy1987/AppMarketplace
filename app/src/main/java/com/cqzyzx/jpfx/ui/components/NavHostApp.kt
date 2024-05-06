@@ -13,6 +13,7 @@ import com.cqzyzx.jpfx.ui.screens.AboutScreen
 import com.cqzyzx.jpfx.ui.screens.AdScreen
 import com.cqzyzx.jpfx.ui.screens.AnimatedScreen
 import com.cqzyzx.jpfx.ui.screens.AppDetailScreen
+import com.cqzyzx.jpfx.ui.screens.CollectLogScreen
 import com.cqzyzx.jpfx.ui.screens.DownloadScreen
 import com.cqzyzx.jpfx.ui.screens.HistoryScreen
 import com.cqzyzx.jpfx.ui.screens.LoginScreen
@@ -34,7 +35,7 @@ fun NavHostApp() {
     NavHost(
         navController = navController,
         // startDestination = Destinations.MainFrame.route+"/1",
-        startDestination = Destinations.SearchFrame.route,
+        startDestination = Destinations.CollectLogFrame.route,
     ) {
         composable(
             Destinations.MainFrame.route + "/{type}",
@@ -273,6 +274,21 @@ fun NavHostApp() {
             },
         ) {
             HistoryScreen(navController)
+        }
+        composable(
+            Destinations.CollectLogFrame.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            CollectLogScreen(navController)
         }
     }
 }

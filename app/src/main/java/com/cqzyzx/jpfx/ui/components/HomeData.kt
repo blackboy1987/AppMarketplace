@@ -186,3 +186,102 @@ fun PagerTabIndicator1(
         }
     )
 }
+
+
+@Composable
+fun CollectLogItem(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) -> Unit,onRemove:(id:Int)->Unit) {
+    var isVisible by remember {
+        mutableStateOf(false)
+    }
+    val scale = remember { Animatable(0.3f) }
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+    LaunchedEffect(isVisible) {
+        scale.animateTo(if (isVisible) 1f else 0f, animationSpec = tween(durationMillis = 400))
+    }
+    Box(
+        modifier = Modifier
+            .then(modifier)
+            .clickable {
+                onClick(item.id)
+            }
+            .fillMaxWidth()
+            .scale(scale.value)
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+        ) {
+            SoftIcon4(url = "${item.logo}")
+            ConstraintLayout(
+                modifier = Modifier
+                    .weight(1.0f)
+                    .padding(start = 8.dp)
+            ) {
+                val (title, title1, title2) = createRefs()
+                Box(modifier = Modifier
+                    .constrainAs(title) {
+                        top.linkTo(parent.top, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                    }) {
+                    Text(
+                        text = "${item.name}",
+                        color = Color(0xff101010),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(title1) {
+                            top.linkTo(title.bottom, (-10).dp)
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(text = "${item.categoryName}", color = Color(0xffa6a6a6), fontSize = 10.sp)
+                        Text(text = " | ", color = Color(0xffa6a6a6), fontSize = 10.sp)
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(title2) {
+                            top.linkTo(title1.bottom, (-10).dp)
+                        }
+                ) {
+                    Text(text = "${item.versionName}", color = Color(0xffa6a6a6), fontSize = 10.sp)
+                }
+            }
+            Card(
+                modifier = Modifier.width(60.dp).clickable {
+                    onRemove(item.id)
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
+                border = BorderStroke(0.5.dp, Color(0xff4488eb)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    text = "移除",
+                    color = Color(0xff4488eb),
+                    fontSize = 13.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
