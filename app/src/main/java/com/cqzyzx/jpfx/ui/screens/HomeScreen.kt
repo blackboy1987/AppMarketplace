@@ -61,7 +61,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.ui.components.Item1
-import com.cqzyzx.jpfx.ui.components.PagerTabIndicator1
 import com.cqzyzx.jpfx.ui.components.SwiperItem
 import com.cqzyzx.jpfx.ui.components.ad.requestInteractionAd
 import com.cqzyzx.jpfx.ui.navigation.Destinations
@@ -233,7 +232,12 @@ fun HomeScreen(
             LazyColumn {
                 item {
                     SwiperItem(homeViewModel.homeData.carousel) { url ->
-                        navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
+                        if(url.startsWith("http")){
+                            navController.navigate(Destinations.WebView2Frame.route + "/" + url)
+                        }else{
+                            navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
+                        }
+
                     }
                 }
                 stickyHeader {

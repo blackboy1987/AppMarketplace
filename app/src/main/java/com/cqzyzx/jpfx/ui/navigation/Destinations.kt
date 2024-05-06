@@ -36,6 +36,8 @@ sealed class Destinations(val route: String) {
     data object HistoryFrame : Destinations("HistoryFrame")
     // 动画
     data object CollectLogFrame : Destinations("CollectLogFrame")
+    // 动画
+    data object WebView2Frame : Destinations("WebView2Frame")
 
 
 

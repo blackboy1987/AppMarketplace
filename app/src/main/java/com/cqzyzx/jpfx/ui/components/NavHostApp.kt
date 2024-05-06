@@ -25,6 +25,7 @@ import com.cqzyzx.jpfx.ui.screens.SearchScreen
 import com.cqzyzx.jpfx.ui.screens.SettingScreen
 import com.cqzyzx.jpfx.ui.screens.TouGaoAppInfoListScreen
 import com.cqzyzx.jpfx.ui.screens.TouGaoScreen
+import com.cqzyzx.jpfx.ui.screens.WebViewScreen2
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -104,6 +105,23 @@ fun NavHostApp() {
             val id = it.arguments?.getString("id") ?: ""
             val adId = it.arguments?.getString("adId") ?: ""
             WebViewScreen(navController, id,adId)
+        }
+
+        composable(
+            Destinations.WebView2Frame.route + "/{url}",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+        ) {
+            val url = it.arguments?.getString("url") ?: ""
+            WebViewScreen2(navController, url)
         }
 
         composable(
