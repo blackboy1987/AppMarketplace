@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,6 +26,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
+import androidx.compose.material.ScaffoldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
@@ -129,9 +131,6 @@ fun HomeScreen(
         loadData()
     }
     Scaffold(
-        modifier = Modifier.background(Color.White),
-        containerColor = Color.White,
-        contentColor = Color.White,
         topBar = {
             TopAppBar(
                 backgroundColor = Color.White,
@@ -229,19 +228,23 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxHeight(),
             color = Color.White,
-            contentColor = Color.White,
         ) {
-            LazyColumn {
-                item {
-                    SwiperItem(homeViewModel.homeData.carousel) { url ->
-                        if(url.startsWith("http")){
-                            navController.navigate(Destinations.WebView2Frame.route + "/" + url)
-                        }else{
-                            navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
-                        }
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 0.dp)
+            ){
+                if(homeViewModel.homeData.carousel.size>0){
+                    item {
+                        SwiperItem(homeViewModel.homeData.carousel) { url ->
+                            if(url.startsWith("http")){
+                                navController.navigate(Destinations.WebView2Frame.route + "/" + url)
+                            }else{
+                                navController.navigate(Destinations.AppDetailFrame.route + "/" + url)
+                            }
 
+                        }
                     }
                 }
+
                 item{
                     NotificationBar("我的是通知公告")
                 }
@@ -370,4 +373,9 @@ fun HomeScreen(
             }
         }
     }
+}
+
+
+@Composable fun HomeTopBar(){
+
 }

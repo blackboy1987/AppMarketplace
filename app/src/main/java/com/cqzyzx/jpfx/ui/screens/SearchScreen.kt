@@ -17,18 +17,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BasicAlertDialog
@@ -42,7 +39,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,16 +50,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.cqzyzx.jpfx.extension.onBottomReached
-import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.SoftItem
 import com.cqzyzx.jpfx.ui.navigation.Destinations
@@ -77,7 +71,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalMaterialApi::class
 )
 @Composable
 fun SearchScreen(
@@ -89,7 +83,7 @@ fun SearchScreen(
     val coroutineScope = rememberCoroutineScope()
     val storeManager = StoreManager(context)
     var keywords by remember {
-        mutableStateOf<String>("")
+        mutableStateOf<String>("天涯")
     }
     var showDialog by remember {
         mutableStateOf<Boolean>(false)
@@ -97,11 +91,6 @@ fun SearchScreen(
     val gson = Gson()
 
     val searchResult = storeManager.get("keywords").collectAsState(initial = "[]")
-
-    LaunchedEffect(Unit) {
-        searchViewModel.hotSearch(context)
-    }
-
 
     fun add(value: String) {
         val type = object : TypeToken<List<String>>() {}.type
@@ -159,6 +148,7 @@ fun SearchScreen(
     Scaffold(
         modifier = Modifier.background(Color.White),
         containerColor = Color.White,
+        contentColor = Color.White,
         topBar = {
             TopAppBar(navigationIcon = {
                 LeftIcon {
@@ -192,45 +182,21 @@ fun SearchScreen(
                             shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, Color(0xffd5d5d5))
                         ) {
-                            Box(modifier = Modifier
-                                .fillMaxSize()){
-                                Box(modifier = Modifier.align(Alignment.TopStart)){
-                                    BasicTextField(
-                                        singleLine = true,
-                                        value = keywords,
-                                        onValueChange = { value -> keywords = value },
-                                        modifier = Modifier
-                                            .height(40.dp)
-                                            .clip(shape = RoundedCornerShape(4.dp))
-                                            .border(1.dp, Color(0xffd5d5d5))
-                                            .background(Color.White)
-                                            .fillMaxWidth()
-                                            .padding(start = 8.dp, end = 8.dp)
-                                            .wrapContentHeight(
-                                                align = Alignment.CenterVertically,
-                                            ),
-                                        keyboardOptions = KeyboardOptions(
-                                            keyboardType = KeyboardType.Text,
-                                            imeAction = ImeAction.Search,
-                                        ), keyboardActions = KeyboardActions(
-                                            onSearch = {
-                                                search(keywords)
-                                            },
-                                        ),
+                            BasicTextField(
+                                singleLine = true,
+                                value = keywords,
+                                onValueChange = { value -> keywords = value },
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .clip(shape = RoundedCornerShape(4.dp))
+                                    .border(1.dp, Color(0xffd5d5d5))
+                                    .background(Color.White)
+                                    .fillMaxWidth()
+                                    .padding(start = 8.dp, end = 8.dp)
+                                    .wrapContentHeight(
+                                        align = Alignment.CenterVertically,
                                     )
-                                }
-                                Box(modifier = Modifier.align(Alignment.CenterEnd)){
-                                    if (keywords.isNotEmpty()) {
-                                        IconButton(onClick = {
-                                            keywords=""
-                                            searchStatus=false
-                                        }) {
-                                            Icon(imageVector = Icons.Filled.Clear,
-                                                contentDescription = null, modifier = Modifier.size(28.dp))
-                                        }
-                                    }
-                                }
-                            }
+                            )
                         }
                     }
                 }
@@ -246,67 +212,21 @@ fun SearchScreen(
         Box(modifier = Modifier.padding(it)) {
             if (!searchStatus) {
                 val filters = get().filter { text -> text.isNotEmpty() }
-                FlowRow(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    filters.forEach { title ->
-                        Card(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .combinedClickable(
-                                    onClick = {
-                                        keywords = title
-                                        search(keywords)
-                                    },
-                                    onLongClick = {
-                                        keywords = title
-                                    },
-                                ),
-                            shape = RoundedCornerShape(4.dp)
-
-                        ) {
-                            Text(text = title, modifier = Modifier.padding(8.dp))
-                        }
-                    }
-                }
                 Column {
-                    Text(text = "热门搜索")
-                    FlowRow(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     ) {
-                        searchViewModel.hotSearchList.forEach { title ->
-                            Card(
-                                modifier = Modifier
-                                    .padding(top = 8.dp)
-                                    .combinedClickable(
-                                        onClick = {
-                                            keywords = title
-                                            search(keywords)
-                                        },
-                                        onLongClick = {
-                                            keywords = title
-                                        },
-                                    ),
-                                shape = RoundedCornerShape(4.dp)
-                Column {
-                    if(filters.isNotEmpty()){
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        ) {
-                            Text(text = "搜索历史")
-                            IconButton(onClick = {
-                                clear()
-                            }) {
-                                Icon(imageVector = Icons.Default.Close, contentDescription = "", tint = Color(0xff737373))
-                            }
-
+                        Text(text = "搜索历史")
+                        IconButton(onClick = {
+                            clear()
+                        }) {
+                            Icon(imageVector = Icons.Default.Close, contentDescription = "", tint = Color(0xff737373))
                         }
+
                     }
                     FlowRow(
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -333,13 +253,9 @@ fun SearchScreen(
                             ) {
                                 Text(text = title, modifier = Modifier.padding(8.dp), fontSize = fontSize12)
                             }
-                            ) {
-                                Text(text = title, modifier = Modifier.padding(8.dp))
-                            }
                         }
                     }
                 }
-
             } else {
                 if (searchViewModel.list.isEmpty()) {
                     CommonUtils.toast(context, "未找到相关应用")
@@ -348,7 +264,7 @@ fun SearchScreen(
                     state = lazyListState,
                 ) {
                     itemsIndexed(searchViewModel.list) { index, item ->
-                        Item1(item = item) { id ->
+                        SoftItem(item = item) { id ->
                             navController.navigate("${Destinations.AppDetailFrame.route}/$id")
                         }
                     }

@@ -12,6 +12,7 @@ import com.cqzyzx.jpfx.R
 import com.cqzyzx.jpfx.config.AdConfig
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.youxiao.ssp.ad.bean.NextAdInfo
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
@@ -36,8 +37,7 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
     AndroidView(factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_splash, null)
         val mAdLayout = view.findViewById<FrameLayout>(R.id.ad_layout)
-        val customLayout = view.findViewById<FrameLayout>(R.id.custom_layout)
-        customLayout.visibility = View.INVISIBLE
+        mAdLayout.visibility = View.VISIBLE
         adClient.requestSplashAd(mAdLayout, AdConfig.SPLASH_AD_ID, object : AdLoadAdapter() {
             override fun onError(var1: Int, error: String) {
                 super.onError(var1, error)
@@ -52,6 +52,51 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
                 callback(0)
                 adData["status"] = "0"
                 HttpUtils.adRequest(adData)
+            }
+
+            override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String?) {
+                Log.e("requestSplashAd", "onStatus: ${p0},${p1},${p2},${p3},", )
+                super.onStatus(p0, p1, p2, p3)
+            }
+
+            override fun onNext(p0: NextAdInfo?) {
+                Log.e("requestSplashAd", "onNext: ${p0}", )
+                super.onNext(p0)
+            }
+
+            override fun onAdClick(p0: SSPAd?) {
+                Log.e("requestSplashAd", "onAdClick: ${p0}", )
+                super.onAdClick(p0)
+            }
+
+            override fun onAdShow(p0: SSPAd?) {
+                Log.e("requestSplashAd", "onAdShow: ${p0}", )
+                super.onAdShow(p0)
+            }
+
+            override fun onAdDismiss(p0: SSPAd?) {
+                Log.e("requestSplashAd", "onAdDismiss: ${p0}", )
+                super.onAdDismiss(p0)
+            }
+
+            override fun onStartDownload(p0: String?) {
+                Log.e("requestSplashAd", "onStartDownload: ${p0}", )
+                super.onStartDownload(p0)
+            }
+
+            override fun onDownloadCompleted(p0: String?) {
+                Log.e("requestSplashAd", "onDownloadCompleted: ${p0}", )
+                super.onDownloadCompleted(p0)
+            }
+
+            override fun onStartInstall(p0: String?) {
+                Log.e("requestSplashAd", "onStartInstall: ${p0}", )
+                super.onStartInstall(p0)
+            }
+
+            override fun onInstallCompleted(p0: String?) {
+                Log.e("requestSplashAd", "onInstallCompleted: ${p0}", )
+                super.onInstallCompleted(p0)
             }
         })
         view

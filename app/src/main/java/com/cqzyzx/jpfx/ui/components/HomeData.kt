@@ -53,14 +53,14 @@ import kotlin.math.abs
 @Composable
 fun Item1(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) -> Unit) {
     var isVisible by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
-    val scale = remember { Animatable(0.3f) }
+    val scale = remember { Animatable(1f) }
     LaunchedEffect(Unit) {
-        isVisible = true
+        //isVisible = true
     }
     LaunchedEffect(isVisible) {
-        scale.animateTo(if (isVisible) 1f else 0f, animationSpec = tween(durationMillis = 400))
+        //scale.animateTo(if (isVisible) 1f else 0f, animationSpec = tween(durationMillis = 400))
     }
     Box(
         modifier = Modifier
@@ -190,14 +190,14 @@ fun PagerTabIndicator1(
 @Composable
 fun CollectLogItem(item: SoftEntity, modifier: Modifier = Modifier, onClick: (id: Int) -> Unit,onRemove:(id:Int)->Unit) {
     var isVisible by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
-    val scale = remember { Animatable(0.3f) }
+    val scale = remember { Animatable(1f) }
     LaunchedEffect(Unit) {
-        isVisible = true
+        //isVisible = true
     }
     LaunchedEffect(isVisible) {
-        scale.animateTo(if (isVisible) 1f else 0f, animationSpec = tween(durationMillis = 400))
+        //scale.animateTo(if (isVisible) 1f else 0f, animationSpec = tween(durationMillis = 400))
     }
     Box(
         modifier = Modifier

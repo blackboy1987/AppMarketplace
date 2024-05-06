@@ -6,9 +6,9 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -50,27 +49,46 @@ fun ScrollableNotification(text: String, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Icon(tint=Color(0xff737373),imageVector = Icons.Default.NotificationImportant , contentDescription = "")
-        Box(
-            modifier = modifier
-                .weight(1.0f)
-                .height(20.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceBetween
+        Box(modifier = modifier
+            .fillMaxWidth()
+            ){
+            Box(
+                modifier = modifier.height(20.dp).fillMaxWidth().background(Color.Red)
             ) {
                 Text(
                     text = text,
                     fontSize = 12.sp,
                     modifier = Modifier
-                        .offset(x = animOffset.dp)
-                        .weight(1.0f),
+                        .offset(x = animOffset.dp),
                     color = Color.Black,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
+            Box(
+                modifier = Modifier.background(Color.White)
+            ){
+                Icon(tint=Color(0xff737373),imageVector = Icons.Default.NotificationImportant , contentDescription = "", modifier = Modifier.padding(start = 8.dp))
+            }
         }
+    }
+}
+
+@Composable
+fun ScrollableNotification1(text: String, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Icon(tint=Color(0xff737373),imageVector = Icons.Default.NotificationImportant , contentDescription = "", modifier = Modifier.padding(start = 8.dp))
+        Text(
+            text = text,
+            modifier = Modifier.weight(1.0f),
+            fontSize = 12.sp,
+            color = Color.Black,
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }
 @Composable
@@ -79,6 +97,6 @@ fun NotificationBar(title: String) {
     Surface(
         modifier = Modifier.fillMaxWidth()
     ) {
-        ScrollableNotification(text = text, modifier = Modifier.padding(8.dp))
+        ScrollableNotification1(text = text)
     }
 }
