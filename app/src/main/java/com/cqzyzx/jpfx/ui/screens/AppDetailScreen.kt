@@ -53,6 +53,7 @@ import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.CollectLogViewModel
 import com.cqzyzx.jpfx.viewmodel.SoftViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @Composable
 fun AppDetailScreen(
@@ -72,7 +73,10 @@ fun AppDetailScreen(
     val userInfo by remember {
         mutableStateOf(SharedPreferencesUtils(context).getUserInfo())
     }
-    LaunchedEffect(Unit) {
+    val key = remember {
+        UUID.randomUUID().toString()
+    }
+    LaunchedEffect(key) {
         softViewModel.detail(context, SharedPreferencesUtils(context).get("token"), id)
     }
 

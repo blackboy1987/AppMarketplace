@@ -12,8 +12,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -26,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,13 +47,13 @@ import androidx.navigation.NavHostController
 import com.cqzyzx.jpfx.entity.CategoryEntity
 import com.cqzyzx.jpfx.extension.onBottomReached
 import com.cqzyzx.jpfx.ui.components.Item1
-import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.TopBarTitle
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.selectColor
 import com.cqzyzx.jpfx.viewmodel.AppViewModel
 import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -68,7 +67,10 @@ fun AppScreen(
     var showDropdownMenu by remember {
         mutableStateOf(false)
     }
-    LaunchedEffect(Unit) {
+    val key = remember {
+        UUID.randomUUID().toString()
+    }
+    LaunchedEffect(key) {
         //获取分类列表
         vm.fetchList(context)
     }
@@ -163,7 +165,9 @@ fun AppScreen(
 fun CategoryItem(category: CategoryEntity, selected: Boolean, click: (id: Int) -> Unit) {
     Button(
         contentPadding = PaddingValues(0.dp),
-        modifier = Modifier.width(80.dp).background(Color(0xfffafafa)),
+        modifier = Modifier
+            .width(80.dp)
+            .background(Color(0xfffafafa)),
         onClick = {
             click(category.id)
         },
