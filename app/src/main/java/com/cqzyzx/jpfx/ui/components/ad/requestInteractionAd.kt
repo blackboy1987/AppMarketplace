@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.http.UrlRequest.Status
 import android.util.Log
 import com.cqzyzx.jpfx.config.AdConfig
+import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.youxiao.ssp.ad.bean.NextAdInfo
@@ -32,6 +33,7 @@ fun requestInteractionAd(context: Context, onClose:(status:String)->Unit) {
             adData["status"] = "0"
             onClose("0")
             HttpUtils.adRequest(adData)
+            CommonUtils.toast(context,"requestInteractionAd onAdShow ${p0}")
         }
 
         override fun onError(p0: Int, p1: String?) {
@@ -40,6 +42,7 @@ fun requestInteractionAd(context: Context, onClose:(status:String)->Unit) {
             adData["status"] = "-1"
             HttpUtils.adRequest(adData)
             onClose("-1")
+            CommonUtils.toast(context,"requestInteractionAd onError ${p0},$p1")
         }
     })
 }

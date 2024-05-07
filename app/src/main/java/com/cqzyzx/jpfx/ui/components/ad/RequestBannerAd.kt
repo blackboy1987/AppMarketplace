@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
 import com.cqzyzx.jpfx.config.AdConfig
+import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.youxiao.ssp.ad.bean.SSPAd
@@ -35,16 +36,18 @@ fun RequestBannerAd(context: Context) {
         adClient.requestBannerAd(findViewById, AdConfig.BANNER_AD_ID, object : AdLoadAdapter() {
             override fun onError(i: Int, s: String) {
                 super.onError(i, s)
-                Log.e("requestBannerAd onError", "onAdLoad: $i,$s")
+                Log.e("requestBannerAd onError", "onError: $i,$s")
                 adData["status"] = "0"
                 HttpUtils.adRequest(adData)
+                CommonUtils.toast(context,"requestBannerAd onError $i,$s")
             }
 
             override fun onAdShow(ad: SSPAd?) {
                 super.onAdShow(ad)
-                Log.e("requestBannerAd onAdShow", "onAdLoad: $ad")
+                Log.e("requestBannerAd onAdShow", "onAdShow: $ad")
                 adData["status"] = "-1"
                 HttpUtils.adRequest(adData)
+                CommonUtils.toast(context,"requestBannerAd onAdShow $ad")
             }
         })
         view

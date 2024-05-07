@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import com.cqzyzx.jpfx.config.AdConfig
 import com.cqzyzx.jpfx.config.Config
 import com.cqzyzx.jpfx.util.AppInfoUtils.getDeviceInfo
 import com.cqzyzx.jpfx.util.HttpUtils
@@ -24,8 +25,8 @@ class SplashActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         login()
         setContentView(R.layout.splash_screen)
-        SSPSdk.init(this@SplashActivity, "7039", true)
-        SSPSdk.init(this@SplashActivity, "7039", "0", true)
+        SSPSdk.init(this@SplashActivity, AdConfig.MEDIA_ID, true)
+        SSPSdk.init(this@SplashActivity, AdConfig.MEDIA_ID, "0", true)
         gotoMainActivity()
 
     }

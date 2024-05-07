@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import com.cqzyzx.jpfx.config.AdConfig
+import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.youxiao.ssp.ad.bean.SSPAd
@@ -30,6 +31,7 @@ fun requestRewardAd(context: Context, onClose:(type:String)->Unit) {
             onClose("loadRewardAdSuc")
             adData["status"] = "0"
             HttpUtils.adRequest(adData)
+            CommonUtils.toast(context,"requestRewardAd loadRewardAdSuc $sspAd")
         }
 
         override fun onReward(p0: SSPAd?, p1: Boolean, p2: MutableMap<String, Any>?) {
@@ -37,6 +39,7 @@ fun requestRewardAd(context: Context, onClose:(type:String)->Unit) {
             onClose("onReward")
             adData["status"] = "1"
             HttpUtils.adRequest(adData)
+            CommonUtils.toast(context,"requestRewardAd onReward ${p0},$p1,$p2")
         }
 
         override fun loadRewardAdFail(s: String) {
@@ -45,6 +48,7 @@ fun requestRewardAd(context: Context, onClose:(type:String)->Unit) {
             onClose("loadRewardAdFail")
             adData["status"] = "-1"
             HttpUtils.adRequest(adData)
+            CommonUtils.toast(context,"requestRewardAd loadRewardAdFail $s")
         }
 
         override fun loadRewardVideoFail(i: Int, i1: Int) {
@@ -53,6 +57,7 @@ fun requestRewardAd(context: Context, onClose:(type:String)->Unit) {
             onClose("loadRewardVideoFail")
             adData["status"] = "-2"
             HttpUtils.adRequest(adData)
+            CommonUtils.toast(context,"requestRewardAd loadRewardVideoFail ${i},$i1")
         }
     })
 }
