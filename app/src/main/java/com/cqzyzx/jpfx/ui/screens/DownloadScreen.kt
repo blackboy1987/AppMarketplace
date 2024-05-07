@@ -56,6 +56,9 @@ fun DownloadScreen(
     var adRewardStatus by remember {
         mutableStateOf(false)
     }
+    var click by remember {
+        mutableStateOf(false)
+    }
     val userInfo by remember {
         mutableStateOf(SharedPreferencesUtils(context).getUserInfo())
     }
@@ -108,27 +111,32 @@ fun DownloadScreen(
                     .align(Alignment.BottomStart)
                     .fillMaxWidth()){
                     Button(onClick = {
-                        if(adRewardStatus){
-                            navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.adDetail.id}/${downloadViewModel.adDetail.adId}")
+                        if(!click){
+                            click = true
+                            if(adRewardStatus){
+                                navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.adDetail.id}/${downloadViewModel.adDetail.adId}")
+                            }else{
+                                requestRewardAd(context, onClose = {msg->
+                                    Log.e("requestRewardAd", "DownloadScreen: $msg")
+                                    if(msg=="onReward"){
+                                        // 视频观看完成
+                                        coroutineScope.launch {
+                                            downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
+                                            CommonUtils.toast(context, msg)
+                                            adRewardStatus = true
+                                            navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
+                                        }
+                                    }else if(msg=="loadRewardAdFail"){
+                                        // 广告加载失败
+                                        coroutineScope.launch {
+                                            downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
+                                            navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
+                                        }
+                                    }
+                                })
+                            }
                         }else{
-                            requestRewardAd(context, onClose = {msg->
-                                Log.e("requestRewardAd", "DownloadScreen: $msg")
-                                if(msg=="onReward"){
-                                    // 视频观看完成
-                                    coroutineScope.launch {
-                                        downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
-                                        CommonUtils.toast(context, msg)
-                                        adRewardStatus = true
-                                        navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
-                                    }
-                                }else if(msg=="loadRewardAdFail"){
-                                    // 广告加载失败
-                                    coroutineScope.launch {
-                                        downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
-                                        navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
-                                    }
-                                }
-                            })
+                            CommonUtils.toast(context,"请勿重复点击")
                         }
                     }, modifier = Modifier
                         .fillMaxWidth()

@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        registerActivityLifecycleCallbacks(MyActivityLifecycleCallbacks())
         // 用来加载开屏广告
         setContent {
             // 添加一个状态来判断开屏广告的加载情况.(默认加载失败)
