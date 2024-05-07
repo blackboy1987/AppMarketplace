@@ -77,8 +77,8 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
             override fun onAdDismiss(p0: SSPAd?) {
                 Log.e("requestSplashAd", "onAdDismiss: ${p0}", )
                 super.onAdDismiss(p0)
-                callback(0)
-                adData["status"] = "0"
+                callback(1)
+                adData["status"] = "1"
                 HttpUtils.adRequest(adData)
             }
 

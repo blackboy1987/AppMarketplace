@@ -1,5 +1,6 @@
 package com.cqzyzx.jpfx
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,11 +12,12 @@ import com.cqzyzx.jpfx.util.IHttpCallback
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.youxiao.ssp.core.SSPSdk
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
 
     override fun attachBaseContext(newBase: Context?) {
+        //SSPSdk.attachBaseContext(newBase)
         super.attachBaseContext(newBase)
-        SSPSdk.attachBaseContext(newBase)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

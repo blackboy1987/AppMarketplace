@@ -1,110 +1,55 @@
 package com.cqzyzx.jpfx
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.cqzyzx.jpfx.config.Config
-import com.cqzyzx.jpfx.ui.components.ad.RequestSplashAd
+import com.cqzyzx.jpfx.ui.layout.PreSplash
+import com.cqzyzx.jpfx.ui.layout.SplashAd
+import com.cqzyzx.jpfx.util.AppInfoUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.IHttpCallback
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
-import com.cqzyzx.jpfx.ui.theme.AppMarketplaceTheme
 import java.util.Date
-import java.util.Timer
-import java.util.TimerTask
 
 class MainActivity : ComponentActivity() {
 
-    @SuppressLint("UnrememberedMutableState")
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e("SplashActivity", "MainActivity start ${Date()}")
         super.onCreate(savedInstanceState)
-        setContent {
-            AppMarketplaceTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Text(text = "MainActivity")
-                }
-            }
-        }
+        registerActivityLifecycleCallbacks(MyActivityLifecycleCallbacks())
         // 用来加载开屏广告
         setContent {
-            var showClose by mutableStateOf(false)
-            fun countDownTimer2() {
-                var num = 5
-                val timer = Timer()
-                val timeTask = object : TimerTask() {
-                    override fun run() {
-                        num--
-                        if (num < 0) {
-                            timer.cancel()
-                            showClose = true
-                        }
-                    }
-                }
-                timer.schedule(timeTask, 1000, 1000)
+            // 添加一个状态来判断开屏广告的加载情况.(默认加载失败)
+            var adSuccess by remember {
+                mutableStateOf(false)
             }
-
-
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Log.e("SplashActivity", "MainActivity ad 1 ${Date()}")
-                Box(modifier = Modifier.fillMaxSize()){
-                    Box(modifier = Modifier.fillMaxSize()){
-                        RequestSplashAd(this@MainActivity) {
-                            Log.e("SplashActivity", "MainActivity ad 2 ${Date()}")
-                            if(it!=0){
-                                gotoMainActivity()
-                            }else{
-                                countDownTimer2()
-                            }
-                            Thread{
-                                val data = mapOf("adType" to 0,"status" to it,"token" to SharedPreferencesUtils(this@MainActivity).get("token"))
-                                HttpUtils.get(
-                                    data,
-                                    Config.baseUrl + "/api/ad/collection",
-                                    object : IHttpCallback {
-                                        override fun onSuccess(data: Any?) {
-                                            Log.e("RequestSplashAd", "onSuccess: ${data.toString()},$it", )
-                                        }
-                                        override fun onFailed(error: Any?) {
-                                        }
-                                    })
-                            }
-                            Log.e("SplashActivity", "MainActivity ad 3 ${Date()}")
-                        }
-                    }
-                    if(showClose){
-                        Box(){
-                            IconButton(onClick = {
-                                gotoMainActivity()
-                            }) {
-                                Icon(imageVector = Icons.Default.Close, contentDescription = "")
-                            }
-                        }
+                SplashAd {
+                    if(it!=0){
+                        gotoMainActivity()
+                    }else{
+                        adSuccess = true
                     }
                 }
-
+                if(!adSuccess){
+                    PreSplash()
+                }
             }
         }
     }
@@ -118,5 +63,32 @@ class MainActivity : ComponentActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         Log.e("SplashActivity", "MainActivity to HomeActivity ${Date()}")
+    }
+
+    /**
+     *
+     * 记录日志
+     */
+    private fun login(){
+        val deviceInfo = AppInfoUtils.getDeviceInfo(this@MainActivity)
+        val data = mapOf(
+            "deviceId" to deviceInfo.deviceId,
+            "model" to deviceInfo.model,
+            "simSerialNumber" to deviceInfo.simSerialNumber,
+            "os" to deviceInfo.os,
+            "manufacturer" to deviceInfo.manufacturer,
+            "token" to SharedPreferencesUtils(this@MainActivity).get("token")
+        )
+        HttpUtils.get(
+            data,
+            Config.baseUrl + "/api/gather",
+            object : IHttpCallback {
+                override fun onSuccess(data: Any?) {
+
+                }
+
+                override fun onFailed(error: Any?) {
+                }
+            })
     }
 }
