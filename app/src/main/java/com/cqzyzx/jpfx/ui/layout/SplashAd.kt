@@ -34,7 +34,7 @@ fun SplashAd(onLoad:(status: Int)->Unit) {
                             override fun onFailed(error: Any?) {
                             }
                         })
-                }
+                }.start()
                 Log.e("SplashActivity", "MainActivity ad 3 ${Date()}")
             }
         }

@@ -16,12 +16,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.cqzyzx.jpfx.config.Config
+import com.cqzyzx.jpfx.entity.CategoryListResponse
 import com.cqzyzx.jpfx.ui.layout.PreSplash
 import com.cqzyzx.jpfx.ui.layout.SplashAd
 import com.cqzyzx.jpfx.util.AppInfoUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.IHttpCallback
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.google.gson.Gson
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
@@ -31,6 +33,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // 用来加载开屏广告
         setContent {
+            // 这里个广告拉取会有一段时间，因此可以在这里做一些初始化的功能
+            Thread{
+                // 登录
+                login()
+                // 获取分类数据
+                category()
+            }.start()
+
             // 添加一个状态来判断开屏广告的加载情况.(默认加载失败)
             var adSuccess by remember {
                 mutableStateOf(false)
@@ -53,16 +63,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * 跳转至主页
-     */
-    private fun gotoMainActivity() {
-        Log.e("SplashActivity", "MainActivity to HomeActivity 4 ${Date()}")
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        Log.e("SplashActivity", "MainActivity to HomeActivity ${Date()}")
-    }
 
     /**
      *
@@ -89,5 +89,40 @@ class MainActivity : ComponentActivity() {
                 override fun onFailed(error: Any?) {
                 }
             })
+    }
+
+    /**
+     *
+     * 分类数据
+     */
+    private fun category(){
+        val data = mapOf(
+            "token" to SharedPreferencesUtils(this@MainActivity).get("token")
+        )
+        HttpUtils.post(
+            data,
+            Config.baseUrl + "/api/category/list",
+            object : IHttpCallback {
+                override fun onSuccess(data: Any?) {
+                    Log.e("category", "onSuccess: ${data.toString()}", )
+                    val gson = Gson()
+                    val categoryListResponse = gson.fromJson(data.toString(), CategoryListResponse::class.java)
+                    SharedPreferencesUtils(this@MainActivity).set("categoryList",gson.toJson(categoryListResponse.data))
+                }
+
+                override fun onFailed(error: Any?) {
+                }
+            })
+    }
+
+    /**
+     * 跳转至主页
+     */
+    private fun gotoMainActivity() {
+        Log.e("SplashActivity", "MainActivity to HomeActivity 4 ${Date()}")
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        Log.e("SplashActivity", "MainActivity to HomeActivity ${Date()}")
     }
 }

@@ -64,7 +64,10 @@ class AppViewModel:ViewModel() {
         currentIndex = id
         hasMore = true
         // 需要清除，显示loading效果
-        softList = arrayListOf()
+        if(pageNumber1==1){
+            softList = arrayListOf()
+        }
+
 
         val res = softService.orderBy(SharedPreferencesUtils(context).get("token"),pageNumber1,pageSize,"7",id)
         if (res.code == 0 && res.data != null) {
@@ -80,9 +83,9 @@ class AppViewModel:ViewModel() {
             }
         }else{
             softList = arrayListOf()
+            hasMore = false
         }
         softListLoading = false
-        hasMore = false
     }
 
     // 下拉刷新

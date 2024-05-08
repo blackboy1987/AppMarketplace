@@ -74,6 +74,7 @@ import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.HomeViewModel
 import com.cqzyzx.jpfx.viewmodel.SoftViewModel
 import java.util.Date
+import java.util.UUID
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class
@@ -100,11 +101,7 @@ fun HomeScreen(
     val selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
-    val pagerState = rememberPagerState(pageCount = {
-        homeViewModel.homeData.categories.size
-    }, initialPage = 0)
     val categories = listOf("最近更新")
-
     suspend fun loadData() {
         if (!loading) {
             loading = true
@@ -112,7 +109,10 @@ fun HomeScreen(
             loading = false
         }
     }
-    LaunchedEffect(Unit) {
+    val key = remember {
+        UUID.randomUUID().toString()
+    }
+    LaunchedEffect(key) {
         homeViewModel.load(context)
         if (homeViewModel.homeData.notice.size > 0 && SharedPreferencesUtils(context).get(
                 "homeNoticeShowDialog_" + CommonUtils.formatDate(
