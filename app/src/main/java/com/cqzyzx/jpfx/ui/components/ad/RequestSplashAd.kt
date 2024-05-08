@@ -6,7 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
 import com.cqzyzx.jpfx.config.AdConfig
@@ -35,7 +38,8 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
 
 
     val adClient = AdClient(context as Activity)
-    AndroidView(factory = {
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_splash, null)
         val mAdLayout = view.findViewById<FrameLayout>(R.id.ad_layout)
         mAdLayout.visibility = View.VISIBLE
