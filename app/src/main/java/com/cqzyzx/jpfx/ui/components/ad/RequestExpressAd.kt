@@ -44,21 +44,18 @@ fun RequestExpressAd(context: Context) {
                 super.onAdLoad(ad)
                 findViewById.removeAllViews()
                 findViewById.addView(ad.view)
-                CommonUtils.toast(context,"requestExpressAd onAdLoad $ad")
             }
 
             override fun onError(i: Int, s: String) {
                 super.onError(i, s)
                 adData["status"] = "-1"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestExpressAd onError $i,$s")
             }
 
             override fun onAdShow(ad: SSPAd?) {
                 super.onAdShow(ad)
                 adData["status"] = "0"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestExpressAd onAdShow $ad")
             }
         })
         view

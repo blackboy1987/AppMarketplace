@@ -2,7 +2,7 @@ package com.cqzyzx.jpfx.config
 
 object AdConfig {
 
-    const val MEDIA_ID = "7039"
+    /*const val MEDIA_ID = "7039"
 
     // 测试开屏广告ID
     const val SPLASH_AD_ID = "13901"
@@ -23,14 +23,14 @@ object AdConfig {
     const val FULL_SCREEN_VIDEO = "12907"
 
     // 测试激励视频广告ID
-    const val REWARD_VIDEO_AD_ID = "13903"
+    const val REWARD_VIDEO_AD_ID = "13903"*/
 
 
 
 
 
 
-    /*const val MEDIA_ID = "6862"
+    const val MEDIA_ID = "6862"
 
     // 测试开屏广告ID
     const val SPLASH_AD_ID = "12902"
@@ -51,6 +51,6 @@ object AdConfig {
     const val FULL_SCREEN_VIDEO = "12907"
 
     // 测试激励视频广告ID
-    const val REWARD_VIDEO_AD_ID = "12909"*/
+    const val REWARD_VIDEO_AD_ID = "12909"
 
 }

@@ -117,12 +117,10 @@ fun DownloadScreen(
                                 navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.adDetail.id}/${downloadViewModel.adDetail.adId}")
                             }else{
                                 requestRewardAd(context, onClose = {msg->
-                                    Log.e("requestRewardAd", "DownloadScreen: $msg")
                                     if(msg=="onReward"){
                                         // 视频观看完成
                                         coroutineScope.launch {
                                             downloadViewModel.adReward(context,downloadViewModel.adDetail.id,downloadViewModel.adDetail.adId)
-                                            CommonUtils.toast(context, msg)
                                             adRewardStatus = true
                                             navController.navigate(Destinations.WebViewFrame.route+"/${downloadViewModel.downloadInfo.id}/${downloadViewModel.downloadInfo.adId}")
                                         }

@@ -31,12 +31,10 @@ fun RequestExpressDrawFeedAd(context: Context) {
                 super.onAdLoad(ad)
                 findViewById.removeAllViews()
                 findViewById.addView(ad.view)
-                CommonUtils.toast(context,"requestExpressDrawFeedAd onAdLoad $ad")
             }
 
             override fun onError(i: Int, s: String) {
                 super.onError(i, s)
-                CommonUtils.toast(context,"requestExpressDrawFeedAd onError $i,$s")
             }
 
             override fun onAdShow(ad: SSPAd?) {

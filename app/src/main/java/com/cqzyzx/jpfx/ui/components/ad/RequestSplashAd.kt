@@ -50,7 +50,6 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
                 callback(-1)
                 adData["status"] = "-1"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestSplashAd onError${var1}, ${error}")
             }
             override fun onAdLoad(p0: SSPAd?) {
                 super.onAdLoad(p0)
@@ -58,7 +57,6 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
                 callback(0)
                 adData["status"] = "0"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestSplashAd onAdLoad ${p0}")
             }
 
             override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String?) {
@@ -87,7 +85,6 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
                 callback(1)
                 adData["status"] = "1"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestSplashAd onAdDismiss ${p0}")
             }
 
             override fun onStartDownload(p0: String?) {
