@@ -131,8 +131,11 @@ class SplashActivity : ComponentActivity() {
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         fun onEnterBackground() {
             // 应用程序进入后台
-            count = 1
-            clearContent()
+            if(count==0){
+                clearContent()
+                count = 1
+            }
+
             Log.e("AppLifecycleObserver", "onEnterBackground: 应用程序进入后台")
         }
     }

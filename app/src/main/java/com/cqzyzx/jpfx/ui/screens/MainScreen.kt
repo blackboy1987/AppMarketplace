@@ -66,7 +66,7 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
         try {
             mutableIntStateOf(SharedPreferencesUtils(context).get("homeIndex").toInt())
         } catch (e: Exception) {
-            mutableIntStateOf(1)
+            mutableIntStateOf(0)
         }
     }
 

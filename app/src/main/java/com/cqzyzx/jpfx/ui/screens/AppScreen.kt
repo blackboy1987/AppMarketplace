@@ -52,15 +52,11 @@ import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.TopBarTitle
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.selectColor
-import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.AppViewModel
 import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AppScreen(
     navController: NavHostController,
@@ -69,15 +65,8 @@ fun AppScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    var categories by remember {
-        mutableStateOf(listOf<CategoryEntity>())
-    }
-    val key = remember {
-        UUID.randomUUID().toString()
-    }
-    LaunchedEffect(key) {
-        val get = SharedPreferencesUtils(context).get("categoryList")
-        categories = Gson().fromJson(get, object : TypeToken<List<CategoryEntity>>() {}.type)
+    LaunchedEffect(vm.categoryLoadStatus) {
+        vm.fetchList(context)
     }
 
     Scaffold(
@@ -123,8 +112,8 @@ fun AppScreen(
                         .background(Color(0xfffafafa))
                         .padding(top = 16.dp)
                 ) {
-                    if (categories.isNotEmpty()) {
-                        categories.forEachIndexed { _, category ->
+                    if (vm.categories.isNotEmpty()) {
+                        vm.categories.forEachIndexed { _, category ->
                             item {
                                 CategoryItem(
                                     category,
@@ -159,11 +148,6 @@ fun AppScreen(
                                     onClick = { id ->
                                         navController.navigate("${Destinations.AppDetailFrame.route}/$id")
                                     })
-                            }
-                        }
-                        if (vm.softListLoading && vm.pageNumber != 1) {
-                            item {
-                                Loading1()
                             }
                         }
                     }
