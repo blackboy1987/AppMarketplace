@@ -26,7 +26,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
-import androidx.compose.material.ScaffoldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
@@ -63,9 +62,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.ui.components.Item1
+import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.NotificationBar
-import com.cqzyzx.jpfx.ui.components.PagerTabIndicator1
-import com.cqzyzx.jpfx.ui.components.SwiperItem
+import com.cqzyzx.jpfx.ui.components.home.SwiperItem
 import com.cqzyzx.jpfx.ui.components.ad.requestInteractionAd
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.fontSize12
@@ -75,6 +74,7 @@ import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.HomeViewModel
 import com.cqzyzx.jpfx.viewmodel.SoftViewModel
 import java.util.Date
+import java.util.UUID
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class
@@ -101,11 +101,7 @@ fun HomeScreen(
     val selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
-    val pagerState = rememberPagerState(pageCount = {
-        homeViewModel.homeData.categories.size
-    }, initialPage = 0)
     val categories = listOf("最近更新")
-
     suspend fun loadData() {
         if (!loading) {
             loading = true
@@ -113,7 +109,10 @@ fun HomeScreen(
             loading = false
         }
     }
-    LaunchedEffect(Unit) {
+    val key = remember {
+        UUID.randomUUID().toString()
+    }
+    LaunchedEffect(key) {
         homeViewModel.load(context)
         if (homeViewModel.homeData.notice.size > 0 && SharedPreferencesUtils(context).get(
                 "homeNoticeShowDialog_" + CommonUtils.formatDate(
@@ -281,6 +280,11 @@ fun HomeScreen(
                                 },
                             )
                         }
+                    }
+                }
+                if(loading){
+                    item{
+                        Loading1()
                     }
                 }
                 itemsIndexed(softViewModel.softList) { index, item ->

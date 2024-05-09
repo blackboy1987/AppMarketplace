@@ -1,5 +1,6 @@
 package com.cqzyzx.jpfx.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,11 +48,15 @@ import androidx.navigation.NavHostController
 import com.cqzyzx.jpfx.entity.CategoryEntity
 import com.cqzyzx.jpfx.extension.onBottomReached
 import com.cqzyzx.jpfx.ui.components.Item1
+import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.TopBarTitle
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.selectColor
+import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.AppViewModel
 import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -64,15 +69,15 @@ fun AppScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    var showDropdownMenu by remember {
-        mutableStateOf(false)
+    var categories by remember {
+        mutableStateOf(listOf<CategoryEntity>())
     }
     val key = remember {
         UUID.randomUUID().toString()
     }
     LaunchedEffect(key) {
-        //获取分类列表
-        vm.fetchList(context)
+        val get = SharedPreferencesUtils(context).get("categoryList")
+        categories = Gson().fromJson(get, object : TypeToken<List<CategoryEntity>>() {}.type)
     }
 
     Scaffold(
@@ -105,6 +110,7 @@ fun AppScreen(
         val state = rememberPullRefreshState(refreshing, ::refresh)
         val lazyListState = rememberLazyListState()
         lazyListState.onBottomReached(buffer = 3) {
+            Log.e("lazyListState", "AppScreen: ")
             coroutineScope.launch {
                 vm.loadMore(context)
             }
@@ -117,8 +123,8 @@ fun AppScreen(
                         .background(Color(0xfffafafa))
                         .padding(top = 16.dp)
                 ) {
-                    if(!vm.categoryLoading){
-                        vm.categories.forEachIndexed { _, category ->
+                    if (categories.isNotEmpty()) {
+                        categories.forEachIndexed { _, category ->
                             item {
                                 CategoryItem(
                                     category,
@@ -126,7 +132,7 @@ fun AppScreen(
                                 ) { currentIndex ->
                                     refreshing = true
                                     coroutineScope.launch {
-                                        vm.updateCurrentIndex(context, 1,currentIndex)
+                                        vm.updateCurrentIndex(context, 1, currentIndex)
                                         //lazyListState.animateScrollToItem(0)
                                         refreshing = false
                                     }
@@ -146,11 +152,19 @@ fun AppScreen(
                         state = lazyListState,
                     ) {
                         items(vm.softList) { item ->
-                           key(item.id){
-                               Item1(item, modifier = Modifier.padding(end = 8.dp), onClick = { id ->
-                                   navController.navigate("${Destinations.AppDetailFrame.route}/$id")
-                               })
-                           }
+                            key(item.id) {
+                                Item1(
+                                    item,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    onClick = { id ->
+                                        navController.navigate("${Destinations.AppDetailFrame.route}/$id")
+                                    })
+                            }
+                        }
+                        if (vm.softListLoading && vm.pageNumber != 1) {
+                            item {
+                                Loading1()
+                            }
                         }
                     }
                     PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.Center))

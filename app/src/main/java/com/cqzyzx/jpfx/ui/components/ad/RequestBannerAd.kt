@@ -5,7 +5,9 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
 import com.cqzyzx.jpfx.config.AdConfig
@@ -30,7 +32,8 @@ fun RequestBannerAd(context: Context) {
         "mediaId" to AdConfig.MEDIA_ID,
         "token" to SharedPreferencesUtils(context).get("token")
     )
-    AndroidView(factory = {
+    AndroidView(
+        modifier = Modifier.fillMaxWidth(),factory = {
         val view = LayoutInflater.from(it).inflate(R.layout.activity_banner, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_layout)
         adClient.requestBannerAd(findViewById, AdConfig.BANNER_AD_ID, object : AdLoadAdapter() {

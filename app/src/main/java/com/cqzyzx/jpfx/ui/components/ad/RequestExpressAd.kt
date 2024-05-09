@@ -4,10 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
 import com.cqzyzx.jpfx.config.AdConfig
+import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.google.gson.Gson
@@ -31,7 +34,9 @@ fun RequestExpressAd(context: Context) {
 
 
     val adClient = AdClient(context as Activity)
-    AndroidView(factory = {
+    AndroidView(
+        modifier = Modifier.fillMaxWidth(),
+        factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_template, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_layout)
         adClient.requestExpressAd(AdConfig.TEMPLATE_AD_ID, object : AdLoadAdapter() {
