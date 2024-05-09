@@ -39,7 +39,6 @@ fun RequestBannerAd(context: Context) {
                 Log.e("requestBannerAd onError", "onError: $i,$s")
                 adData["status"] = "0"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestBannerAd onError $i,$s")
             }
 
             override fun onAdShow(ad: SSPAd?) {
@@ -47,7 +46,6 @@ fun RequestBannerAd(context: Context) {
                 Log.e("requestBannerAd onAdShow", "onAdShow: $ad")
                 adData["status"] = "-1"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestBannerAd onAdShow $ad")
             }
         })
         view

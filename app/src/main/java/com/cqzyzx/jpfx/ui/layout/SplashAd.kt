@@ -17,11 +17,10 @@ import java.util.Date
 @Composable
 fun SplashAd(onLoad:(status: Int)->Unit) {
     val context = LocalContext.current
-    var start = Date().time
+    val start = Date().time
     Box(modifier = Modifier.fillMaxSize()){
         Box(modifier = Modifier.fillMaxSize()){
             RequestSplashAd(context) {
-                CommonUtils.toast(context,"开屏广告加载时间：${(Date().time-start)/1000} 秒")
                 onLoad(it)
                 Thread{
                     val data = mapOf("adType" to 0,"status" to it,"token" to SharedPreferencesUtils(context).get("token"))
@@ -36,7 +35,6 @@ fun SplashAd(onLoad:(status: Int)->Unit) {
                             }
                         })
                 }
-                Log.e("SplashActivity", "MainActivity ad 3 ${Date()}")
             }
         }
     }

@@ -46,64 +46,36 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
                 callback(-1)
                 adData["status"] = "-1"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestSplashAd onError${var1}, ${error}")
             }
+
+            /**
+             * 加载成功
+             */
             override fun onAdLoad(p0: SSPAd?) {
                 super.onAdLoad(p0)
                 Log.e("requestSplashAd", "onAdLoad: ${p0}", )
                 callback(0)
                 adData["status"] = "0"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestSplashAd onAdLoad ${p0}")
             }
 
-            override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String?) {
-                Log.e("requestSplashAd", "onStatus: ${p0},${p1},${p2},${p3},", )
-                super.onStatus(p0, p1, p2, p3)
-            }
-
-            override fun onNext(p0: NextAdInfo?) {
-                Log.e("requestSplashAd", "onNext: ${p0}", )
-                super.onNext(p0)
-            }
-
-            override fun onAdClick(p0: SSPAd?) {
-                Log.e("requestSplashAd", "onAdClick: ${p0}", )
-                super.onAdClick(p0)
-            }
-
+            /**
+             * 广告显示
+             */
             override fun onAdShow(p0: SSPAd?) {
                 Log.e("requestSplashAd", "onAdShow: ${p0}", )
                 super.onAdShow(p0)
             }
 
+            /**
+             * 广告隐藏
+             */
             override fun onAdDismiss(p0: SSPAd?) {
                 Log.e("requestSplashAd", "onAdDismiss: ${p0}", )
                 super.onAdDismiss(p0)
                 callback(1)
                 adData["status"] = "1"
                 HttpUtils.adRequest(adData)
-                CommonUtils.toast(context,"requestSplashAd onAdDismiss ${p0}")
-            }
-
-            override fun onStartDownload(p0: String?) {
-                Log.e("requestSplashAd", "onStartDownload: ${p0}", )
-                super.onStartDownload(p0)
-            }
-
-            override fun onDownloadCompleted(p0: String?) {
-                Log.e("requestSplashAd", "onDownloadCompleted: ${p0}", )
-                super.onDownloadCompleted(p0)
-            }
-
-            override fun onStartInstall(p0: String?) {
-                Log.e("requestSplashAd", "onStartInstall: ${p0}", )
-                super.onStartInstall(p0)
-            }
-
-            override fun onInstallCompleted(p0: String?) {
-                Log.e("requestSplashAd", "onInstallCompleted: ${p0}", )
-                super.onInstallCompleted(p0)
             }
         })
         view

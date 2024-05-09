@@ -33,7 +33,6 @@ fun requestInteractionAd(context: Context, onClose:(status:String)->Unit) {
             adData["status"] = "0"
             onClose("0")
             HttpUtils.adRequest(adData)
-            CommonUtils.toast(context,"requestInteractionAd onAdShow ${p0}")
         }
 
         override fun onError(p0: Int, p1: String?) {
@@ -42,7 +41,6 @@ fun requestInteractionAd(context: Context, onClose:(status:String)->Unit) {
             adData["status"] = "-1"
             HttpUtils.adRequest(adData)
             onClose("-1")
-            CommonUtils.toast(context,"requestInteractionAd onError ${p0},$p1")
         }
     })
 }
