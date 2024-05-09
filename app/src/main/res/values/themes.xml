@@ -2,5 +2,6 @@
 <resources>
     <style name="Theme.AppMarketplace" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowBackground">@drawable/logo</item>
     </style>
 </resources>
