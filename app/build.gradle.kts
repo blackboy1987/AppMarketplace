@@ -53,6 +53,10 @@ android {
 
 dependencies {
 
+
+    implementation("androidx.lifecycle:lifecycle-runtime:2.7.0")
+
+
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")
     implementation("com.google.accompanist:accompanist-insets:0.31.5-beta")
     implementation("com.google.accompanist:accompanist-insets-ui:0.31.5-beta")
