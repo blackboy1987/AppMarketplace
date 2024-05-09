@@ -42,13 +42,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.MyInput1
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.fontSize12
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.LoginViewModel
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 
@@ -96,7 +96,19 @@ fun LoginScreen(
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
-            val (text1, text2, logo) = createRefs()
+            val (text1, text2, logo,back) = createRefs()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(back) {
+                        top.linkTo(text1.top, margin = 10.dp)
+                        start.linkTo(text1.start, margin = 10.dp)
+                    }
+            ) {
+                LeftIcon{
+                    navController.navigate(Destinations.MainFrame.route+"/0")
+                }
+            }
             Box(modifier = Modifier
                 .height(100.dp)
                 .fillMaxWidth()

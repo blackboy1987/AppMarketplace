@@ -1,9 +1,13 @@
 package com.cqzyzx.jpfx.ui.screens
 
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -18,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +39,9 @@ import com.cqzyzx.jpfx.ui.theme.selectIconColor
 import com.cqzyzx.jpfx.ui.theme.unSelectColor
 import com.cqzyzx.jpfx.ui.theme.unSelectTextColor
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 data class NavigationItem(
     val title: String,
@@ -41,6 +49,7 @@ data class NavigationItem(
     val selectIcon: Painter,
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(navController: NavHostController, type: String = "0") {
     val context = LocalContext.current
@@ -63,12 +72,13 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
     )
 
     var selectedItem by remember {
-        try {
-            mutableIntStateOf(SharedPreferencesUtils(context).get("homeIndex").toInt())
-        } catch (e: Exception) {
-            mutableIntStateOf(0)
-        }
+        mutableIntStateOf(0)
     }
+    var cornerShape = rememberCoroutineScope()
+    var pagerState = rememberPagerState(
+        initialPage=selectedItem,
+        pageCount = {navigationItems.size}
+    )
 
     Scaffold(
         bottomBar = {
@@ -80,6 +90,10 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                         selected = (selectedItem == index),
                         onClick = {
                             selectedItem = index
+                            cornerShape.launch {
+                                Log.e("cornerShape", "MainScreen: $index", )
+                                pagerState.animateScrollToPage(index)
+                            }
                         },
                         icon = {
                             if (selectedItem == index) {
@@ -148,23 +162,20 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                 .fillMaxHeight()
                 .background(Color.Red),
         ) {
-            when (selectedItem) {
-                0 -> {
-                    SharedPreferencesUtils(context).set("homeIndex", "0")
-                    HomeScreen(navController = navController)
-                }
-                1 -> {
-                    SharedPreferencesUtils(context).set("homeIndex", "1")
-                    AppScreen(navController = navController)
-                }
-                2 -> {
-                    // 判断是否登录
-                    val token = SharedPreferencesUtils(context).get("token")
-                    if (token.isNotBlank()) {
-                        SharedPreferencesUtils(context).set("homeIndex", "2")
+            HorizontalPager(
+                pageSpacing = 20.dp,
+                state = pagerState,
+                userScrollEnabled = false,
+            ) {index->
+                when(index){
+                    0 -> {
+                        HomeScreen(navController)
+                    }
+                    1 -> {
+                        AppScreen(navController)
+                    }
+                    2 -> {
                         MineScreen(navController = navController)
-                    } else {
-                        navController.navigate(Destinations.LoginFrame.route)
                     }
 
                 }
