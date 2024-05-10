@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.screens.AboutScreen
-import com.cqzyzx.jpfx.ui.screens.AdScreen
 import com.cqzyzx.jpfx.ui.screens.AnimatedScreen
 import com.cqzyzx.jpfx.ui.screens.AppDetailScreen
 import com.cqzyzx.jpfx.ui.screens.CollectLogScreen
@@ -19,12 +18,12 @@ import com.cqzyzx.jpfx.ui.screens.HistoryScreen
 import com.cqzyzx.jpfx.ui.screens.LoginScreen
 import com.cqzyzx.jpfx.ui.screens.MainScreen
 import com.cqzyzx.jpfx.ui.screens.PageScreen
-import com.cqzyzx.jpfx.ui.screens.WebViewScreen
 import com.cqzyzx.jpfx.ui.screens.RegisterScreen
 import com.cqzyzx.jpfx.ui.screens.SearchScreen
 import com.cqzyzx.jpfx.ui.screens.SettingScreen
 import com.cqzyzx.jpfx.ui.screens.TouGaoAppInfoListScreen
 import com.cqzyzx.jpfx.ui.screens.TouGaoScreen
+import com.cqzyzx.jpfx.ui.screens.WebViewScreen
 import com.cqzyzx.jpfx.ui.screens.WebViewScreen2
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -247,21 +246,6 @@ fun NavHostApp() {
             val type = it.arguments?.getString("type") ?: ""
             val title = it.arguments?.getString("title") ?: ""
             PageScreen(navController,type,title)
-        }
-        composable(
-            Destinations.AdFrame.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left
-                )
-            },
-        ) {
-            AdScreen(navController)
         }
         composable(
             Destinations.AnimatedFrame.route,

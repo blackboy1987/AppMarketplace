@@ -2,7 +2,6 @@ package com.cqzyzx.jpfx.viewmodel
 
 import android.content.Context
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -18,8 +17,6 @@ class AppViewModel:ViewModel() {
 
     private val softService = SoftService.instance()
 
-    var categoryLoadStatus by mutableIntStateOf(0)
-
     var categoryLoading by mutableStateOf(true)
         private set
 
@@ -34,9 +31,7 @@ class AppViewModel:ViewModel() {
         private set
 
 
-    /**
-     * 选中的分类id
-     */
+
     var currentIndex by mutableStateOf(0)
         private set
 
@@ -47,7 +42,7 @@ class AppViewModel:ViewModel() {
     private var pageSize = 20
 
     // 分类
-    suspend fun fetchList(context: Context){
+    suspend fun fetchList(context: Context) {
         categoryLoading = true
         val res = categoryService.list(SharedPreferencesUtils(context).get("token"))
         if (res.code == 0) {
@@ -57,7 +52,6 @@ class AppViewModel:ViewModel() {
             updateCurrentIndex(context,1,tmpList[0].id)
             categories = tmpList
             categoryLoading = false
-            categoryLoadStatus = 1
         }else{
             categories = arrayListOf()
         }
@@ -70,10 +64,7 @@ class AppViewModel:ViewModel() {
         currentIndex = id
         hasMore = true
         // 需要清除，显示loading效果
-        if(pageNumber1==1){
-            softList = arrayListOf()
-        }
-
+        softList = arrayListOf()
 
         val res = softService.orderBy(SharedPreferencesUtils(context).get("token"),pageNumber1,pageSize,"7",id)
         if (res.code == 0 && res.data != null) {
@@ -89,9 +80,9 @@ class AppViewModel:ViewModel() {
             }
         }else{
             softList = arrayListOf()
-            hasMore = false
         }
         softListLoading = false
+        hasMore = false
     }
 
     // 下拉刷新

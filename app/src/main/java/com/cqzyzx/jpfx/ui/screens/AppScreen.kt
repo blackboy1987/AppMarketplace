@@ -1,6 +1,5 @@
 package com.cqzyzx.jpfx.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -21,13 +20,11 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,7 +46,6 @@ import androidx.navigation.NavHostController
 import com.cqzyzx.jpfx.entity.CategoryEntity
 import com.cqzyzx.jpfx.extension.onBottomReached
 import com.cqzyzx.jpfx.ui.components.Item1
-import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.TopBarTitle
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.selectColor
@@ -58,7 +54,7 @@ import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AppScreen(
     navController: NavHostController,
@@ -67,7 +63,14 @@ fun AppScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
+    var showDropdownMenu by remember {
+        mutableStateOf(false)
+    }
+    val key = remember {
+        UUID.randomUUID().toString()
+    }
+    LaunchedEffect(key) {
+        //获取分类列表
         vm.fetchList(context)
     }
 
@@ -76,9 +79,8 @@ fun AppScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xfffafafa)
-                ),
+                backgroundColor = Color(0xfffafafa),
+                elevation = 0.dp,
                 title = { TopBarTitle(text = "应用分类") },
                 actions = {
                     IconButton(onClick = {
@@ -102,7 +104,6 @@ fun AppScreen(
         val state = rememberPullRefreshState(refreshing, ::refresh)
         val lazyListState = rememberLazyListState()
         lazyListState.onBottomReached(buffer = 3) {
-            Log.e("lazyListState", "AppScreen: ")
             coroutineScope.launch {
                 vm.loadMore(context)
             }
@@ -115,7 +116,7 @@ fun AppScreen(
                         .background(Color(0xfffafafa))
                         .padding(top = 16.dp)
                 ) {
-                    if (vm.categories.isNotEmpty()) {
+                    if(!vm.categoryLoading){
                         vm.categories.forEachIndexed { _, category ->
                             item {
                                 CategoryItem(
@@ -124,7 +125,7 @@ fun AppScreen(
                                 ) { currentIndex ->
                                     refreshing = true
                                     coroutineScope.launch {
-                                        vm.updateCurrentIndex(context, 1, currentIndex)
+                                        vm.updateCurrentIndex(context, 1,currentIndex)
                                         //lazyListState.animateScrollToItem(0)
                                         refreshing = false
                                     }
@@ -144,13 +145,10 @@ fun AppScreen(
                         state = lazyListState,
                     ) {
                         items(vm.softList) { item ->
-                            key(item.id) {
-                                Item1(
-                                    item,
-                                    modifier = Modifier.padding(end = 8.dp),
-                                    onClick = { id ->
-                                        navController.navigate("${Destinations.AppDetailFrame.route}/$id")
-                                    })
+                            key(item.id){
+                                Item1(item, modifier = Modifier.padding(end = 8.dp), onClick = { id ->
+                                    navController.navigate("${Destinations.AppDetailFrame.route}/$id")
+                                })
                             }
                         }
                     }
