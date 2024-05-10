@@ -77,6 +77,41 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
                 adData["status"] = "1"
                 HttpUtils.adRequest(adData)
             }
+
+            override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String?) {
+                Log.e("requestSplashAd", "onStatus: ${p0}", )
+                super.onStatus(p0, p1, p2, p3)
+            }
+
+            override fun onNext(p0: NextAdInfo?) {
+                Log.e("requestSplashAd", "onNext: ${p0}", )
+                super.onNext(p0)
+            }
+
+            override fun onAdClick(p0: SSPAd?) {
+                Log.e("requestSplashAd", "onAdClick: ${p0}", )
+                super.onAdClick(p0)
+            }
+
+            override fun onStartDownload(p0: String?) {
+                Log.e("requestSplashAd", "onStartDownload: ${p0}", )
+                super.onStartDownload(p0)
+            }
+
+            override fun onDownloadCompleted(p0: String?) {
+                Log.e("requestSplashAd", "onDownloadCompleted: ${p0}", )
+                super.onDownloadCompleted(p0)
+            }
+
+            override fun onStartInstall(p0: String?) {
+                Log.e("requestSplashAd", "onStartInstall: ${p0}", )
+                super.onStartInstall(p0)
+            }
+
+            override fun onInstallCompleted(p0: String?) {
+                Log.e("requestSplashAd", "onInstallCompleted: ${p0}", )
+                super.onInstallCompleted(p0)
+            }
         })
         view
     })

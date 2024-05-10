@@ -40,6 +40,7 @@ import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.google.gson.Gson
 import com.youxiao.ssp.core.SSPSdk
 import java.util.Date
+import kotlin.math.log
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
@@ -114,6 +115,7 @@ class SplashActivity : ComponentActivity() {
                     Box(modifier = Modifier.fillMaxSize()) {
                         SplashAd { code ->
                             status = code
+                            Log.e("SplashAd", "mySetContent: $code", )
                             if (code == -1 || code == 1) {
                                 // 显示主界面
                                 status = 1

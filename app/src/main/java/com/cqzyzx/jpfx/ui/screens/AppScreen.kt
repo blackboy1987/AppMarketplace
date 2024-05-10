@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -68,6 +69,9 @@ fun AppScreen(
     val key = rememberSaveable {
         UUID.randomUUID().toString()
     }
+    var currentIndex by rememberSaveable {
+        mutableIntStateOf(0)
+    }
     LaunchedEffect(key) {
         //获取分类列表
         vm.fetchList(context)
@@ -93,7 +97,7 @@ fun AppScreen(
         }
     ) { contentPadding ->
         val refreshScope = rememberCoroutineScope()
-        var refreshing by remember { mutableStateOf(false) }
+        var refreshing by rememberSaveable { mutableStateOf(false) }
 
         fun refresh() = refreshScope.launch {
             /*refreshing = true
@@ -121,9 +125,10 @@ fun AppScreen(
                             item {
                                 CategoryItem(
                                     category,
-                                    category.id == vm.currentIndex
-                                ) { currentIndex ->
+                                    category.id == currentIndex
+                                ) { index ->
                                     refreshing = true
+                                    currentIndex = index
                                     coroutineScope.launch {
                                         vm.updateCurrentIndex(context, 1,currentIndex)
                                         //lazyListState.animateScrollToItem(0)
