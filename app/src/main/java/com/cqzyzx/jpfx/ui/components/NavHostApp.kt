@@ -20,8 +20,6 @@ import com.cqzyzx.jpfx.ui.screens.PageScreen
 import com.cqzyzx.jpfx.ui.screens.RegisterScreen
 import com.cqzyzx.jpfx.ui.screens.SearchScreen
 import com.cqzyzx.jpfx.ui.screens.SettingScreen
-import com.cqzyzx.jpfx.ui.screens.TouGaoAppInfoListScreen
-import com.cqzyzx.jpfx.ui.screens.TouGaoScreen
 import com.cqzyzx.jpfx.ui.screens.WebViewScreen
 import com.cqzyzx.jpfx.ui.screens.WebViewScreen2
 
@@ -182,37 +180,6 @@ fun NavHostApp() {
             },
         ) {
             AboutScreen(navController)
-        }
-        composable(
-            Destinations.TouGaoAppInfoListFrame.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left
-                )
-            },
-        ) {
-            TouGaoAppInfoListScreen(navController)
-        }
-        composable(
-            Destinations.TouGaoFrame.route + "/{packageName}",
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left
-                )
-            },
-        ) {
-            val packageName = it.arguments?.getString("packageName") ?: ""
-            TouGaoScreen(navController, packageName)
         }
         composable(
             Destinations.SettingFrame.route,

@@ -92,58 +92,10 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                             }
                         },
                         icon = {
-                            if (selectedItem == index) {
-                                Card(
-                                    colors = CardDefaults.cardColors().copy(
-                                        containerColor = selectColor,
-                                    ),
-                                    shape = RoundedCornerShape(24.dp),
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                ) {
-                                    Icon(
-                                        modifier = Modifier
-                                            .padding(
-                                                horizontal = 24.dp,
-                                                vertical = 4.dp
-                                            )
-                                            .size(20.dp),
-                                        painter = item.selectIcon,
-                                        contentDescription = null,
-                                        tint = selectIconColor,
-                                    )
-                                }
-                            } else {
-                                Card(
-                                    colors = CardDefaults.cardColors().copy(
-                                        containerColor = Color.White,
-                                    ),
-                                    shape = RoundedCornerShape(24.dp),
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                ) {
-                                    Icon(
-                                        modifier = Modifier
-                                            .padding(
-                                                horizontal = 24.dp,
-                                                vertical = 4.dp
-                                            )
-                                            .size(20.dp),
-                                        painter = item.icon,
-                                        contentDescription = null,
-                                        tint = unSelectColor,
-                                    )
-                                }
-                            }
+                            BarIcon(item,selectedItem == index)
                         },
                         label = {
-                            if (selectedItem == index) {
-                                Text(
-                                    text = item.title,
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            } else {
-                                Text(text = item.title, color = unSelectTextColor)
-                            }
+                           BarLabel(item,selectedItem == index)
                         },
                         selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = MaterialTheme.colorScheme.primary,
@@ -159,7 +111,6 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
                 .background(Color.Red),
         ) {
             HorizontalPager(
-                pageSpacing = 20.dp,
                 state = pagerState,
                 userScrollEnabled = false,
             ) {index->
@@ -176,6 +127,64 @@ fun MainScreen(navController: NavHostController, type: String = "0") {
 
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun BarLabel(item: NavigationItem, selected: Boolean) {
+    if (selected) {
+        Text(
+            text = item.title,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )
+    } else {
+        Text(text = item.title, color = unSelectTextColor)
+    }
+}
+
+@Composable
+fun BarIcon(item:NavigationItem,selected: Boolean) {
+    if (selected) {
+        Card(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = selectColor,
+            ),
+            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Icon(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = 4.dp
+                    )
+                    .size(20.dp),
+                painter = item.selectIcon,
+                contentDescription = null,
+                tint = selectIconColor,
+            )
+        }
+    } else {
+        Card(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.White,
+            ),
+            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Icon(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = 4.dp
+                    )
+                    .size(20.dp),
+                painter = item.icon,
+                contentDescription = null,
+                tint = unSelectColor,
+            )
         }
     }
 }

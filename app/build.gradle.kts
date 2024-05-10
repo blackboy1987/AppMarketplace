@@ -53,7 +53,9 @@ android {
 
 dependencies {
 
-
+    /**
+     * 监听应用前后台切换
+     */
     implementation("androidx.lifecycle:lifecycle-runtime:2.7.0")
 
 
@@ -83,9 +85,6 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.appcompat:appcompat:1.7.0-alpha03")
     implementation("com.android.support:appcompat-v7:28.0.0")
-
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.9.0")
 
     implementation("androidx.datastore:datastore-preferences:1.1.0-beta02")
 

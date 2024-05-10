@@ -150,18 +150,20 @@ fun MineScreen(
                             contentDescription = ""
                         )
                     })
-                    ListItem(modifier = Modifier
-                        .clickable {
-                            navController.navigate(Destinations.CollectLogFrame.route)
-                        }
-                        .height(40.dp), headlineContent = {
-                        Text(text = "我的收藏", fontSize = 12.sp,)
-                    }, trailingContent = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowRight,
-                            contentDescription = ""
-                        )
-                    })
+                    if(SharedPreferencesUtils(context).get("token").isNotEmpty()){
+                        ListItem(modifier = Modifier
+                            .clickable {
+                                navController.navigate(Destinations.CollectLogFrame.route)
+                            }
+                            .height(40.dp), headlineContent = {
+                            Text(text = "我的收藏", fontSize = 12.sp,)
+                        }, trailingContent = {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowRight,
+                                contentDescription = ""
+                            )
+                        })
+                    }
                     ListItem(modifier = Modifier
                         .clickable {
                             // 浏览记录清理掉
@@ -179,20 +181,6 @@ fun MineScreen(
                             contentDescription = ""
                         )
                     })
-                    if(mineViewModel.data.upload==1){
-                        ListItem(modifier = Modifier
-                            .clickable {
-                                navController.navigate(Destinations.TouGaoAppInfoListFrame.route)
-                            }
-                            .height(40.dp), headlineContent = {
-                            Text(text = "上传应用", fontSize = 12.sp,)
-                        }, trailingContent = {
-                            Icon(
-                                imageVector = Icons.Default.ArrowForwardIos,
-                                contentDescription = ""
-                            )
-                        })
-                    }
                 }
             }
         }
