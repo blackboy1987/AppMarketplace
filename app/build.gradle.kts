@@ -81,7 +81,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
-    implementation(files("./libs/ssp_sdk_v5.1.10.1315.1.aar"))
+    implementation(files("./libs/ssp_sdk_v5.1.10.1325.1.aar"))
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.appcompat:appcompat:1.7.0-alpha03")
     implementation("com.android.support:appcompat-v7:28.0.0")
