@@ -1,6 +1,5 @@
 package com.cqzyzx.jpfx.ui.screens
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -22,9 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.azhon.appupdate.listener.OnDownloadListener
-import com.azhon.appupdate.manager.DownloadManager
-import com.cqzyzx.jpfx.R
 import com.cqzyzx.jpfx.repository.entity.DownloadUrl
 import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.MyWebView
@@ -33,7 +29,6 @@ import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.util.DownloadUtils
 import com.cqzyzx.jpfx.util.IDownloadCallback
 import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
-import java.io.File
 
 
 @OptIn(

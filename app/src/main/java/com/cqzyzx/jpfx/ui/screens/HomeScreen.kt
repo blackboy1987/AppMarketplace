@@ -22,11 +22,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
@@ -40,6 +39,7 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -64,8 +64,8 @@ import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.NotificationBar
-import com.cqzyzx.jpfx.ui.components.home.SwiperItem
 import com.cqzyzx.jpfx.ui.components.ad.requestInteractionAd
+import com.cqzyzx.jpfx.ui.components.home.SwiperItem
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.theme.fontSize12
 import com.cqzyzx.jpfx.ui.theme.selectColor
@@ -132,8 +132,9 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                backgroundColor = Color.White,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
                 title = {
                     Box(
                         modifier = Modifier

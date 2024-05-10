@@ -20,17 +20,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,16 +52,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.cqzyzx.jpfx.entity.SoftEntity
 import com.cqzyzx.jpfx.repository.entity.HistoryEntity
-import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.SoftIcon4
 import com.cqzyzx.jpfx.util.CommonUtils
-import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.HistoryViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("InvalidColorHexValue", "RememberReturnType")
 @Composable
 fun HistoryScreen(
@@ -78,8 +77,9 @@ fun HistoryScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                backgroundColor = Color.White,
-                elevation = 0.dp,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xfffafafa)
+                ),
                 title = {
                     Text(text = "历史记录")
                 }, navigationIcon = {

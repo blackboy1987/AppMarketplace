@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.cqzyzx.jpfx.config.Config
 import com.cqzyzx.jpfx.entity.SettingEntity
 import com.cqzyzx.jpfx.ui.components.LeftIcon
 import com.cqzyzx.jpfx.ui.components.SoftIcon12
