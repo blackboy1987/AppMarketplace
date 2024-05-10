@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cqzyzx.jpfx.ui.navigation.Destinations
 import com.cqzyzx.jpfx.ui.screens.AboutScreen
-import com.cqzyzx.jpfx.ui.screens.AnimatedScreen
 import com.cqzyzx.jpfx.ui.screens.AppDetailScreen
 import com.cqzyzx.jpfx.ui.screens.CollectLogScreen
 import com.cqzyzx.jpfx.ui.screens.DownloadScreen
@@ -246,21 +245,6 @@ fun NavHostApp() {
             val type = it.arguments?.getString("type") ?: ""
             val title = it.arguments?.getString("title") ?: ""
             PageScreen(navController,type,title)
-        }
-        composable(
-            Destinations.AnimatedFrame.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left
-                )
-            },
-        ) {
-            AnimatedScreen(navController)
         }
         composable(
             Destinations.HistoryFrame.route,

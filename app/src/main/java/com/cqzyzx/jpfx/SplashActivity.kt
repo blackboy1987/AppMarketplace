@@ -39,13 +39,14 @@ import com.cqzyzx.jpfx.util.IHttpCallback
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.google.gson.Gson
 import com.youxiao.ssp.core.SSPSdk
+import java.util.Date
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
 
     private val categoryService = CategoryService.instance()
 
-    var count: Int = 0
+    var time: Long = 0
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
     }
@@ -132,20 +133,18 @@ class SplashActivity : ComponentActivity() {
         fun onEnterForeground() {
             // 应用程序进入前台
             Log.e("AppLifecycleObserver", "onEnterForeground: 应用程序进入前台")
-            if(count==1){
+            if(time>1000*60){
+                // 切换到后台超过一分钟
+                clearContent()
                 mySetContent()
-                count = 0;
             }
+            time = 0L
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         fun onEnterBackground() {
             // 应用程序进入后台
-            if(count==0){
-                clearContent()
-                count = 1
-            }
-
+            time = Date().time
             Log.e("AppLifecycleObserver", "onEnterBackground: 应用程序进入后台")
         }
     }
