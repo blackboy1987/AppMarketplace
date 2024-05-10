@@ -19,6 +19,7 @@ data class HomeEntity(
     val categories: List<HomeCategory> = listOf(),
     val carousel: List<HomeCarousel> = listOf(),
     var notice: List<HomeNotice> = listOf(),
+    var list: List<SoftEntity> = listOf(),
 )
 
 data class HomeEntityResponse(val data: HomeEntity) : BaseResponse()

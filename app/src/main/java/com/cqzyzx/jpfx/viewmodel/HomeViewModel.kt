@@ -18,6 +18,10 @@ class HomeViewModel:ViewModel() {
     private val homeService = HomeService.instance()
     var categoryList by mutableStateOf(listOf<CategoryEntity>(CategoryEntity(0,"全部")))
     var homeData by mutableStateOf<HomeEntity>(HomeEntity())
+    var count by mutableStateOf(3)
+
+
+
 
     suspend fun category(context:Context){
         try{

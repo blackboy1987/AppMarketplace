@@ -24,8 +24,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
@@ -34,11 +32,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +47,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,7 +73,6 @@ import com.cqzyzx.jpfx.ui.theme.selectColor
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.HomeViewModel
-import com.cqzyzx.jpfx.viewmodel.SoftViewModel
 import java.util.Date
 import java.util.UUID
 
@@ -84,7 +84,6 @@ import java.util.UUID
 fun HomeScreen(
     navController: NavHostController,
     homeViewModel: HomeViewModel = viewModel(),
-    softViewModel: SoftViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     CommonUtils.ShowStatus((context as Activity).window)
@@ -97,24 +96,21 @@ fun HomeScreen(
     var loading by remember {
         mutableStateOf(false)
     }
-    val categoryId by remember { mutableIntStateOf(0) }
-    val selectedTabIndex by remember {
+    val selectedTabIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
-    val categories = listOf("最近更新")
-    suspend fun loadData() {
-        if (!loading) {
-            loading = true
-            softViewModel.switchTab(context, categoryId)
-            loading = false
-        }
-    }
-    val key = remember {
+
+    var key = rememberSaveable {
         UUID.randomUUID().toString()
     }
+    val categories = listOf("最近更新")
     LaunchedEffect(key) {
         homeViewModel.load(context)
-        if (homeViewModel.homeData.notice.size > 0 && SharedPreferencesUtils(context).get(
+    }
+
+    LaunchedEffect(key) {
+        // 通知公告是否需要弹出
+        if (homeViewModel.homeData.notice.isNotEmpty() && SharedPreferencesUtils(context).get(
                 "homeNoticeShowDialog_" + CommonUtils.formatDate(
                     Date(), "yyyy-MM-dd"
                 ) + (homeViewModel.homeData.notice[0].id)
@@ -122,13 +118,14 @@ fun HomeScreen(
         ) {
             showDialog = true
         }
+        // 获取用户信息
         if (userInfo.adType6 > 0 && SharedPreferencesUtils(context).get("adType6") != "0") {
             requestInteractionAd(context) { status ->
                 SharedPreferencesUtils(context).set("adType6", status)
             }
         }
-        loadData()
     }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -288,7 +285,7 @@ fun HomeScreen(
                         Loading1()
                     }
                 }
-                itemsIndexed(softViewModel.softList) { index, item ->
+                itemsIndexed(homeViewModel.homeData.list) { index, item ->
                     key(item.id) {
                         Item1(item) { id ->
                             navController.navigate(Destinations.AppDetailFrame.route + "/$id")

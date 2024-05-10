@@ -34,6 +34,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,14 +62,10 @@ import java.util.UUID
 fun AppScreen(
     navController: NavHostController,
     vm: AppViewModel = viewModel(),
-    downloadViewModel: DownloadViewModel = viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    var showDropdownMenu by remember {
-        mutableStateOf(false)
-    }
-    val key = remember {
+    val key = rememberSaveable {
         UUID.randomUUID().toString()
     }
     LaunchedEffect(key) {
