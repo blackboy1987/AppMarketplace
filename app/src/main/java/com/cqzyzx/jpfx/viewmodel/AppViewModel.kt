@@ -34,7 +34,9 @@ class AppViewModel:ViewModel() {
         private set
 
 
-
+    /**
+     * 选中的分类id
+     */
     var currentIndex by mutableStateOf(0)
         private set
 
@@ -45,7 +47,7 @@ class AppViewModel:ViewModel() {
     private var pageSize = 20
 
     // 分类
-    suspend fun fetchList(context: Context) {
+    suspend fun fetchList(context: Context){
         categoryLoading = true
         val res = categoryService.list(SharedPreferencesUtils(context).get("token"))
         if (res.code == 0) {
@@ -55,7 +57,7 @@ class AppViewModel:ViewModel() {
             updateCurrentIndex(context,1,tmpList[0].id)
             categories = tmpList
             categoryLoading = false
-            categoryLoadStatus = 1;
+            categoryLoadStatus = 1
         }else{
             categories = arrayListOf()
         }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +28,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.config.AdConfig
 import com.cqzyzx.jpfx.config.Config
+import com.cqzyzx.jpfx.entity.CategoryEntity
+import com.cqzyzx.jpfx.service.CategoryService
 import com.cqzyzx.jpfx.ui.components.NavHostApp
 import com.cqzyzx.jpfx.ui.layout.SplashAd
 import com.cqzyzx.jpfx.ui.theme.AppMarketplaceTheme
@@ -34,10 +37,14 @@ import com.cqzyzx.jpfx.util.AppInfoUtils.getDeviceInfo
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.IHttpCallback
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.google.gson.Gson
 import com.youxiao.ssp.core.SSPSdk
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
+
+    private val categoryService = CategoryService.instance()
+
     var count: Int = 0
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
@@ -72,6 +79,9 @@ class SplashActivity : ComponentActivity() {
              * 0： 显示广告
              * 1： 显示主界面
              */
+            LaunchedEffect(Unit) {
+                categories()
+            }
             var status by remember {
                 mutableIntStateOf(0)
             }
@@ -166,5 +176,13 @@ class SplashActivity : ComponentActivity() {
                 override fun onFailed(error: Any?) {
                 }
             })
+    }
+
+    private suspend fun categories(){
+        val res = categoryService.list(SharedPreferencesUtils(this@SplashActivity).get("token"))
+        if (res.code == 0) {
+            val gson = Gson()
+            SharedPreferencesUtils(this@SplashActivity).set("categories",gson.toJson(res.data))
+        }
     }
 }

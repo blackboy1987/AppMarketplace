@@ -55,6 +55,7 @@ import com.cqzyzx.jpfx.ui.theme.selectColor
 import com.cqzyzx.jpfx.viewmodel.AppViewModel
 import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -65,7 +66,10 @@ fun AppScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    LaunchedEffect(vm.categoryLoadStatus) {
+    var key = remember {
+        mutableStateOf(UUID.randomUUID().toString())
+    }
+    LaunchedEffect(key) {
         vm.fetchList(context)
     }
 
