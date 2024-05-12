@@ -42,6 +42,7 @@ class SplashActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setting()
         login()
         loadAd()
         mySetContent()
@@ -117,15 +118,12 @@ class SplashActivity : ComponentActivity() {
             Config.baseUrl + "/api/adConfig",
             object : IHttpCallback {
                 override fun onSuccess(data: Any?) {
-                    Log.e("adConfig", "onSuccess: ${data.toString()}")
                     val toJson = data.toString()
                     SharedPreferencesUtils(this@SplashActivity).set("adConfig",toJson)
-
                     goMainActivity()
                 }
 
                 override fun onFailed(error: Any?) {
-                    Log.e("adConfig", "onFailed: ${error.toString()}")
                     goMainActivity()
                 }
             })
@@ -151,6 +149,33 @@ class SplashActivity : ComponentActivity() {
             object : IHttpCallback {
                 override fun onSuccess(data: Any?) {
 
+                }
+
+                override fun onFailed(error: Any?) {
+                }
+            })
+    }
+
+    /**
+     * 获取网站得相关配置信息
+     */
+    private fun setting() {
+        val deviceInfo = getDeviceInfo(this@SplashActivity)
+        val data = mapOf(
+            "deviceId" to deviceInfo.deviceId,
+            "model" to deviceInfo.model,
+            "simSerialNumber" to deviceInfo.simSerialNumber,
+            "os" to deviceInfo.os,
+            "manufacturer" to deviceInfo.manufacturer,
+            "token" to SharedPreferencesUtils(this@SplashActivity).get("token")
+        )
+        HttpUtils.get(
+            data,
+            Config.baseUrl + "/api/setting",
+            object : IHttpCallback {
+                override fun onSuccess(data: Any?) {
+                    val toJson = data.toString()
+                    SharedPreferencesUtils(this@SplashActivity).set("settingConfig",toJson)
                 }
 
                 override fun onFailed(error: Any?) {

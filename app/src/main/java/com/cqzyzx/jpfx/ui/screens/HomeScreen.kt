@@ -2,6 +2,7 @@ package com.cqzyzx.jpfx.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -62,6 +63,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.cqzyzx.jpfx.entity.AdConfig
+import com.cqzyzx.jpfx.entity.SiteConfig
 import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.Loading1
 import com.cqzyzx.jpfx.ui.components.NotificationBar
@@ -73,6 +76,7 @@ import com.cqzyzx.jpfx.ui.theme.selectColor
 import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.cqzyzx.jpfx.viewmodel.HomeViewModel
+import com.google.gson.Gson
 import java.util.Date
 import java.util.UUID
 
@@ -118,12 +122,7 @@ fun HomeScreen(
         ) {
             showDialog = true
         }
-        // 获取用户信息
-        if (userInfo.adType6 > 0 && SharedPreferencesUtils(context).get("adType6") != "0") {
-            requestInteractionAd(context) { status ->
-                SharedPreferencesUtils(context).set("adType6", status)
-            }
-        }
+        loadRequestInteractionAd(context)
     }
 
     Scaffold(
@@ -378,6 +377,57 @@ fun HomeScreen(
     }
 }
 
+/**
+ * 加载广告
+ */
+fun loadRequestInteractionAd(context:Context){
+    // 缓存key
+    val cacheKey = "requestInteractionAdCount_"+CommonUtils.formatDate(Date(),"yyyyMMdd")
+    val gson = Gson()
+    var adCount = 0
+    var readAdCount = 0
+    val get = SharedPreferencesUtils(context).get("settingConfig")
+    adCount = try {
+        val siteConfig = gson.fromJson(get, SiteConfig::class.java)
+        if(SharedPreferencesUtils(context).get("token").isEmpty()){
+            // 未登录
+            siteConfig.adType4Count
+        }else{
+            siteConfig.memberAdType4Count
+        }
+
+    }catch (e: Exception){
+        0
+    }
+
+    readAdCount = try {
+        val get1 = SharedPreferencesUtils(context).get(cacheKey)
+        get1.toInt()
+    }catch (e: Exception){
+        0
+    }
+    // 获取用户信息
+    if (
+        // 加载成功
+        SharedPreferencesUtils(context).get("adType6") != "0"
+        // 用户点击关闭
+        && SharedPreferencesUtils(context).get("adType6") != "3"
+        // 还需要看广告
+        && adCount>readAdCount) {
+        requestInteractionAd(context) { status ->
+            if(status=="3"){
+                try {
+                    SharedPreferencesUtils(context).set(cacheKey,(readAdCount+1).toString())
+                }catch (e:Exception){
+                    SharedPreferencesUtils(context).set(cacheKey,"1")
+                }
+            }
+
+
+            SharedPreferencesUtils(context).set("adType6", status)
+        }
+    }
+}
 
 @Composable fun HomeTopBar(){
 

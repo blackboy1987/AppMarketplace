@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.cqzyzx.jpfx.entity.AdConfig
+import com.cqzyzx.jpfx.util.CommonUtils
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.google.gson.Gson
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
+import java.util.Date
 
 /**
  * 插屏广告：13902
@@ -40,6 +42,17 @@ fun requestInteractionAd(context: Context, onClose:(status:String)->Unit) {
             adData["status"] = "-1"
             HttpUtils.adRequest(adData)
             onClose("-1")
+        }
+
+        override fun onAdClick(p0: SSPAd?) {
+            super.onAdClick(p0)
+            Log.e("requestInteractionAd", "onAdClick: $p0", )
+        }
+
+        override fun onAdDismiss(p0: SSPAd?) {
+            super.onAdDismiss(p0)
+            onClose("3")
+            Log.e("requestInteractionAd", "onAdDismiss: $p0", )
         }
     })
 }
