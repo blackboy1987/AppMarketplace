@@ -14,7 +14,7 @@ import com.youxiao.ssp.ad.listener.AdLoadAdapter
 fun requestInteractionAd(context: Context, onClose:(type:String)->Unit) {
     var status: String = ""
     val adClient = AdClient(context as Activity)
-    adClient.requestInteractionAd("12903", object : AdLoadAdapter() {
+    adClient.requestInteractionAd("13902", object : AdLoadAdapter() {
         override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String?) {
             Log.e("requestInteractionAd", "onStatus: $p0,$p1,$p2,$p3", )
             super.onStatus(p0, p1, p2, p3)

@@ -13,7 +13,7 @@ import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
 
 /**
- *模板信息流广告：8461
+ *模板信息流广告：13905
  */
 @Composable
 fun RequestExpressAd(context: Context) {
@@ -21,7 +21,7 @@ fun RequestExpressAd(context: Context) {
     AndroidView(factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_template, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_layout)
-        adClient.requestExpressAd("12905", object : AdLoadAdapter() {
+        adClient.requestExpressAd("13905", object : AdLoadAdapter() {
             override fun onAdLoad(ad: SSPAd) {
                 super.onAdLoad(ad)
                 findViewById.removeAllViews()

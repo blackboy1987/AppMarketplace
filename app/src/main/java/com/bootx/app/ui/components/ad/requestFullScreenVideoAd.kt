@@ -10,12 +10,12 @@ import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
 
 /**
- *全屏视频：8811 OK
+ *全屏视频：13905 OK
  */
 fun requestFullScreenVideoAd(context: Context, onClose:(type:String)->Unit) {
     var status: String = ""
     val adClient = AdClient(context as Activity)
-    adClient.requestFullScreenVideoAd("12907", object : AdLoadAdapter() {
+    adClient.requestFullScreenVideoAd("13905", object : AdLoadAdapter() {
         var gson = Gson()
         override fun onStatus(p0: Int, p1: Int, p2: Int, p3: String) {
             Log.e("requestFullScreenVideoAd", "onStatus: $p0,$p1,$p2, $p3", )

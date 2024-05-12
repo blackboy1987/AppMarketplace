@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         // 用来加载开屏广告
-        /*setContent {
+        setContent {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     Log.e("SplashActivity", "MainActivity ad 3 ${Date()}")
                 }
             }
-        }*/
+        }
         gotoMainActivity()
     }
 

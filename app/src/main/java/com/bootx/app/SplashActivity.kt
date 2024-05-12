@@ -22,8 +22,8 @@ class SplashActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         login()
         setContentView(R.layout.splash_screen)
-        SSPSdk.init(this@SplashActivity, "6862", true)
-        SSPSdk.init(this@SplashActivity, "6862", "0", true)
+        SSPSdk.init(this@SplashActivity, "7039", true)
+        SSPSdk.init(this@SplashActivity, "7039", "0", true)
         gotoMainActivity()
 
     }

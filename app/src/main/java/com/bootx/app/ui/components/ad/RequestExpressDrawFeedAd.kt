@@ -12,7 +12,7 @@ import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
 
 /**
- *模板视频信息流：8517
+ *模板视频信息流：13905
  */
 @Composable
 fun RequestExpressDrawFeedAd(context: Context) {
@@ -22,7 +22,7 @@ fun RequestExpressDrawFeedAd(context: Context) {
     AndroidView(factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_video_feed, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_flayout)
-        adClient.requestExpressDrawFeedAd("12906", object : AdLoadAdapter() {
+        adClient.requestExpressDrawFeedAd("13905", object : AdLoadAdapter() {
             override fun onAdLoad(ad: SSPAd) {
                 super.onAdLoad(ad)
                 findViewById.removeAllViews()
