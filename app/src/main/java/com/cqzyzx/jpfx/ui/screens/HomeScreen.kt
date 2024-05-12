@@ -110,10 +110,10 @@ fun HomeScreen(
 
     LaunchedEffect(key) {
         // 通知公告是否需要弹出
-        if (homeViewModel.homeData.notice.isNotEmpty() && SharedPreferencesUtils(context).get(
+        if (homeViewModel.homeData.notice1.isNotEmpty() && SharedPreferencesUtils(context).get(
                 "homeNoticeShowDialog_" + CommonUtils.formatDate(
                     Date(), "yyyy-MM-dd"
-                ) + (homeViewModel.homeData.notice[0].id)
+                ) + (homeViewModel.homeData.notice1[0].id)
             ).isEmpty()
         ) {
             showDialog = true
@@ -241,9 +241,10 @@ fun HomeScreen(
                         }
                     }
                 }
-
-                item{
-                    NotificationBar("我的是通知公告")
+                if(!homeViewModel.homeData.notice0.isEmpty()){
+                    item{
+                        NotificationBar("${homeViewModel.homeData.notice0[0].content}")
+                    }
                 }
                 stickyHeader {
                     ScrollableTabRow(
@@ -308,14 +309,14 @@ fun HomeScreen(
             ) {
                 Column {
                     Text(
-                        text = "${homeViewModel.homeData.notice[0].title}",
+                        text = "${homeViewModel.homeData.notice1[0].title}",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "${homeViewModel.homeData.notice[0].content}",
+                        text = "${homeViewModel.homeData.notice1[0].content}",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Left,
                         fontSize = 12.sp
@@ -334,7 +335,7 @@ fun HomeScreen(
                                         "homeNoticeShowDialog_" + CommonUtils.formatDate(
                                             Date(),
                                             "yyyy-MM-dd"
-                                        ) + (homeViewModel.homeData.notice[0].id), "0"
+                                        ) + (homeViewModel.homeData.notice1[0].id), "0"
                                     )
                                 },
                             colors = CardDefaults.cardColors().copy(

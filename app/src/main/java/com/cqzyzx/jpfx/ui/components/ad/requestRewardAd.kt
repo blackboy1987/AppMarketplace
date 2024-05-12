@@ -3,29 +3,30 @@ package com.cqzyzx.jpfx.ui.components.ad
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
-import com.cqzyzx.jpfx.config.AdConfig
-import com.cqzyzx.jpfx.util.CommonUtils
+import com.cqzyzx.jpfx.entity.AdConfig
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.google.gson.Gson
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.RewardVideoAdAdapter
-import java.util.Date
 
 /**
 *激励视频广告：13903
 */
 fun requestRewardAd(context: Context, onClose:(type:String)->Unit) {
-    val adId = AdConfig.REWARD_VIDEO_AD_ID
+    val gson = Gson()
+    val adConfig = gson.fromJson(SharedPreferencesUtils(context).get("adConfig"), AdConfig::class.java)
+    val adId = adConfig.rewardVideoAdId
     val adData = mutableMapOf(
         "adId" to adId,
         "adType" to "5",
-        "mediaId" to AdConfig.REWARD_VIDEO_AD_ID,
+        "mediaId" to adId,
         "token" to SharedPreferencesUtils(context).get("token")
     )
 
     val adClient = AdClient(context as Activity)
-    adClient.requestRewardAd(AdConfig.REWARD_VIDEO_AD_ID, object : RewardVideoAdAdapter() {
+    adClient.requestRewardAd(adId, object : RewardVideoAdAdapter() {
         override fun loadRewardAdSuc(sspAd: SSPAd?) {
             super.loadRewardAdSuc(sspAd)
             onClose("loadRewardAdSuc")

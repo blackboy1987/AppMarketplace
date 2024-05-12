@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
-import com.cqzyzx.jpfx.util.CommonUtils
+import com.cqzyzx.jpfx.entity.AdConfig
+import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.google.gson.Gson
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
@@ -19,6 +21,8 @@ import com.youxiao.ssp.ad.listener.AdLoadAdapter
  */
 @Composable
 fun RequestExpressDrawFeedAd(context: Context) {
+    val gson = Gson()
+    val adConfig = gson.fromJson(SharedPreferencesUtils(context).get("adConfig"), AdConfig::class.java)
     val adClient = AdClient(context as Activity)
 
 
@@ -26,7 +30,7 @@ fun RequestExpressDrawFeedAd(context: Context) {
         modifier = Modifier.fillMaxWidth(),factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_video_feed, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_flayout)
-        adClient.requestExpressDrawFeedAd("13905", object : AdLoadAdapter() {
+        adClient.requestExpressDrawFeedAd(adConfig.videoFeedAdId, object : AdLoadAdapter() {
             override fun onAdLoad(ad: SSPAd) {
                 super.onAdLoad(ad)
                 findViewById.removeAllViews()

@@ -9,27 +9,27 @@ import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
-import com.cqzyzx.jpfx.config.AdConfig
-import com.cqzyzx.jpfx.util.CommonUtils
+import com.cqzyzx.jpfx.entity.AdConfig
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.google.gson.Gson
 import com.youxiao.ssp.ad.bean.NextAdInfo
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
-import java.util.Date
 
 /**
  * 开屏广告: 3561
  */
 @Composable
 fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
-
-    val adId = AdConfig.SPLASH_AD_ID
+    val gson = Gson()
+    val adConfig = gson.fromJson(SharedPreferencesUtils(context).get("adConfig"), AdConfig::class.java)
+    val adId = adConfig.splashAdId
     val adData = mutableMapOf(
         "adId" to adId,
         "adType" to "6",
-        "mediaId" to AdConfig.MEDIA_ID,
+        "mediaId" to adId,
         "token" to SharedPreferencesUtils(context).get("token")
     )
 
@@ -39,7 +39,7 @@ fun RequestSplashAd(context: Context,callback:(code: Int)->Unit) {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_splash, null)
         val mAdLayout = view.findViewById<FrameLayout>(R.id.ad_layout)
         mAdLayout.visibility = View.VISIBLE
-        adClient.requestSplashAd(mAdLayout, AdConfig.SPLASH_AD_ID, object : AdLoadAdapter() {
+        adClient.requestSplashAd(mAdLayout, adId, object : AdLoadAdapter() {
             override fun onError(var1: Int, error: String) {
                 super.onError(var1, error)
                 Log.e("requestSplashAd", "onError: ${var1}, ${error}", )

@@ -38,7 +38,6 @@ import com.cqzyzx.jpfx.viewmodel.DownloadViewModel
 fun WebViewScreen(
     navController: NavHostController,
     id: String,
-    adId: String,
     downloadViewModel: DownloadViewModel = viewModel(),
 ) {
 

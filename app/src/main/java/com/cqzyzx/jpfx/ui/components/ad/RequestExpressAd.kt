@@ -9,26 +9,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
-import com.cqzyzx.jpfx.config.AdConfig
-import com.cqzyzx.jpfx.util.CommonUtils
+import com.cqzyzx.jpfx.entity.AdConfig
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.google.gson.Gson
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
-import java.util.Date
 
 /**
  *模板信息流广告：13905
  */
 @Composable
 fun RequestExpressAd(context: Context) {
-    val adId = AdConfig.INTER_AD_ID
+    val gson = Gson()
+    val adConfig = gson.fromJson(SharedPreferencesUtils(context).get("adConfig"), AdConfig::class.java)
+    val adId = adConfig.interAdId
     val adData = mutableMapOf(
         "adId" to adId,
         "adType" to "1",
-        "mediaId" to AdConfig.TEMPLATE_AD_ID,
+        "mediaId" to adId,
         "token" to SharedPreferencesUtils(context).get("token")
     )
 
@@ -39,7 +39,7 @@ fun RequestExpressAd(context: Context) {
         factory = {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_template, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_layout)
-        adClient.requestExpressAd(AdConfig.TEMPLATE_AD_ID, object : AdLoadAdapter() {
+        adClient.requestExpressAd(adId, object : AdLoadAdapter() {
             override fun onAdLoad(ad: SSPAd) {
                 super.onAdLoad(ad)
                 findViewById.removeAllViews()

@@ -10,33 +10,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cqzyzx.jpfx.R
-import com.cqzyzx.jpfx.config.AdConfig
-import com.cqzyzx.jpfx.util.CommonUtils
+import com.cqzyzx.jpfx.entity.AdConfig
 import com.cqzyzx.jpfx.util.HttpUtils
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
+import com.google.gson.Gson
 import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.ad.core.AdClient
 import com.youxiao.ssp.ad.listener.AdLoadAdapter
-import java.util.Date
 
 /**
  *横幅广告：1983 OK
  */
 @Composable
 fun RequestBannerAd(context: Context) {
+    val gson = Gson()
+    val adConfig = gson.fromJson(SharedPreferencesUtils(context).get("adConfig"), AdConfig::class.java)
     val adClient = AdClient(context as Activity)
-    val adId = AdConfig.BANNER_AD_ID
+    val adId = adConfig.bannerAdId
     var adData = mutableMapOf(
         "adId" to adId,
         "adType" to "0",
-        "mediaId" to AdConfig.MEDIA_ID,
+        "mediaId" to adConfig.bannerAdId,
         "token" to SharedPreferencesUtils(context).get("token")
     )
     AndroidView(
         modifier = Modifier.fillMaxWidth(),factory = {
         val view = LayoutInflater.from(it).inflate(R.layout.activity_banner, null)
         val findViewById = view.findViewById<FrameLayout>(R.id.ad_layout)
-        adClient.requestBannerAd(findViewById, AdConfig.BANNER_AD_ID, object : AdLoadAdapter() {
+        adClient.requestBannerAd(findViewById, adConfig.bannerAdId, object : AdLoadAdapter() {
             override fun onError(i: Int, s: String) {
                 super.onError(i, s)
                 Log.e("requestBannerAd onError", "onError: $i,$s")

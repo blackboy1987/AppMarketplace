@@ -99,8 +99,7 @@ fun NavHostApp() {
             },
         ) {
             val id = it.arguments?.getString("id") ?: ""
-            val adId = it.arguments?.getString("adId") ?: ""
-            WebViewScreen(navController, id,adId)
+            WebViewScreen(navController, id)
         }
 
         composable(
