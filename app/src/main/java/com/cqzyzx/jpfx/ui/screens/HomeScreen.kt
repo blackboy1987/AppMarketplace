@@ -110,9 +110,6 @@ fun HomeScreen(
     val categories = listOf("最近更新")
     LaunchedEffect(key) {
         homeViewModel.load(context)
-    }
-
-    LaunchedEffect(key) {
         // 通知公告是否需要弹出
         if (homeViewModel.homeData.notice1.isNotEmpty() && SharedPreferencesUtils(context).get(
                 "homeNoticeShowDialog_" + CommonUtils.formatDate(
