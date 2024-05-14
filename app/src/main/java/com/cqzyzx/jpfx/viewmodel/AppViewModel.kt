@@ -2,6 +2,7 @@ package com.cqzyzx.jpfx.viewmodel
 
 import android.content.Context
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,9 @@ class AppViewModel:ViewModel() {
     private val categoryService = CategoryService.instance()
 
     private val softService = SoftService.instance()
+
+    var status by mutableIntStateOf(0)
+
 
     var categoryLoading by mutableStateOf(true)
         private set
@@ -55,6 +59,7 @@ class AppViewModel:ViewModel() {
         }else{
             categories = arrayListOf()
         }
+        status = 1
         categoryLoading = false
     }
 

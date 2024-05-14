@@ -64,6 +64,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.entity.AdConfig
+import com.cqzyzx.jpfx.entity.HomeEntity
 import com.cqzyzx.jpfx.entity.SiteConfig
 import com.cqzyzx.jpfx.ui.components.Item1
 import com.cqzyzx.jpfx.ui.components.Loading1
@@ -89,6 +90,9 @@ fun HomeScreen(
     navController: NavHostController,
     homeViewModel: HomeViewModel = viewModel(),
 ) {
+    var status by rememberSaveable {
+        mutableIntStateOf(0)
+    }
     val context = LocalContext.current
     CommonUtils.ShowStatus((context as Activity).window)
     var showDialog by remember {
@@ -108,18 +112,25 @@ fun HomeScreen(
         UUID.randomUUID().toString()
     }
     val categories = listOf("最近更新")
-    LaunchedEffect(key) {
-        homeViewModel.load(context)
-        // 通知公告是否需要弹出
-        if (homeViewModel.homeData.notice1.isNotEmpty() && SharedPreferencesUtils(context).get(
-                "homeNoticeShowDialog_" + CommonUtils.formatDate(
-                    Date(), "yyyy-MM-dd"
-                ) + (homeViewModel.homeData.notice1[0].id)
-            ).isEmpty()
-        ) {
-            showDialog = true
+    var homeData by remember {
+        mutableStateOf(HomeEntity())
+    }
+    LaunchedEffect(status) {
+        if(status!=1){
+            homeViewModel.load(context)
+            status = homeViewModel.status
+            homeData = homeViewModel.homeData
+            // 通知公告是否需要弹出
+            if (homeViewModel.homeData.notice1.isNotEmpty() && SharedPreferencesUtils(context).get(
+                    "homeNoticeShowDialog_" + CommonUtils.formatDate(
+                        Date(), "yyyy-MM-dd"
+                    ) + (homeViewModel.homeData.notice1[0].id)
+                ).isEmpty()
+            ) {
+                showDialog = true
+            }
+            loadRequestInteractionAd(context)
         }
-        loadRequestInteractionAd(context)
     }
 
     Scaffold(

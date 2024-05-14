@@ -66,15 +66,17 @@ fun AppScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val key = rememberSaveable {
-        UUID.randomUUID().toString()
-    }
     var currentIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
-    LaunchedEffect(key) {
-        //获取分类列表
-        vm.fetchList(context)
+    var status by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    LaunchedEffect(status) {
+        if(status!=1){
+            vm.fetchList(context)
+            status = vm.status
+        }
     }
 
     Scaffold(

@@ -3,6 +3,7 @@ package com.cqzyzx.jpfx.viewmodel
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -19,7 +20,7 @@ class HomeViewModel:ViewModel() {
     var categoryList by mutableStateOf(listOf<CategoryEntity>(CategoryEntity(0,"全部")))
     var homeData by mutableStateOf<HomeEntity>(HomeEntity())
     var count by mutableStateOf(3)
-
+    var status by mutableIntStateOf(0)
 
 
 
@@ -32,6 +33,7 @@ class HomeViewModel:ViewModel() {
             }else{
                 CommonUtils.toast(context,res.msg)
             }
+            status = 1
         }catch (e: Exception){
             Log.e("category", "category: ${e}", )
         }
