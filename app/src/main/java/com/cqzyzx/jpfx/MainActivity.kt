@@ -26,13 +26,11 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import coil.compose.AsyncImage
 import com.cqzyzx.jpfx.entity.AdConfig
-import com.cqzyzx.jpfx.service.CategoryService
 import com.cqzyzx.jpfx.ui.components.NavHostApp
 import com.cqzyzx.jpfx.ui.layout.SplashAd
 import com.cqzyzx.jpfx.ui.theme.AppMarketplaceTheme
 import com.cqzyzx.jpfx.util.SharedPreferencesUtils
 import com.google.gson.Gson
-import com.youxiao.ssp.ad.bean.SSPAd
 import com.youxiao.ssp.core.SSPSdk
 import java.util.Date
 
